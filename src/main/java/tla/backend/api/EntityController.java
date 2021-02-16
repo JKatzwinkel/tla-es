@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import tla.backend.es.model.meta.Indexable;
 import tla.backend.service.EntityService;
@@ -49,7 +51,10 @@ public abstract class EntityController<T extends Indexable, D extends AbstractDt
         consumes = MediaType.ALL_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<SingleDocumentWrapper<? extends AbstractDto>> get(@PathVariable String id) throws ObjectNotFoundException {
+    @ApiResponse(responseCode = "200", description = "object found")
+    public ResponseEntity<SingleDocumentWrapper<? extends AbstractDto>> get(
+        @Parameter(description = "TLA object ID", required = true) @PathVariable String id
+    ) throws ObjectNotFoundException {
         SingleDocumentWrapper<?> result = getService().getDetails(id);
         if (result != null) {
             return new ResponseEntity<SingleDocumentWrapper<?>>(
@@ -102,10 +107,14 @@ public abstract class EntityController<T extends Indexable, D extends AbstractDt
     @RequestMapping(
         value = "/search",
         method = RequestMethod.POST,
-        consumes = MediaType.ALL_VALUE,
+        consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<SearchResultsWrapper<?>> search(@RequestBody SearchCommand<D> command, Pageable page) {
+    @ApiResponse(responseCode = "200", description = "search successful")
+    public ResponseEntity<SearchResultsWrapper<?>> search(
+        @RequestBody(required = true) SearchCommand<D> command,
+        @Parameter(required = false) Pageable page
+    ) {
         log.info("page: {}", tla.domain.util.IO.json(page));
         log.info("command: {}", tla.domain.util.IO.json(command));
         var result = this.getService().runSearchCommand(command, page);
