@@ -198,6 +198,21 @@ public class RepoPopulator {
     }
 
     /**
+     * Creates Elasticsearch indices for all model classes with mappings and settings
+     * according to their {@code @Settings} and {@code @Mapping} annotations, and their
+     * member fields' object mapping annotations. If an index already exists, its creation
+     * fails silently.
+     */
+    public RepoPopulator createIndices() {
+        EntityService.getRegisteredModelClasses().stream().map(
+            modelClass -> EntityService.getService(
+                modelClass.asSubclass(AbstractBTSBaseClass.class)
+            )
+        ).forEach(EntityService::createIndex);
+        return this;
+    }
+
+    /**
      * Indexes all documents inside a <code>*.tar.gz</code> file at the specified location.
      * @param filenames List of length 1
      * @throws IOException

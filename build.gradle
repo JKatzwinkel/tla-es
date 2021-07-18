@@ -12,7 +12,7 @@ plugins {
 }
 
 group = 'org.bbaw.aaew.tla'
-version = '0.0.900-dev'
+version = '0.0.901-dev'
 sourceCompatibility = '17'
 
 publishing {

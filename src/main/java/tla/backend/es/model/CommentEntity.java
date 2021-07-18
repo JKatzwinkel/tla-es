@@ -27,10 +27,10 @@ import tla.domain.model.meta.TLADTO;
 @NoArgsConstructor
 @BTSeClass("BTSComment")
 @TLADTO(CommentDto.class)
-@Document(indexName = "comment")
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Document(indexName = "comment", createIndex = false)
 @ToString(of = {"id", "body", "revisionState"}, callSuper = true)
 public class CommentEntity extends LinkedEntity implements Indexable {
 

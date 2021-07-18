@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.RestStatusException;
+import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Service;
@@ -98,6 +100,33 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
     public Class<T> getModelClass() {
         return this.modelClass;
     }
+
+    /**
+     * Create the Elasticsearch index specified in the {@code @Document} annotation
+     * of this service's model class, and configure its settings and mappings according
+     * to {@code @Setting} and {@code @Mapping} annotations of the model class, and
+     * spring data elasticsearch object mapping annotations of the model class's attributes.
+     */
+    public boolean createIndex() {
+        IndexOperations index = searchService.getOperations().indexOps(modelClass);
+        var name = index.getIndexCoordinates().getIndexName();
+        if (index.exists()) {
+            log.info("index {} already exists.", name);
+            return false;
+        }
+        try {
+            index.create(
+                index.createSettings(modelClass),
+                index.createMapping(modelClass)
+            );
+            log.info("created index {} for model class {}.", name, modelClass.getSimpleName());
+            return true;
+        } catch (RestStatusException e) {
+            log.warn("index {} already exists!", name);
+        }
+        return false;
+    }
+
 
     /**
      * Returns the entity service registered for a given model class, or null if no such model class have been

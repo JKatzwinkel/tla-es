@@ -27,7 +27,7 @@ import tla.domain.model.meta.TLADTO;
 @NoArgsConstructor
 @BTSeClass("BTSText")
 @TLADTO(TextDto.class)
-@Document(indexName = "text")
+@Document(indexName = "text", createIndex = false)
 public class TextEntity extends UserFriendlyEntity implements Recursable {
 
     @Field(type = FieldType.Search_As_You_Type, name = "hash")
