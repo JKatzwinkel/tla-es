@@ -45,11 +45,11 @@ public class ApiControllerTest extends AbstractMockMvcTest {
     }
 
     @Test
-    @DisplayName("request to version endpoint should be successful even with unpopulated search engine")
+    @DisplayName("request to version endpoint with no corpus metadata should return HTTP code 202")
     void queryVersionEndpointNotPopulated() throws Exception {
         when(metadataRepo.findAll()).thenReturn(List.of());
         mockMvc.perform(get("/version")).andExpect(
-            status().isOk()
+            status().isAccepted()
         ).andExpect(
             jsonPath("$.version").value(buildProperties.getVersion())
         ).andExpect(

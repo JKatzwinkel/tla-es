@@ -6,13 +6,13 @@ plugins {
     id 'maven-publish'
     id 'co.uzzu.dotenv.gradle' version '1.1.0'
     id 'de.undercouch.download' version '4.1.2'
-    id 'org.springframework.boot' version '2.5.2'
+    id 'org.springframework.boot' version '2.5.3'
     id 'com.github.ben-manes.versions' version '0.39.0'
     id 'com.github.dawnwords.jacoco.badge' version '0.2.4'
 }
 
 group = 'org.bbaw.aaew.tla'
-version = '0.0.848'
+version = '0.0.849'
 sourceCompatibility = '11'
 
 publishing {
@@ -59,15 +59,15 @@ dependencies {
     implementation 'org.apache.tomcat.embed:tomcat-embed-core:9.0.35'
     implementation 'org.yaml:snakeyaml:1.29'
 
-    implementation 'org.springframework.boot:spring-boot:2.5.2'
-    implementation 'org.springframework.boot:spring-boot-autoconfigure:2.5.2'
+    implementation 'org.springframework.boot:spring-boot:2.6.0-M1'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure:2.6.0-M1'
     implementation 'org.springframework.data:spring-data-elasticsearch:4.3.0-M1'
     implementation 'org.springframework:spring-web:5.3.9'
     implementation 'org.springframework:spring-webmvc:5.3.9'
     implementation 'org.apache.logging.log4j:log4j-core:2.14.1'
     implementation 'org.slf4j:slf4j-simple:2.0.0-alpha2'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.6.0-M1'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.0-M1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.0-M1'
 }

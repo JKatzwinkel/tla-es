@@ -53,8 +53,10 @@ public class ApiController {
     @RequestMapping(value = "/version", method = RequestMethod.GET)
     public ResponseEntity<?> getVersionInfo() throws IOException {
         Metadata info = this.metadataService.getInfo();
+        HttpStatus statusCode = HttpStatus.OK;
         if (info == null) {
             info = Metadata.EMPTY;
+            statusCode = HttpStatus.ACCEPTED;
         }
         return new ResponseEntity<>(
             Map.of(
@@ -67,7 +69,7 @@ public class ApiController {
                 "lingglossVersion", info.getLingglossVersion(),
                 "esVersion", this.metadataService.getESVersionNumber()
             ),
-            HttpStatus.OK
+            statusCode
         );
     }
 
