@@ -203,7 +203,7 @@ public class RepoPopulator {
      * @throws IOException
      * @see {@link #init()}
      */
-    public void ingestTarFile(List<String> filenames) throws IOException {
+    public void ingestTarFile(List<String> filenames) throws Exception {
         log.info("process tar file {}", String.join(", ", filenames));
         if (filenames.size() == 1) {
             String filename = filenames.get(0);
@@ -220,6 +220,7 @@ public class RepoPopulator {
                     String.format("file not found: %s", filename),
                     e
                 );
+                throw e;
             } catch (IOException e) {
                 log.error(
                     String.format("error during processing tar archive %s", filename),

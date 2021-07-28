@@ -2,6 +2,7 @@ package tla.backend.es.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -20,6 +22,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import tla.backend.App;
 import tla.backend.es.model.meta.TLAEntity;
 import tla.backend.es.query.ESQueryBuilder;
@@ -29,6 +32,7 @@ import tla.domain.command.SearchCommand;
 import tla.domain.dto.meta.DocumentDto;
 import tla.domain.model.meta.BTSeClass;
 
+@Slf4j
 @TestInstance(Lifecycle.PER_CLASS)
 @SpringBootTest(classes = {App.class})
 public class RepoPopulatorTest {
@@ -45,7 +49,7 @@ public class RepoPopulatorTest {
     private TestService testService;
 
     @BTSeClass("TestEntity")
-    @Document(indexName = "test")
+    @Document(indexName = "test", createIndex = false)
     static class TestEntity extends TLAEntity {}
 
     @Service
@@ -66,9 +70,23 @@ public class RepoPopulatorTest {
         testService = new TestService();
     }
 
+    @BeforeEach
+    void createIndex() {
+        var index = operations.indexOps(TestEntity.class);
+        var created = false;
+        if (!index.exists()) {
+            created |= index.create(
+                index.createSettings(TestEntity.class),
+                index.createMapping(TestEntity.class)
+            );
+        }
+        log.info("test entity ES index created: {}", created);
+    }
+
     @AfterEach
     void deleteIndex() {
-        operations.indexOps(TestEntity.class).delete();
+        var deleted = operations.indexOps(TestEntity.class).delete();
+        log.info("test entity ES index deleted: {}", deleted);
     }
 
     @Test
@@ -84,11 +102,11 @@ public class RepoPopulatorTest {
     @DisplayName("repo populator should ingest test entity instance to Elasticsearch index")
     void testRepoPopulator() throws Exception {
         var ingestor = repoPopulator.init().selectBatchIngestor("test");
-        ingestor.add("{\"eclass\": \"TestEntity\", \"id\": \"1\"}");
+        ingestor.add("{\"eclass\": \"TestEntity\", \"id\": \"2\"}");
         repoPopulator.flushIngestors();
         var service = repoPopulator.getService("test");
         assertEquals(testService, service);
-        var entity = service.getRepo().findById("1");
+        var entity = service.getRepo().findById("2");
         assertNotNull(entity);
     }
 
@@ -100,6 +118,17 @@ public class RepoPopulatorTest {
         );
         var entity = testService.getRepo().findById("1");
         assertNotNull(entity);
+    }
+
+    @Test
+    @DisplayName("ingestion of non-existent file should throw exception")
+    void testIngestTarArchive_nonexistent() throws Exception {
+        assertThrows(
+            Exception.class,
+            () -> repoPopulator.init().ingestTarFile(
+                List.of("foo.bar.gz")
+            )
+        );
     }
 
 }
