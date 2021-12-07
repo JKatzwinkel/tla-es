@@ -12,6 +12,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
+import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.filter.Filter;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -176,29 +177,28 @@ public class SearchService {
      * value counts.
      */
     public static Map<String, Map<String, Long>> extractAggregations(SearchHits<?> hits) {
-        if (hits.hasAggregations()) {
-            Map<String, Map<String, Long>> aggregations = new HashMap<>();
-            for (Aggregation agg : hits.getAggregations().asList()) {
-                if (agg instanceof Terms) {
-                    aggregations.put(
-                        agg.getName(),
-                        getFacetsFromBuckets((Terms) agg)
-                    );
-                } else if (agg instanceof Filter) {
-                    ((Filter) agg).getAggregations().asList().stream().filter(
-                        sub -> sub instanceof Terms
-                    ).forEach(
-                        sub -> aggregations.put(
-                            agg.getName(),
-                            getFacetsFromBuckets((Terms) sub)
-                        )
-                    );
-                }
-            }
-            return aggregations;
-        } else {
+        if (!hits.hasAggregations()) {
             return Map.of();
         }
+        Map<String, Map<String, Long>> result = new HashMap<>();
+        for (Aggregation agg : (Aggregations) hits.getAggregations().aggregations()) {
+            if (agg instanceof Terms) {
+                result.put(
+                    agg.getName(),
+                    getFacetsFromBuckets((Terms) agg)
+                );
+            } else if (agg instanceof Filter) {
+                ((Filter) agg).getAggregations().asList().stream().filter(
+                    sub -> sub instanceof Terms
+                ).forEach(
+                    sub -> result.put(
+                        agg.getName(),
+                        getFacetsFromBuckets((Terms) sub)
+                    )
+                );
+            }
+        }
+        return result;
     }
 
 }

@@ -13,8 +13,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-import org.elasticsearch.common.collect.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -85,7 +85,7 @@ public class SentenceServiceTest {
         SearchHit<SentenceEntity> hit = new SearchHit<>(
             null, null, null, 1f, null, null, null, null, null, null, s
         );
-        SearchHits<SentenceEntity> hits = new SearchHitsImpl<>(1, TotalHitsRelation.EQUAL_TO, 1f, null, List.of(hit), null);
+        SearchHits<SentenceEntity> hits = new SearchHitsImpl<>(1, TotalHitsRelation.EQUAL_TO, 1f, null, List.of(hit), null, null);
         SentenceSearch cmd = new SentenceSearch();
         TranslationSpec translation = new TranslationSpec();
         translation.setText("Blut der ersten Geburt der Kobra");

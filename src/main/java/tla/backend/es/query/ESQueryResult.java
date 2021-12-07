@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -62,16 +63,17 @@ public class ESQueryResult<T extends Indexable> {
      * aggregation doesn't exist
      */
     public Map<String, Long> getAggregation(String agg) {
-        if (this.hits.getAggregations() != null && this.hits.getAggregations().get(agg) != null) {
-            return (
-                (Terms) this.hits.getAggregations().get(agg)
-            ).getBuckets().stream().collect(
-                Collectors.toMap(
-                    Terms.Bucket::getKeyAsString, Terms.Bucket::getDocCount
-                )
-            );
+        Aggregations aggregations = (Aggregations) this.hits.getAggregations().aggregations();
+        if (aggregations == null || aggregations.get(agg) == null) {
+            return Collections.emptyMap();
         }
-        return Collections.emptyMap();
+        return (
+            (Terms) aggregations.get(agg)
+        ).getBuckets().stream().collect(
+            Collectors.toMap(
+                Terms.Bucket::getKeyAsString, Terms.Bucket::getDocCount
+            )
+        );
     }
 
     /**

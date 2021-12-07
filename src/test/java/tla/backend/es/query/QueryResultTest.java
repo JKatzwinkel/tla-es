@@ -25,7 +25,7 @@ public class QueryResultTest {
         
         SearchHits<?> searchHits = new SearchHitsImpl<>(
             pages * ESQueryResult.SEARCH_RESULT_PAGE_SIZE,
-            TotalHitsRelation.EQUAL_TO, 10f, null, HITS_MOCK, null
+            TotalHitsRelation.EQUAL_TO, 10f, null, HITS_MOCK, null, null
         );
         Pageable page = PageRequest.of(0, ESQueryResult.SEARCH_RESULT_PAGE_SIZE);
         assertEquals(
@@ -38,7 +38,7 @@ public class QueryResultTest {
         final int pages = 2;
         SearchHits<?> searchHits = new SearchHitsImpl<>(
             pages * ESQueryResult.SEARCH_RESULT_PAGE_SIZE + 1,
-            TotalHitsRelation.EQUAL_TO, 10f, null, HITS_MOCK, null
+            TotalHitsRelation.EQUAL_TO, 10f, null, HITS_MOCK, null, null
         );
         Pageable page = PageRequest.of(0, ESQueryResult.SEARCH_RESULT_PAGE_SIZE);
         assertEquals(

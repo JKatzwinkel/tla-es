@@ -127,7 +127,7 @@ public class RepoPopulator {
                 this.count += this.batch.size();
                 this.batch.clear();
             } catch (Exception e) {
-                log.error(
+                log.warn(
                     String.format(
                         "%s ingestor could not save %d docs (%s)! Trying again...",
                         this.modelClass.getSimpleName(),
