@@ -99,9 +99,13 @@ the variable `SAMPLE_URL` in there:
 
 Run the app using the `bootRun` task:
 
+```bash
+    ./gradlew tasks # lists available gradle tasks
     ./gradlew bootrun
+```
 
 > If you are on a Windows machine, you need to execute the `gradlew.bat` wrapper shipped with this repository.
+
 
 
 ## Tests
@@ -148,7 +152,7 @@ When running the application using the  `bootRun` task, comma-separated argument
 
 Populate database with a corpus dump and shut down after:
 
-    ./gradlew bootRun --args="--date-file=sample.tar.gz --shutdown"
+    ./gradlew bootRun --args="--data-file=sample.tar.gz --shutdown"
 
 There is a gradle task for populating the backend app's elasticsearch indices with corpus data obtained
 from a URL specified via the `SAMPLE_URL` environment variable:
