@@ -30,7 +30,8 @@ jobs:
         url: http://localhost:8090/lemma/get/100690
         responseCode: 200
         interval: 5000
-        timeout: 100000
+        timeout: 120000
+      continue-on-error: true
 
     - name: query backend version
       run: curl -s http://localhost:8090/version
