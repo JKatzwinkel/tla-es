@@ -12,7 +12,7 @@ plugins {
 }
 
 group = 'org.bbaw.aaew.tla'
-version = '0.0.850'
+version = '0.0.852-dev'
 sourceCompatibility = '11'
 
 publishing {
@@ -35,8 +35,7 @@ repositories {
 }
 
 configurations {
-    implementation.exclude module: 'spring-boot-starter-jetty'
-    implementation.exclude module: 'spring-boot-starter-netty'
+    implementation.exclude module: 'spring-boot-starter-tomcat'
     implementation.exclude group: 'jakarta.xml.bind'
     implementation.exclude group: 'org.xmlunit'
     implementation.exclude group: 'org.skyscreamer'
@@ -56,10 +55,10 @@ dependencies {
     implementation 'com.github.jkatzwinkel:tla-common:main-SNAPSHOT'
     implementation 'org.modelmapper:modelmapper:2.4.5'
     implementation 'org.apache.commons:commons-compress:1.21'
-    implementation 'org.apache.tomcat.embed:tomcat-embed-core:9.0.35'
     implementation 'org.yaml:snakeyaml:1.30'
 
     implementation 'org.springframework.boot:spring-boot:2.6.2'
+    implementation 'org.springframework.boot:spring-boot-starter-jetty:2.6.2'
     implementation 'org.springframework.boot:spring-boot-autoconfigure:2.6.2'
     implementation 'org.springframework.data:spring-data-elasticsearch:4.3.0'
     implementation 'org.springframework:spring-web:5.3.13'
