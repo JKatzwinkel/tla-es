@@ -21,6 +21,7 @@ until wget -q --spider "${ES_URL}" 2>/dev/null; do
     echo "waiting for connection to ES instance at ${ES_URL}..."
     sleep 4
 done
+wget -q --spider "${ES_URL}" 1>/dev/null && echo "...connected."
 
 if [ "${CMD}" = "populate" ]; then
     echo "populate database..."
