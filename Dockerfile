@@ -1,4 +1,4 @@
-FROM gradle:7.3.3-jdk17 AS build
+FROM gradle:7.4-jdk17 AS build
 
 COPY --chown=gradle:gradle . /home/gradle/tla
 WORKDIR /home/gradle/tla
