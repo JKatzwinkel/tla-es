@@ -19,6 +19,7 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import tla.backend.es.model.meta.Indexable;
 import tla.backend.es.model.meta.LinkedEntity;
@@ -87,6 +88,11 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
                 }
             }
         }
+    }
+
+    @PostConstruct
+    void init() {
+        createIndex();
     }
 
     public ModelMapper getModelMapper() {

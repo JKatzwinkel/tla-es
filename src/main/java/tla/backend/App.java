@@ -46,11 +46,9 @@ public class App implements ApplicationRunner {
             )
         );
         if (args.containsOption("data-file")) {
-            repoPopulator.createIndices().init().ingestTarFile(
+            repoPopulator.init().ingestTarFile(
                 args.getOptionValues("data-file")
             );
-        } else {
-            repoPopulator.createIndices();
         }
         if (args.containsOption("shutdown")) {
             shutdown(0);

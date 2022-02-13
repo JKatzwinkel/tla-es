@@ -23,10 +23,11 @@ until wget -q --spider "${ES_URL}" 2>/dev/null; do
 done
 wget -q --spider "${ES_URL}" 1>/dev/null && echo "...connected."
 echo "wait for cluster health to reach at least yellow..."
-wget -q "${ES_URL}/_cluster/health?wait_for_status=yellow" -O /dev/null
+wget -q "${ES_URL}/_cluster/health?wait_for_status=yellow" -O /dev/stdout
+echo
 
 if [ "${CMD}" = "populate" ]; then
-    echo "populate database..."
+    echo "start TLA backend && populate database..."
     java -jar tla-backend.jar --data-file=sample.tar.gz --shutdown
 else
     echo "run backend server..."
