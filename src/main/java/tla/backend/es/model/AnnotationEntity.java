@@ -2,7 +2,6 @@ package tla.backend.es.model;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -86,9 +85,7 @@ public class AnnotationEntity extends BaseEntity {
                     Passport::getLeafNodeValue
                 ).map(
                     String::trim
-                ).collect(
-                    Collectors.toList()
-                );
+                ).toList();
             }
         }
         return Collections.emptyList();

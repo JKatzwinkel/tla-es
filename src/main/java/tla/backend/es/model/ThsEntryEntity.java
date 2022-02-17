@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -96,10 +95,8 @@ public class ThsEntryEntity extends UserFriendlyEntity implements Recursable {
             ).forEach(
                 n -> {
                     List<String> translations = n.extractProperty(SYNONYM_VALUE_PATH).stream().map(
-                        leafNode -> leafNode.getLeafNodeValue()
-                    ).collect(
-                        Collectors.toList()
-                    );
+                        Passport::getLeafNodeValue
+                    ).toList();
                     n.extractProperty(SYNONYM_LANG_PATH).forEach(
                         langValueNode -> {
                             String lang = langValueNode.getLeafNodeValue();

@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -312,7 +311,7 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
     public Collection<? extends AbstractDto> toDTO(Collection<T> entities) {
         return entities.stream().map(
             ModelConfig::toDTO
-        ).collect(Collectors.toList());
+        ).toList();
     }
 
     /**
@@ -324,7 +323,7 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
                 hit.getContent(),
                 dtoClass
             )
-        ).collect(Collectors.toList());
+        ).toList();
     }
 
     /**

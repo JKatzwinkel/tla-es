@@ -57,9 +57,7 @@ public class AttestationTreeBuilder {
             ).contains(
                 this.children.stream().map(
                     Node::toNestedAttestation
-                ).collect(
-                    Collectors.toList()
-                )
+                ).toList()
             ).build();
         }
     }
@@ -148,9 +146,7 @@ public class AttestationTreeBuilder {
     public List<AttestedTimespan> build() {
         var roots = this.getRoots().map(
             Node::toNestedAttestation
-        ).collect(
-            Collectors.toList()
-        );
+        ).toList();
         return List.of(
             AttestedTimespan.builder().contains(
                 roots

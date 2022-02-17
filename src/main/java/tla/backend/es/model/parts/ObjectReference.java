@@ -2,7 +2,6 @@ package tla.backend.es.model.parts;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -67,7 +66,7 @@ public class ObjectReference implements Resolvable, Comparable<Resolvable> {
      */
     public void setRanges(List<Resolvable.Range> ranges) {
         if (ranges != null) {
-            this.ranges = ranges.stream().distinct().collect(Collectors.toList());
+            this.ranges = ranges.stream().distinct().toList();
         } else {
             this.ranges = null;
         }

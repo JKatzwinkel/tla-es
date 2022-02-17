@@ -122,6 +122,7 @@ public class ObjectReferenceTest {
         ref2.setRanges(
             List.of(
                 Resolvable.Range.of("Token12", "Token99"),
+                Resolvable.Range.of("Token12", "Token99"),
                 Resolvable.Range.of("Token00", "Token06")
             )
         );
@@ -129,7 +130,6 @@ public class ObjectReferenceTest {
             () -> assertEquals(ref1, ref2, "instance"),
             () -> assertEquals(ref1.hashCode(), ref2.hashCode(), "hashcode")
         );
-        ref2.getRanges().add(Resolvable.Range.of("Token12", "Token99"));
         assertAll("duplicate range should not affect objectref equality",
             () -> assertEquals(ref1, ref2, "instance"),
             () -> assertEquals(ref1.hashCode(), ref2.hashCode(), "hashcode")

@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -71,7 +70,7 @@ public class ModelTest {
                     "number of model class configurations registered should be the same as model classes known to ModelConfig (%s)",
                     String.join(
                         ", ",
-                        modelClasses.stream().map(Class::getName).collect(Collectors.toList())
+                        modelClasses.stream().map(Class::getName).toList()
                     )
                 )
             )
