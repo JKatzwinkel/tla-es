@@ -4,9 +4,9 @@ plugins {
     id 'jacoco'
     id 'application'
     id 'maven-publish'
-    id 'co.uzzu.dotenv.gradle' version '1.2.0'
-    id 'de.undercouch.download' version '5.0.1'
-    id 'org.springframework.boot' version '2.6.3'
+    id 'co.uzzu.dotenv.gradle' version '2.0.0'
+    id 'de.undercouch.download' version '5.0.2'
+    id 'org.springframework.boot' version '2.6.4'
     id 'com.github.ben-manes.versions' version '0.42.0'
     id 'com.github.dawnwords.jacoco.badge' version '0.2.4'
 }
@@ -53,7 +53,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
     implementation 'com.github.jkatzwinkel:tla-common:main-SNAPSHOT'
-    implementation 'org.modelmapper:modelmapper:3.0.0'
+    implementation 'org.modelmapper:modelmapper:3.1.0'
     implementation 'org.apache.commons:commons-compress:1.21'
     implementation 'org.yaml:snakeyaml:1.30'
 
@@ -61,9 +61,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jetty:3.0.0-M1'
     implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.0-M1'
     implementation 'org.springframework.data:spring-data-elasticsearch:5.0.0-M1'
-    implementation 'org.springframework:spring-webmvc:6.0.0-M2'
-    implementation 'org.apache.logging.log4j:log4j-core:2.17.1'
-    implementation 'org.slf4j:slf4j-simple:2.0.0-alpha6'
+    implementation 'org.springframework:spring-webmvc:6.0.0-M3'
+    implementation 'org.apache.logging.log4j:log4j-core:2.17.2'
+    implementation 'org.slf4j:slf4j-simple:2.0.0-alpha7'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.0-M1'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
