@@ -21,6 +21,7 @@ import tla.backend.es.model.SentenceEntity;
 import tla.backend.es.model.ThsEntryEntity;
 import tla.backend.es.model.meta.Recursable;
 import tla.backend.es.query.ESQueryBuilder;
+import tla.backend.es.query.ESQueryResult;
 import tla.backend.es.query.LemmaSearchQueryBuilder;
 import tla.backend.es.query.OccurrenceSearchQueryBuilder;
 import tla.backend.es.query.TextSearchQueryBuilder;
@@ -36,6 +37,7 @@ import tla.domain.dto.meta.AbstractDto;
 import tla.domain.model.Language;
 import tla.domain.model.ObjectReference;
 import tla.domain.model.extern.AttestedTimespan;
+import tla.domain.model.extern.AttestedTimespan.AttestationStats;
 
 @Service
 @ModelClass(value = LemmaEntity.class, path = "lemma")
@@ -82,9 +84,16 @@ public class LemmaService extends EntityService<LemmaEntity, ElasticsearchReposi
      * total occurrences for each one.
      */
     public List<AttestedTimespan> computeAttestedTimespans(String lemmaId) {
-        Map<String, Long> dateCounts = searchService.register(
+        ESQueryResult<?> result = searchService.register(
             new OccurrenceSearchQueryBuilder(lemmaId)
-        ).run(SearchService.UNPAGED).getAggregation(
+        ).run(SearchService.UNPAGED);
+        Map<String, Long> textCounts = result.getAggregation(
+            OccurrenceSearchQueryBuilder.AGG_ID_TEXT_IDS
+        );
+        var sentenceCount = textCounts.values().stream().collect(
+            Collectors.summingInt(Long::intValue)
+        );
+        Map<String, Long> dateCounts = result.getAggregation(
             TextSearchQueryBuilder.AGG_ID_DATE
         );
         var terms = EntityRetrieval.BulkEntityResolver.of(
@@ -92,9 +101,15 @@ public class LemmaService extends EntityService<LemmaEntity, ElasticsearchReposi
                 id -> ObjectReference.builder().id(id).eclass(THS_ENTITY_ECLASS).build()
             )
         ).stream();
-        return AttestationTreeBuilder.of(
+        var attestations = AttestationTreeBuilder.of(
             terms.map(entity -> (Recursable) entity)
         ).counts(dateCounts).resolve();
+        if (!attestations.isEmpty()) {
+            attestations.get(0).setAttestations(
+                AttestationStats.builder().sentences(sentenceCount).build()
+            );
+        }
+        return attestations;
     }
 
     public Map<String, Long> getMostFrequent(int limit) {

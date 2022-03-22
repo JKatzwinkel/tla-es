@@ -18,7 +18,7 @@ import tla.domain.model.SentenceToken.Lemmatization;
 @ModelClass(TextEntity.class)
 public class OccurrenceSearchQueryBuilder extends TextSearchQueryBuilder {
 
-    final static String AGG_ID_TEXT_IDS = "text_ids";
+    public final static String AGG_ID_TEXT_IDS = "text_ids";
 
     /**
      * instantiates a query builder for searching lemma attestations, which is
