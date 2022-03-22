@@ -108,8 +108,7 @@ public class LemmaControllerTest extends AbstractMockMvcTest {
                 )
             );
         mockMvc.perform(
-            get("/lemma/get/whatever")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+            get("/lemma/get/whatever").contentType(MediaType.APPLICATION_JSON_VALUE)
         )
             .andExpect(
                 status().isOk()

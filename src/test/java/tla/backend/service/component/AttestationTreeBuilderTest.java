@@ -60,4 +60,20 @@ public class AttestationTreeBuilderTest {
         );
     }
 
+    @Test
+    @DisplayName("attestation timespan tree should only ever have 1 element on root level")
+    void testAttestationTreeAlwaysOnly1Root() throws Exception {
+        Stream<Recursable> thsEntries = Stream.of(
+            Util.loadSampleFile(ThsEntryEntity.class, "E7YEQAEKZVEJ5PX7WKOXY2QEEM"),
+            Util.loadSampleFile(ThsEntryEntity.class, "4SJRB25AURBUZMSZBBXRRHDO3A")
+        );
+        Map<String, Long> counts = Map.of(
+            "E7YEQAEKZVEJ5PX7WKOXY2QEEM", 5L,
+            "4SJRB25AURBUZMSZBBXRRHDO3A", 11L
+        );
+        AttestationTreeBuilder treeBuilder = AttestationTreeBuilder.of(thsEntries);
+        List<AttestedTimespan> attestations = treeBuilder.counts(counts).resolve();
+        assertEquals(1, attestations.size(), "only 1 attestatioin object on root level");
+    }
+
 }

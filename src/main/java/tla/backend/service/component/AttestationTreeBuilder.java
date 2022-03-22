@@ -122,10 +122,18 @@ public class AttestationTreeBuilder {
     }
 
     public List<AttestedTimespan> resolve() {
-        return this.getRoots().map(
+        var roots = this.getRoots().map(
             Node::toNestedAttestation
         ).collect(
             Collectors.toList()
+        );
+        if (roots.size() < 2) {
+            return roots;
+        }
+        return List.of(
+            AttestedTimespan.builder().contains(
+                roots
+            ).build()
         );
     }
 
