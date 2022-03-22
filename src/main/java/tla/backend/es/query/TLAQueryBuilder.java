@@ -139,7 +139,7 @@ public interface TLAQueryBuilder {
      * returns ES search hits and page information wrapped together into one object.
      */
     public ESQueryResult<?> getResult();
-    public void setResult(ESQueryResult<?> result);
+    public ESQueryResult<?> setResult(ESQueryResult<?> result);
 
     /**
      * Add criterion to root query's <code>must</code> clause list.

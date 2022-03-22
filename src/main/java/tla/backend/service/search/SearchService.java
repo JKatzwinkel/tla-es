@@ -13,7 +13,6 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.Aggregations;
-import org.elasticsearch.search.aggregations.bucket.filter.Filter;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,10 +66,12 @@ public class SearchService {
                         ),
                         dependency.getQuery().getModelClass()
                     )
+                ).addAggregationResults(
+                    extractESAggregations(dependency.getQuery().getResult().getHits())
                 );
                 dependency.resolve();
                 this.aggregations.putAll(
-                    extractAggregations(dependency.getQuery().getResult().getHits())
+                    dependency.getQuery().getResult().getAggregations()
                 );
             }
             log.info("run head query");
@@ -78,7 +79,7 @@ public class SearchService {
                 this.query.buildNativeSearchQuery(page),
                 this.query.getModelClass()
             );
-            result.addAggregations(this.aggregations);
+            result.addAggregationResults(this.aggregations);
             return result;
         }
 
@@ -176,7 +177,7 @@ public class SearchService {
      * Converts terms aggregations in an Elasticsearch search response to a map of field
      * value counts.
      */
-    public static Map<String, Map<String, Long>> extractAggregations(SearchHits<?> hits) {
+    public static Map<String, Map<String, Long>> extractESAggregations(SearchHits<?> hits) {
         if (!hits.hasAggregations()) {
             return Map.of();
         }
@@ -186,15 +187,6 @@ public class SearchService {
                 result.put(
                     agg.getName(),
                     getFacetsFromBuckets((Terms) agg)
-                );
-            } else if (agg instanceof Filter) {
-                ((Filter) agg).getAggregations().asList().stream().filter(
-                    sub -> sub instanceof Terms
-                ).forEach(
-                    sub -> result.put(
-                        agg.getName(),
-                        getFacetsFromBuckets((Terms) sub)
-                    )
                 );
             }
         }

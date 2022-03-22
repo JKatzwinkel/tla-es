@@ -66,8 +66,9 @@ public abstract class ESQueryBuilder implements TLAQueryBuilder {
         return qb.build();
     }
 
-    public void setResult(ESQueryResult<?> result) {
+    public ESQueryResult<?> setResult(ESQueryResult<?> result) {
         this.result = result;
+        return result;
     }
 
     public void setDTOClass(Class<? extends AbstractBTSBaseClass> dtoClass) {

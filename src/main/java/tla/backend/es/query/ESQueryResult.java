@@ -63,6 +63,10 @@ public class ESQueryResult<T extends Indexable> {
      * aggregation doesn't exist
      */
     public Map<String, Long> getAggregation(String agg) {
+        return this.aggregations.getOrDefault(agg, this.getAggregationFromESHits(agg));
+    }
+
+    private Map<String, Long> getAggregationFromESHits(String agg) {
         Aggregations aggregations = (Aggregations) this.hits.getAggregations().aggregations();
         if (aggregations == null || aggregations.get(agg) == null) {
             return Collections.emptyMap();
@@ -79,7 +83,7 @@ public class ESQueryResult<T extends Indexable> {
     /**
      * save terms aggregation results.
      */
-    public void addAggregations(Map<String, Map<String, Long>> aggs) {
+    public void addAggregationResults(Map<String, Map<String, Long>> aggs) {
         this.aggregations.putAll(aggs);
     }
 
