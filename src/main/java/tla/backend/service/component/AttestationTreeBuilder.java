@@ -16,6 +16,11 @@ import tla.backend.es.model.parts.ObjectPath;
 import tla.domain.model.extern.AttestedTimespan;
 import tla.domain.model.meta.Resolvable;
 
+/**
+ * Builds a tree of {@link AttestedTimespan} DTO objects out of a list of thesaurus entries
+ * and a map of thesaurus entry IDs and their respective attestation counts. The resulting tree
+ * represents the implicit logical structure of the thesaurus entries passed as input.
+ */
 public class AttestationTreeBuilder {
 
     protected class Node {
@@ -44,8 +49,7 @@ public class AttestationTreeBuilder {
 
         public AttestedTimespan toNestedAttestation() {
             return AttestedTimespan.builder().attestations(
-                AttestedTimespan.AttestationStats.builder()
-                .count(
+                AttestedTimespan.AttestationStats.builder().count(
                     counts.getOrDefault(((BaseEntity) this.entity).getId(), 0L)
                 ).build()
             ).period(
@@ -58,14 +62,13 @@ public class AttestationTreeBuilder {
                 )
             ).build();
         }
-
     }
 
     private Map<String, Node> nodes;
     protected Map<String, Long> counts;
 
-    public AttestationTreeBuilder(Stream<Recursable> stream) {
-        this.nodes = stream.collect(
+    public AttestationTreeBuilder(Stream<Recursable> entities) {
+        this.nodes = entities.collect(
             Collectors.toMap(
                 entity -> ((BaseEntity) entity).getId(),
                 entity -> new Node(entity)
@@ -84,11 +87,17 @@ public class AttestationTreeBuilder {
         return this.nodes.getOrDefault(id, null);
     }
 
+    /**
+     * adds <code>node</code> to <code>parent</code>'s children.
+     */
     private void attach(Node node, Node parent) {
         parent.addChild(node);
         node.addParent(parent);
     }
 
+    /**
+     * find the first known node referenced within the {@link ObjectPath} passed, beginning at its end.
+     */
     private Node findClosestAncestor(ObjectPath path) {
         for (Resolvable segment : Util.reverse(path)) {
             var node = getNode(segment.getId());
@@ -99,6 +108,9 @@ public class AttestationTreeBuilder {
         return null;
     }
 
+    /**
+     * places a node at its appropriate position within the tree that's currently been built.
+     */
     private void register(Node node) {
         if (node.getEntity().getPaths() != null) {
             for (ObjectPath path : node.getEntity().getPaths()) {
@@ -110,12 +122,18 @@ public class AttestationTreeBuilder {
         }
     }
 
+    /**
+     * return stream consisting of all nodes that don't have a parent.
+     */
     public Stream<Node> getRoots() {
         return this.nodes.values().stream().filter(
             Node::isRoot
         );
     }
 
+    /**
+     * sets input ID/count table.
+     */
     public AttestationTreeBuilder counts(Map<String, Long> counts) {
         this.counts = counts;
         return this;

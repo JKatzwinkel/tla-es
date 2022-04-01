@@ -125,7 +125,8 @@ public class ThsEntryEntity extends UserFriendlyEntity implements Recursable {
     }
 
     /**
-     * Returns the timespan represented by a thesaurus entry.
+     * Returns the timespan represented by a thesaurus entry in the form of a list
+     * of size 2 containing first and last year.
      */
     public List<Integer> extractTimespan() {
         List<Integer> years = new ArrayList<>();

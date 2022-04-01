@@ -93,17 +93,17 @@ public class LemmaService extends EntityService<LemmaEntity, ElasticsearchReposi
         var sentenceCount = textCounts.values().stream().collect(
             Collectors.summingInt(Long::intValue)
         );
-        Map<String, Long> dateCounts = result.getAggregation(
+        Map<String, Long> textCountPerDate = result.getAggregation(
             TextSearchQueryBuilder.AGG_ID_DATE
         );
-        var terms = EntityRetrieval.BulkEntityResolver.of(
-            dateCounts.keySet().stream().map(
+        var dates = EntityRetrieval.BulkEntityResolver.of(
+            textCountPerDate.keySet().stream().map(
                 id -> ObjectReference.builder().id(id).eclass(THS_ENTITY_ECLASS).build()
             )
         ).stream();
         var attestations = AttestationTreeBuilder.of(
-            terms.map(entity -> (Recursable) entity)
-        ).counts(dateCounts).build();
+            dates.map(entity -> (Recursable) entity)
+        ).counts(textCountPerDate).build();
         if (!attestations.isEmpty()) {
             attestations.get(0).setAttestations(
                 AttestationStats.builder().sentences(sentenceCount).build()
