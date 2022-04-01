@@ -121,15 +121,18 @@ public class AttestationTreeBuilder {
         return this;
     }
 
-    public List<AttestedTimespan> resolve() {
+    /**
+     * recursively map entities and entity ID count inputs to attested timespans and return
+     * a list containing the root node of the resulting tree. The root node ifself will be an artificial
+     * container with no real date thesaurus representation, but this way it is guaranteed that there is
+     * always only 1 root.
+     */
+    public List<AttestedTimespan> build() {
         var roots = this.getRoots().map(
             Node::toNestedAttestation
         ).collect(
             Collectors.toList()
         );
-        if (roots.size() < 2) {
-            return roots;
-        }
         return List.of(
             AttestedTimespan.builder().contains(
                 roots

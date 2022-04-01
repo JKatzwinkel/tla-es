@@ -103,10 +103,13 @@ public class LemmaService extends EntityService<LemmaEntity, ElasticsearchReposi
         ).stream();
         var attestations = AttestationTreeBuilder.of(
             terms.map(entity -> (Recursable) entity)
-        ).counts(dateCounts).resolve();
+        ).counts(dateCounts).build();
         if (!attestations.isEmpty()) {
             attestations.get(0).setAttestations(
                 AttestationStats.builder().sentences(sentenceCount).build()
+            );
+            attestations.get(0).setPeriod(
+                AttestedTimespan.Period.builder().begin(0).end(0).build()
             );
         }
         return attestations;

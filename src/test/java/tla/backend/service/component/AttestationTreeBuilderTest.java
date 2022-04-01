@@ -41,39 +41,33 @@ public class AttestationTreeBuilderTest {
     @Test
     @DisplayName("reconstructed hierarchic entity tree should translate to nested attestation objects")
     void testAttestationTree() throws Exception {
-        Stream<Recursable> thsEntries = Stream.of(
-            Util.loadSampleFile(ThsEntryEntity.class, "E7YEQAEKZVEJ5PX7WKOXY2QEEM"),
-            Util.loadSampleFile(ThsEntryEntity.class, "N673TBXEGJDDBO6B6DZXKT64YQ"),
-            Util.loadSampleFile(ThsEntryEntity.class, "4SJRB25AURBUZMSZBBXRRHDO3A")
-        );
+        var dynasty21 = Util.loadSampleFile(ThsEntryEntity.class, "E7YEQAEKZVEJ5PX7WKOXY2QEEM");
+        var djedefre = Util.loadSampleFile(ThsEntryEntity.class, "4SJRB25AURBUZMSZBBXRRHDO3A");
+        var pharaonic = Util.loadSampleFile(ThsEntryEntity.class, "N673TBXEGJDDBO6B6DZXKT64YQ"); // common ancestor of the 2 above
         Map<String, Long> counts = Map.of(
-            "E7YEQAEKZVEJ5PX7WKOXY2QEEM", 5L,
-            "N673TBXEGJDDBO6B6DZXKT64YQ", 7L,
-            "4SJRB25AURBUZMSZBBXRRHDO3A", 11L
+            dynasty21.getId(), 5L,
+            pharaonic.getId(), 7L,
+            djedefre.getId(), 11L
         );
-        AttestationTreeBuilder treeBuilder = AttestationTreeBuilder.of(thsEntries);
-        List<AttestedTimespan> attestations = treeBuilder.counts(counts).resolve();
-        assertAll("nested attestations should resemble entity tree reconstruction",
-            () -> assertEquals(1, attestations.size(), "only 1 attestation object on root level"),
-            () -> assertEquals(2, attestations.get(0).getContains().size(), "root attestation should have 2 children"),
-            () -> assertEquals(7L, attestations.get(0).getAttestations().getCount(), "attestation count should have been set according to map passed")
+        AttestationTreeBuilder treeBuilder = AttestationTreeBuilder.of(
+            Stream.of(dynasty21, pharaonic, djedefre)
+        ).counts(counts);
+        List<AttestedTimespan> attestations = treeBuilder.build();
+        assertAll("nested attestations should be structurally equal to reconstructed entity tree",
+            () -> assertEquals(1, attestations.size(), "root level list contains only the artificial root node"),
+            () -> assertEquals(
+                pharaonic.toAttestedPeriod(), attestations.get(0).getContains().get(0).getPeriod(),
+                "actual root is at level 1"
+            ),
+            () -> assertEquals(
+                2, attestations.get(0).getContains().get(0).getContains().size(),
+                "common ancestor attestation should have 2 children"
+            ),
+            () -> assertEquals(
+                7L, attestations.get(0).getContains().get(0).getAttestations().getCount(),
+                "attestation count should have been set according to map passed"
+            )
         );
-    }
-
-    @Test
-    @DisplayName("attestation timespan tree should only ever have 1 element on root level")
-    void testAttestationTreeAlwaysOnly1Root() throws Exception {
-        Stream<Recursable> thsEntries = Stream.of(
-            Util.loadSampleFile(ThsEntryEntity.class, "E7YEQAEKZVEJ5PX7WKOXY2QEEM"),
-            Util.loadSampleFile(ThsEntryEntity.class, "4SJRB25AURBUZMSZBBXRRHDO3A")
-        );
-        Map<String, Long> counts = Map.of(
-            "E7YEQAEKZVEJ5PX7WKOXY2QEEM", 5L,
-            "4SJRB25AURBUZMSZBBXRRHDO3A", 11L
-        );
-        AttestationTreeBuilder treeBuilder = AttestationTreeBuilder.of(thsEntries);
-        List<AttestedTimespan> attestations = treeBuilder.counts(counts).resolve();
-        assertEquals(1, attestations.size(), "only 1 attestatioin object on root level");
     }
 
 }
