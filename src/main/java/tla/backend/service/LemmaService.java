@@ -23,7 +23,8 @@ import tla.backend.es.model.meta.Recursable;
 import tla.backend.es.query.ESQueryBuilder;
 import tla.backend.es.query.ESQueryResult;
 import tla.backend.es.query.LemmaSearchQueryBuilder;
-import tla.backend.es.query.OccurrenceSearchQueryBuilder;
+import tla.backend.es.query.SentenceSearchQueryBuilder;
+import tla.backend.es.query.TextsContainingLemmaOccurrenceQueryBuilder;
 import tla.backend.es.query.TextSearchQueryBuilder;
 import tla.backend.es.repo.LemmaRepo;
 import tla.backend.service.component.AttestationTreeBuilder;
@@ -84,16 +85,16 @@ public class LemmaService extends EntityService<LemmaEntity, ElasticsearchReposi
      * total occurrences for each one.
      */
     public List<AttestedTimespan> computeAttestedTimespans(String lemmaId) {
-        ESQueryResult<?> result = searchService.register(
-            new OccurrenceSearchQueryBuilder(lemmaId)
+        ESQueryResult<?> textSearchResult = searchService.register(
+            new TextsContainingLemmaOccurrenceQueryBuilder(lemmaId)
         ).run(SearchService.UNPAGED);
-        Map<String, Long> textCounts = result.getAggregation(
-            OccurrenceSearchQueryBuilder.AGG_ID_TEXT_IDS
+        Map<String, Long> textCounts = textSearchResult.getAggregation(
+            SentenceSearchQueryBuilder.AGG_ID_TEXT_IDS
         );
         var sentenceCount = textCounts.values().stream().collect(
             Collectors.summingInt(Long::intValue)
         );
-        Map<String, Long> textCountPerDate = result.getAggregation(
+        Map<String, Long> textCountPerDate = textSearchResult.getAggregation(
             TextSearchQueryBuilder.AGG_ID_DATE
         );
         var dates = EntityRetrieval.BulkEntityResolver.of(

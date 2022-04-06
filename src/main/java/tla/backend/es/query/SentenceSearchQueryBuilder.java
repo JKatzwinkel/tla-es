@@ -19,6 +19,8 @@ import tla.domain.command.PassportSpec;
 @ModelClass(SentenceEntity.class)
 public class SentenceSearchQueryBuilder extends ESQueryBuilder implements MultiLingQueryBuilder {
 
+    public final static String AGG_ID_TEXT_IDS = "text_ids";
+
     public void setTokens(Collection<TokenSearchQueryBuilder> tokenQueries) {
         BoolQueryBuilder tokenQuery = boolQuery();
         if (tokenQueries != null) {
