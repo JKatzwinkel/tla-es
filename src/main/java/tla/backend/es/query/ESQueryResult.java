@@ -88,6 +88,13 @@ public class ESQueryResult<T extends Indexable> {
     }
 
     /**
+     * return total number of results.
+     */
+    public long getHitCount() {
+        return this.hits.getTotalHits();
+    }
+
+    /**
      * Create a serializable transfer object containing page information
      * about an ES search result.
      */

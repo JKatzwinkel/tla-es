@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +45,17 @@ public class QueryResultTest {
         assertEquals(
             pages + 1, ESQueryResult.pageInfo(searchHits, page).getTotalPages(), "n times page size plus 1 results fit in n + 1 pages"
         );
+    }
+
+    @Test
+    @DisplayName("query result should return correct hit count")
+    void queryResultHitCount() {
+        SearchHits<LemmaEntity> searchHits = new SearchHitsImpl<>(
+            ESQueryResult.SEARCH_RESULT_PAGE_SIZE,
+            TotalHitsRelation.EQUAL_TO, 10f, null, HITS_MOCK, null, null
+        );
+        ESQueryResult<?> result = new ESQueryResult<LemmaEntity>(searchHits, Pageable.unpaged());
+        assertEquals(ESQueryResult.SEARCH_RESULT_PAGE_SIZE, result.getHitCount());
     }
 
 }
