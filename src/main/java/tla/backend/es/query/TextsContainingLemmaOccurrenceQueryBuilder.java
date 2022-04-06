@@ -1,6 +1,7 @@
 package tla.backend.es.query;
 
 import tla.backend.es.model.TextEntity;
+import tla.backend.es.query.dependencies.TextIdsOfSentencesContainingLemmaDependency;
 import tla.backend.service.ModelClass;
 
 /**
@@ -21,15 +22,7 @@ public class TextsContainingLemmaOccurrenceQueryBuilder extends TextSearchQueryB
      */
     public TextsContainingLemmaOccurrenceQueryBuilder(String lemmaId) {
         super();
-        SentenceSearchQueryBuilder sentenceQuery = new SentencesContainingLemmaOccurrenceQueryBuilder(lemmaId);
-        QueryDependency<String []> textIdsFromSentencesContainingLemma = new QueryDependency<>(
-            sentenceQuery,
-            this::setId,
-            sentenceDependency -> sentenceDependency.getResult().getAggregation(
-                SentencesContainingLemmaOccurrenceQueryBuilder.AGG_ID_TEXT_IDS
-            ).keySet().toArray(new String[]{})
-        );
-        this.dependsOn(textIdsFromSentencesContainingLemma);
+        this.dependsOn(new TextIdsOfSentencesContainingLemmaDependency(this, lemmaId));
     }
 
 }

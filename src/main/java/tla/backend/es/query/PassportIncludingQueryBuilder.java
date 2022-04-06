@@ -4,6 +4,8 @@ import org.elasticsearch.index.query.QueryBuilders;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+
+import tla.backend.es.query.dependencies.ThsRefExpansionDependency;
 import tla.domain.command.PassportSpec;
 import tla.domain.command.PassportSpec.PassportSpecValue;
 

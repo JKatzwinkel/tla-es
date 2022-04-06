@@ -1,10 +1,14 @@
-package tla.backend.es.query;
+package tla.backend.es.query.dependencies;
 
 import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import lombok.extern.slf4j.Slf4j;
+
+import tla.backend.es.query.PassportIncludingQueryBuilder;
+import tla.backend.es.query.TLAQueryBuilder;
+import tla.backend.es.query.ThsSearchQueryBuilder;
 import tla.domain.command.PassportSpec;
 
 @Slf4j
