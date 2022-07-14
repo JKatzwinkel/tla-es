@@ -53,7 +53,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
     implementation 'com.github.jkatzwinkel:tla-common:main-SNAPSHOT'
-    implementation 'org.modelmapper:modelmapper:3.0.0'
+    implementation 'org.modelmapper:modelmapper:3.1.0'
     implementation 'org.apache.commons:commons-compress:1.21'
     implementation 'org.yaml:snakeyaml:1.30'
 
