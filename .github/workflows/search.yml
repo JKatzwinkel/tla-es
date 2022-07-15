@@ -33,7 +33,7 @@ jobs:
         timeout: 30000
 
     - name: Cache sample corpus data
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       env:
         cache-name: cache-corpus-data
       with:
