@@ -31,6 +31,7 @@ import tla.backend.es.query.TLAQueryBuilder.QueryDependency;
 
 @Slf4j
 @Service
+@SuppressWarnings("deprecation") // TODO
 public class SearchService {
 
     public final static Pageable UNPAGED = Pageable.unpaged();

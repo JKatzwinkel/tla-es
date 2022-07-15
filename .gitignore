@@ -1,5 +1,4 @@
 .env
-.gitattributes
 .gradle
 .gradletasknamecache
 .project

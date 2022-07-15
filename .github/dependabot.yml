@@ -8,10 +8,14 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    reviewers:
+      - "jkatzwinkel"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
+    reviewers:
+      - "jkatzwinkel"
 
 ...
