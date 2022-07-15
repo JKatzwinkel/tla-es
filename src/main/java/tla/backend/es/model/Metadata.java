@@ -22,8 +22,8 @@ import tla.domain.model.meta.BTSeClass;
 @Setter
 @NoArgsConstructor
 @BTSeClass("TLAMetadata")
-@Document(indexName = "meta")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Document(indexName = "meta", createIndex = false)
 public class Metadata extends AbstractBTSBaseClass implements Indexable {
 
     public static final String NULL = "n/a";

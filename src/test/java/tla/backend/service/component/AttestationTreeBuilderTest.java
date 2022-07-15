@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +26,7 @@ public class AttestationTreeBuilderTest {
             Util.loadSampleFile(ThsEntryEntity.class, "4SJRB25AURBUZMSZBBXRRHDO3A")
         );
         AttestationTreeBuilder treeBuilder = AttestationTreeBuilder.of(thsEntries);
-        var roots = treeBuilder.getRoots().collect(Collectors.toList());
+        var roots = treeBuilder.getRoots().toList();
         assertAll("entities should be organized according to hierarchic relations",
             () -> assertEquals(1, roots.size(), "only 1 root"),
             () -> assertEquals(

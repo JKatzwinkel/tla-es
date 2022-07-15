@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -94,7 +93,7 @@ public class RepoPopulatorTest {
     void testDomainModelRegistry() {
         List<String> classes = EntityService.getRegisteredModelClasses().stream().map(
             modelClass -> modelClass.getSimpleName()
-        ).collect(Collectors.toList());
+        ).toList();
         assertTrue(classes.contains("TestEntity"));
     }
 

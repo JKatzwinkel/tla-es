@@ -7,16 +7,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.RestStatusException;
+import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import tla.backend.es.model.meta.Indexable;
 import tla.backend.es.model.meta.LinkedEntity;
@@ -58,6 +60,7 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
     private Class<T> modelClass = null;
     private Class<D> dtoClass = null;
     protected static Map<Class<? extends Indexable>, EntityService<? extends Indexable, ? extends ElasticsearchRepository<?,?>, ? extends AbstractDto>> modelClassServices = new HashMap<>();
+    // TODO: either remove or actually utilize:
     protected static Map<Class<? extends Indexable>, AbstractDto> modelClassDtos = new HashMap<>();
 
     /**
@@ -87,6 +90,11 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
         }
     }
 
+    @PostConstruct
+    void init() {
+        createIndex();
+    }
+
     public ModelMapper getModelMapper() {
         return this.modelMapper;
     }
@@ -100,20 +108,42 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
     }
 
     /**
-     * Returns the entity service registered for a given model class, or null if no such model class have been
-     * registered.
+     * Create the Elasticsearch index specified in the {@code @Document} annotation
+     * of this service's model class, and configure its settings and mappings according
+     * to {@code @Setting} and {@code @Mapping} annotations of the model class, and
+     * spring data elasticsearch object mapping annotations of the model class's attributes.
+     */
+    public boolean createIndex() {
+        IndexOperations index = searchService.getOperations().indexOps(modelClass);
+        var name = index.getIndexCoordinates().getIndexName();
+        if (index.exists()) {
+            log.info("index {} already exists.", name);
+            return false;
+        }
+        try {
+            index.create(
+                index.createSettings(modelClass),
+                index.createMapping(modelClass)
+            );
+            log.info("created index {} for model class {}.", name, modelClass.getSimpleName());
+            return true;
+        } catch (RestStatusException e) {
+            log.warn("index {} already exists!", name);
+        }
+        return false;
+    }
+
+
+    /**
+     * Returns the entity service registered for a given model class.
+     *
      * Registration takes place at construction time of any service with a {@link ModelClass} annotation.
      * This is required for the entity retrieval service to work.
      */
     public static EntityService<? extends Indexable, ? extends ElasticsearchRepository<?, ?>, ? extends AbstractDto> getService(
         Class<? extends AbstractBTSBaseClass> modelClass
     ) {
-        if (modelClassServices.containsKey(modelClass)) {
-            return modelClassServices.get(modelClass);
-        } else {
-            log.error("No service registered for eclass '{}'!'", modelClass);
-            return null;
-        }
+        return modelClassServices.get(modelClass);
     }
 
     /**
@@ -190,30 +220,29 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
     public SingleDocumentWrapper<? extends AbstractDto> getDetails(String id) {
         T document = this.retrieve(id);
         final SingleDocumentWrapper<?> container;
-        if (document != null) {
-            container = new SingleDocumentWrapper<>(
-                ModelConfig.toDTO(document)
+        if (document == null) {
+            return null;
+        }
+        container = new SingleDocumentWrapper<>(
+            ModelConfig.toDTO(document)
+        );
+        var bulk = this.retrieveRelatedDocs(document);
+        if (document instanceof TLAEntity) {
+            bulk.addAll(
+                ((TLAEntity) document).getPassport() != null ?
+                ((TLAEntity) document).getPassport().extractObjectReferences() : null
             );
-            var bulk = this.retrieveRelatedDocs(document);
-            if (document instanceof TLAEntity) {
-                bulk.addAll(
-                    ((TLAEntity) document).getPassport() != null ?
-                    ((TLAEntity) document).getPassport().extractObjectReferences() : null
-                );
-            }
-            try {
-                bulk.resolve().forEach(
-                    relatedObject -> {
-                        container.addRelated(
-                            (DocumentDto) ModelConfig.toDTO(relatedObject)
-                        );
-                    }
-                );
-            } catch (Exception e) {
-                log.error("something went wrong during conversion of related objects to DTO");
-            }
-        } else {
-            container = null;
+        }
+        try {
+            bulk.resolve().forEach(
+                relatedObject -> {
+                    container.addRelated(
+                        (DocumentDto) ModelConfig.toDTO(relatedObject)
+                    );
+                }
+            );
+        } catch (Exception e) {
+            log.error("something went wrong during conversion of related objects to DTO");
         }
         return container;
     }
@@ -251,10 +280,6 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
     public Indexable retrieveSingleBTSDoc(String eclass, String id) {
         Class<? extends AbstractBTSBaseClass> modelClass = ModelConfig.getModelClass(eclass);
         EntityService<?, ?, ?> service = EntityService.getService(modelClass);
-        if (service == null) {
-            log.error("Could not find entity service for eclass {}!", eclass);
-            throw new ObjectNotFoundException(id, eclass);
-        }
         ElasticsearchRepository<? extends Indexable, String> repo = service.getRepo();
         Optional<? extends Indexable> result = repo.findById(id);
         return result.orElseThrow(
@@ -277,7 +302,7 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
     public Collection<? extends AbstractDto> toDTO(Collection<T> entities) {
         return entities.stream().map(
             ModelConfig::toDTO
-        ).collect(Collectors.toList());
+        ).toList();
     }
 
     /**
@@ -289,7 +314,7 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
                 hit.getContent(),
                 dtoClass
             )
-        ).collect(Collectors.toList());
+        ).toList();
     }
 
     /**

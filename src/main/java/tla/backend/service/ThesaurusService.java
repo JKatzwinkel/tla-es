@@ -1,7 +1,6 @@
 package tla.backend.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,14 +45,10 @@ public class ThesaurusService extends UserFriendlyEntityService<ThsEntryEntity, 
                 node -> node.get() instanceof Resolvable
             ).map(
                 node -> (Resolvable) node.get()
-            ).collect(
-                Collectors.toList()
-            )
+            ).toList()
         ).resolve().stream().map(
             term -> (ThsEntryEntity) term
-        ).collect(
-            Collectors.toList()
-        );
+        ).toList();
     }
 
     /**

@@ -1,8 +1,8 @@
 ![build](https://github.com/jkatzwinkel/tla-es/workflows/build/badge.svg)
 ![deploy](https://github.com/jkatzwinkel/tla-es/workflows/deploy/badge.svg)
 ![search](https://github.com/jkatzwinkel/tla-es/workflows/searchtest/badge.svg)
-![LINE](https://img.shields.io/badge/line--coverage-81.10%25-brightgreen.svg)
-![METHOD](https://img.shields.io/badge/method--coverage-80.61%25-brightgreen.svg)
+![LINE](https://img.shields.io/badge/line--coverage-81.65%25-brightgreen.svg)
+![METHOD](https://img.shields.io/badge/method--coverage-80.85%25-brightgreen.svg)
 
 # tla-es
 
@@ -35,11 +35,11 @@ Requirements:
 #### 1.1. Prerequesites
 
 1. Create an environment variable template file `.env` based on the template coming with this repo:
-   ```
+   ```bash
    cp .env.template .env
    ```
 2. Specify the location where a TLA corpus data archive can be downloaded using the `SAMPLE_URL` environment variable, e.g.:
-   ```
+   ```ini
    SAMPLE_URL=http://example.org/sample.tar.gz
    ```
 
@@ -47,7 +47,9 @@ Requirements:
 
 Start the docker container setup configured in `docker-compose.yml`:
 
-    docker-compose up -d
+```bash
+  docker-compose up -d
+```
 
 This will build and run three containers:
 
@@ -58,21 +60,23 @@ This will build and run three containers:
 The `tla-ingest` container will take its time downloading the TLA corpus data archive file and uploading it into Elasticsearch.
 You can check its progress by taking a look into its log output:
 
-    docker logs -f tla-ingest
+```bash
+  docker logs -f tla-ingest
+```
 
 
 ### 2. Using Gradle
 
 Requirements:
 
-- Java 11
-- Elasticsearch 7.15.2 *or* Docker Compose
+- Java 17
+- Elasticsearch 7.17.3 *or* Docker Compose
 
 #### 2.1. Prerequesites
 
 1. This method requires you to provide a running Elasticsearch instance. If you have Docker Compose, you can simply start one in a
    container by using the configuration coming with this repository:
-   ```
+   ```bash
    docker-compose up -d es
    ```
    Before continuing, make sure Elasticsearch is running by checking the output of `docker ps --all` or
@@ -85,26 +89,23 @@ Requirements:
 you must set the `SAMPLE_URL` environment variable to a URL pointing to a tar-compressed TLA corpus data
 file. One way to do this is to create a `.env` file in the directory containing this README, and setting
 the variable `SAMPLE_URL` in there:
-   ```
+   ```ini
    SAMPLE_URL=http://example.org/sample.tar.gz
    ```
 
 4. Finally, download and store TLA corpus data from the specified source by running the `populate` gradle task:
-   ```
+   ```bash
    ./gradlew populate
    ```
-> If you are on a Windows machine, you have to use the `gradlew.bat` wrapper instead.)
 
 #### 2.2. Run application
 
 Run the app using the `bootRun` task:
 
 ```bash
-    ./gradlew tasks # lists available gradle tasks
-    ./gradlew bootrun
+  ./gradlew tasks # lists available gradle tasks
+  ./gradlew bootrun
 ```
-
-> If you are on a Windows machine, you need to execute the `gradlew.bat` wrapper shipped with this repository.
 
 
 
@@ -147,19 +148,28 @@ it from the local `.env` file.
 When running the application using the  `bootRun` task, comma-separated arguments can be passed via
 `args` property in the following ways:
 
-    ./gradlew bootRun --Pargs=--data-file=sample.tar.gz,--foo=bar
-    ./gradlew bootRun --args="--data-file=sample.tar.gz --foo=bar"
+```bash
+  ./gradlew bootRun --Pargs=--data-file=sample.tar.gz,--foo=bar
+  ./gradlew bootRun --args="--data-file=sample.tar.gz --foo=bar"
+```
 
 Populate database with a corpus dump and shut down after:
 
-    ./gradlew bootRun --args="--data-file=sample.tar.gz --shutdown"
+```bash
+  ./gradlew bootRun --args="--data-file=sample.tar.gz --shutdown"
+```
 
 There is a gradle task for populating the backend app's elasticsearch indices with corpus data obtained
 from a URL specified via the `SAMPLE_URL` environment variable:
 
-    ./gradlew populate
+```bash
+  ./gradlew populate
+```
 
 You can check for the newest version of package dependencies by running:
 
-    ./gradlew dependencyUpdates
+```bash
+  ./gradlew dependencyUpdates
+```
 
+<!--- vim: set ts=2 sw=2 tw=0 noet ft=markdown : -->

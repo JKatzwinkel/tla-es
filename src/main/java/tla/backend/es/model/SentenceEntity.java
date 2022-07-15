@@ -38,9 +38,9 @@ import tla.domain.model.meta.TLADTO;
 @AllArgsConstructor
 @BTSeClass("BTSSentence")
 @TLADTO(SentenceDto.class)
-@Document(indexName = "sentence")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Document(indexName = "sentence", createIndex = false)
 @Setting(settingPath = "/elasticsearch/settings/indices/sentence.json")
 public class SentenceEntity extends LinkedEntity implements Indexable {
 

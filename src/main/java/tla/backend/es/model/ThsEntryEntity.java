@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,8 +36,8 @@ import tla.domain.model.meta.TLADTO;
 @NoArgsConstructor
 @BTSeClass("BTSThsEntry")
 @TLADTO(ThsEntryDto.class)
-@Document(indexName = "ths")
 @EqualsAndHashCode(callSuper = true)
+@Document(indexName = "ths", createIndex = false)
 @Setting(settingPath = "/elasticsearch/settings/indices/ths.json")
 public class ThsEntryEntity extends UserFriendlyEntity implements Recursable {
 
@@ -84,44 +84,42 @@ public class ThsEntryEntity extends UserFriendlyEntity implements Recursable {
      *
      * @return {@link Translations} instance or <code>null</code> if no synonyms are in passport
      */
-    private Translations extractTranslationsFromPassport() {
-        Translations res = null;
-        if (this.getPassport() != null) {
-            List<Passport> nodes = this.getPassport().extractProperty(
-                SYNONYMS_PASSPORT_PATH
-            );
-            Map<String, List<String>> synonyms = new HashMap<>();
-            nodes.stream().filter(
-                n -> n.containsKey(SYNONYM_LANG_PATH) && n.containsKey(SYNONYM_VALUE_PATH)
-            ).forEach(
-                n -> {
-                    List<String> translations = n.extractProperty(SYNONYM_VALUE_PATH).stream().map(
-                        leafNode -> leafNode.getLeafNodeValue()
-                    ).collect(
-                        Collectors.toList()
-                    );
-                    n.extractProperty(SYNONYM_LANG_PATH).forEach(
-                        langValueNode -> {
-                            String lang = langValueNode.getLeafNodeValue();
-                            if (synonyms.containsKey(lang)) {
-                                synonyms.get(lang).addAll(translations);
-                            } else {
-                                synonyms.put(lang, new ArrayList<String>(translations));
-                            }
-                        }
-                    );
-                }
-            );
-            try {
-                res = objectMapper.readValue(
-                    objectMapper.writeValueAsString(synonyms),
-                    Translations.class
-                );
-            } catch (Exception e) {
-                log.error("something went wrong during synonum extraction", e);
-            }
+    protected Translations extractTranslationsFromPassport() {
+        if (this.getPassport() == null) {
+            return null;
         }
-        return res;
+        List<Passport> nodes = this.getPassport().extractProperty(
+            SYNONYMS_PASSPORT_PATH
+        );
+        Map<String, List<String>> synonyms = new HashMap<>();
+        nodes.stream().filter(
+            n -> n.containsKey(SYNONYM_LANG_PATH) && n.containsKey(SYNONYM_VALUE_PATH)
+        ).forEach(
+            n -> {
+                List<String> translations = n.extractProperty(SYNONYM_VALUE_PATH).stream().map(
+                    Passport::getLeafNodeValue
+                ).toList();
+                n.extractProperty(SYNONYM_LANG_PATH).stream().map(
+                    Passport::getLeafNodeValue
+                ).forEach(
+                    lang -> synonyms.merge(
+                        lang, translations,
+                        (v, w) -> Stream.concat(v.stream(), w.stream()).toList()
+                    )
+                );
+            }
+        );
+        try {
+            return objectMapper.readValue(
+                objectMapper.writeValueAsString(synonyms),
+                Translations.class
+            );
+        } catch (Exception e) {
+            log.error(
+                String.format("something went wrong during synonym extraction from ths entry %s", this.getId()), e
+            );
+            return null;
+        }
     }
 
     /**

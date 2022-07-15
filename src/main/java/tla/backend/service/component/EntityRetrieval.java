@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -45,7 +44,7 @@ public class EntityRetrieval {
          * entities.
          */
         public static BulkEntityResolver of(Stream<? extends Resolvable> references) {
-            return BulkEntityResolver.of(references.collect(Collectors.toList()));
+            return BulkEntityResolver.of(references.toList());
         }
 
         /**
@@ -138,9 +137,7 @@ public class EntityRetrieval {
          * Retrieve referenced object from respective ES indices.
          */
         public Collection<Indexable> resolve() {
-            return this.stream().collect(
-                Collectors.toList()
-            );
+            return this.stream().toList();
         }
 
         /**

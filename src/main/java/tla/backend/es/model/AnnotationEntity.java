@@ -2,7 +2,6 @@ package tla.backend.es.model;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -29,10 +28,10 @@ import tla.domain.model.meta.TLADTO;
 @NoArgsConstructor
 @BTSeClass("BTSAnnotation")
 @TLADTO(AnnotationDto.class)
-@Document(indexName = "annotation")
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Document(indexName = "annotation", createIndex = false)
 public class AnnotationEntity extends BaseEntity {
 
     /**
@@ -86,9 +85,7 @@ public class AnnotationEntity extends BaseEntity {
                     Passport::getLeafNodeValue
                 ).map(
                     String::trim
-                ).collect(
-                    Collectors.toList()
-                );
+                ).toList();
             }
         }
         return Collections.emptyList();

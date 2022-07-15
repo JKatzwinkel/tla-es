@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -60,7 +62,7 @@ public class SentenceServiceTest {
     @Autowired
     private SentenceService sentenceService;
 
-    @MockBean
+    @SpyBean
     private ElasticsearchOperations operations;
 
     @Test
@@ -70,9 +72,7 @@ public class SentenceServiceTest {
         when(
             textRepo.findAllById(anyCollection())
         ).thenReturn(
-            List.of(
-                text
-            )
+            List.of(text)
         );
         String annoId = "IBUBd0kXx8hvzU9vuxAKWNHnf6s";
         var rubrum = Util.loadSampleFile(AnnotationEntity.class, annoId);
@@ -93,14 +93,10 @@ public class SentenceServiceTest {
         cmd.setTranslation(translation);
         var query = sentenceService.getSearchCommandAdapter(cmd);
         assertNotNull(query);
-        when(
-            operations.search(
-                any(org.springframework.data.elasticsearch.core.query.Query.class),
-                eq(SentenceEntity.class),
-                any()
-            )
-        ).thenReturn(
-            hits
+        doReturn(hits).when(operations).search(
+            any(org.springframework.data.elasticsearch.core.query.Query.class),
+            eq(SentenceEntity.class),
+            any()
         );
         SearchResultsWrapper<?> dto = sentenceService.runSearchCommand(cmd, PageRequest.of(1, 20)).orElseThrow();
         assertAll("test search results in container",

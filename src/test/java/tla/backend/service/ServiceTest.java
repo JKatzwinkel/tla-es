@@ -1,13 +1,14 @@
 package tla.backend.service;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.List;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,13 +27,9 @@ public class ServiceTest {
     private LemmaService lemmaService;
 
     @Test
+    @DisplayName("entity services should get registered")
     void testServiceRegistry() {
         assertNotNull(lemmaService, "lemma service should be injected");
-        Annotation lemmaServiceModelClassAnnotation = null;
-        for (Annotation a : lemmaService.getClass().getAnnotations()) {
-            lemmaServiceModelClassAnnotation = (a instanceof ModelClass) ? a : lemmaServiceModelClassAnnotation;
-        }
-        assertNotNull(lemmaServiceModelClassAnnotation, "lemma service should have expected annotation");
         assertAll("test if services register themselves",
             () -> assertTrue(EntityService.modelClassServices.size() > 0),
             () -> assertTrue(EntityService.modelClassServices.containsKey(LemmaEntity.class)),
@@ -43,7 +40,14 @@ public class ServiceTest {
     }
 
     @Test
-    void dtoBatchMapping() throws Exception {
+    @DisplayName("repeated attempts at creating entity elasticsearch index should fail silently")
+    void testCreateExistingIndex() {
+        assertFalse(lemmaService.createIndex());
+    }
+
+    @Test
+    @DisplayName("test conversion of multiple entities to DTO via service")
+    void testDTOBatchMapping() throws Exception {
         LemmaEntity l = tla.domain.util.IO.loadFromFile("src/test/resources/sample/lemma/31610.json", LemmaEntity.class);
         LemmaEntity l2 = LemmaEntity.builder().id("1")
             .externalReference("thor", List.of(

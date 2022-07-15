@@ -1,4 +1,4 @@
-FROM gradle:7.3.3-jdk11 AS build
+FROM gradle:7.4.2-jdk17 AS build
 
 COPY --chown=gradle:gradle . /home/gradle/tla
 WORKDIR /home/gradle/tla
@@ -7,7 +7,7 @@ RUN gradle bootJar --no-daemon && \
     mv build/libs/*.jar bin/run/tla-backend.jar
 
 
-FROM openjdk:11.0.10-jdk-buster
+FROM openjdk:17.0.2-jdk-buster
 
 RUN mkdir /app
 WORKDIR /app/

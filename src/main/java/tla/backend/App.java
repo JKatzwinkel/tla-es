@@ -40,23 +40,30 @@ public class App implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        log.info("process command line args:");
-        log.info(String.join(", ", args.getOptionNames()));
+        log.info(
+            "process command line args: {}", String.join(
+                ", ", args.getOptionNames().stream().map(arg -> "--%s".formatted(arg)).toList()
+            )
+        );
         if (args.containsOption("data-file")) {
             repoPopulator.init().ingestTarFile(
                 args.getOptionValues("data-file")
             );
         }
         if (args.containsOption("shutdown")) {
-            shutdown();
+            shutdown(0);
         }
     }
 
-    public void shutdown() {
+    /**
+     * terminates the application with the specified exit code.
+     * If exit code is not 0, or if any <code>ExitCodeGenerator</code> beans exist in the context,
+     * an <code>ExitCodeEvent</code> is being published to the application context.
+     */
+    public void shutdown(int exitCode) {
         System.exit(
             SpringApplication.exit(
-                applicationContext,
-                () -> 0
+                applicationContext, () -> exitCode
             )
         );
     }

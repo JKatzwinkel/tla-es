@@ -22,6 +22,7 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.stereotype.Service;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import tla.backend.es.model.meta.Indexable;
 import tla.backend.es.query.ESQueryBuilder;
@@ -30,6 +31,7 @@ import tla.backend.es.query.TLAQueryBuilder.QueryDependency;
 
 @Slf4j
 @Service
+@SuppressWarnings("deprecation") // TODO
 public class SearchService {
 
     public final static Pageable UNPAGED = Pageable.unpaged();
@@ -86,6 +88,7 @@ public class SearchService {
     }
 
     @Autowired
+    @Getter
     private ElasticsearchOperations operations;
 
     @Autowired

@@ -2,7 +2,6 @@ package tla.backend.api;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
@@ -39,9 +38,7 @@ public class ApiController {
                 "\n",
                 handlerMapping.getHandlerMethods().keySet().stream().flatMap(
                     mapping -> mapping.getPatternValues().stream()
-                ).sorted().collect(
-                    Collectors.toList()
-                )
+                ).sorted().toList()
             ),
             HttpStatus.OK
         );

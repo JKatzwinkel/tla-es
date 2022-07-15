@@ -1,17 +1,22 @@
 ---
 
+spring:
+  output:
+    ansi:
+      enabled: always
+
 logging:
-    file:
-        name: app.log
+  file:
+    name: app.log
 
 server:
-    error:
-        whitelabel:
-            enabled: false
+  error:
+    whitelabel:
+      enabled: false
 
 tla:
-    es:
-        port: ${ES_PORT:9200}
-        host: ${ES_HOST:localhost}
+  es:
+    port: ${ES_PORT:9200}
+    host: ${ES_HOST:localhost}
 
 ...
