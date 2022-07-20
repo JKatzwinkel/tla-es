@@ -1,5 +1,7 @@
 package tla.backend.es.query.dependencies;
 
+import java.util.List;
+
 import tla.backend.es.query.ESQueryBuilder;
 import tla.backend.es.query.SentencesContainingLemmaOccurrenceQueryBuilder;
 import tla.backend.es.query.TLAQueryBuilder.QueryDependency;
@@ -12,7 +14,7 @@ import tla.backend.es.query.TLAQueryBuilder.QueryDependency;
  *
  * @author jkatzwinkel
  */
-public class TextIdsOfSentencesContainingLemmaDependency extends QueryDependency<String []> {
+public class TextIdsOfSentencesContainingLemmaDependency extends QueryDependency<List<String>> {
 
     public TextIdsOfSentencesContainingLemmaDependency(ESQueryBuilder query, String lemmaId) {
         super(
@@ -20,7 +22,7 @@ public class TextIdsOfSentencesContainingLemmaDependency extends QueryDependency
             query::setId,
             sentenceDependency -> sentenceDependency.getResult().getAggregation(
                 SentencesContainingLemmaOccurrenceQueryBuilder.AGG_ID_TEXT_IDS
-            ).keySet().toArray(new String[]{})
+            ).keySet().stream().toList()
         );
     }
 

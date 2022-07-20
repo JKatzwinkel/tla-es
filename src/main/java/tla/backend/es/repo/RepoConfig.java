@@ -6,19 +6,15 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.env.Environment;
 import org.springframework.data.convert.ReadingConverter;
 import org.springframework.data.convert.WritingConverter;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
-import org.springframework.data.elasticsearch.client.RestClients;
-import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfiguration;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfiguration;
 import org.springframework.data.elasticsearch.core.convert.ElasticsearchConverter;
 import org.springframework.data.elasticsearch.core.convert.ElasticsearchCustomConversions;
 import org.springframework.data.elasticsearch.core.convert.MappingElasticsearchConverter;
@@ -31,18 +27,25 @@ import tla.domain.model.Passport;
 @Slf4j
 @Configuration
 @EnableElasticsearchRepositories
-public class RepoConfig extends AbstractElasticsearchConfiguration {
+public class RepoConfig extends ElasticsearchConfiguration {
 
     @Autowired
     private Environment env;
 
-    @Bean
-    @Primary
-    public ElasticsearchRestTemplate elasticsearchRestTemplate() {
-        return new ElasticsearchRestTemplate(
-            elasticsearchClient(),
-            elasticsearchConverter()
+    @Override
+    public ClientConfiguration clientConfiguration() {
+        var host = env.getProperty(
+            "tla.es.host", "localhost"
         );
+        var port = Integer.parseInt(
+            env.getProperty(
+                "tla.es.port", "9200"
+            )
+        );
+        log.info("configure Elasticsearch client for connection to {}:{}", host, port);
+        return ClientConfiguration.builder().connectedTo(
+            InetSocketAddress.createUnresolved(host, port)
+        ).build();
     }
 
     @Bean
@@ -55,32 +58,6 @@ public class RepoConfig extends AbstractElasticsearchConfiguration {
         );
         mappingElasticsearchConverter.afterPropertiesSet();
         return mappingElasticsearchConverter;
-    }
-
-    @Bean
-    @Override
-    public RestHighLevelClient elasticsearchClient() {
-        log.info
-            ("create elasticsearch client for local instance at {}:{}",
-            env.getProperty("tla.es.host"),
-            env.getProperty("tla.es.port")
-        );
-        return RestClients.create(
-            ClientConfiguration.create(
-                InetSocketAddress.createUnresolved(
-                    env.getProperty(
-                        "tla.es.host",
-                        "localhost"
-                    ),
-                    Integer.parseInt(
-                        env.getProperty(
-                            "tla.es.port",
-                            "9200"
-                        )
-                    )
-                )
-            )
-        ).rest();
     }
 
     @Bean

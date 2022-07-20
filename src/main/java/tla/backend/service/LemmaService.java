@@ -1,23 +1,15 @@
 package tla.backend.service;
 
-import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.BucketOrder;
-import org.elasticsearch.search.aggregations.bucket.nested.Nested;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Service;
 
 import tla.backend.es.model.LemmaEntity;
-import tla.backend.es.model.SentenceEntity;
 import tla.backend.es.model.ThsEntryEntity;
 import tla.backend.es.model.meta.Recursable;
 import tla.backend.es.query.ESQueryBuilder;
@@ -116,15 +108,15 @@ public class LemmaService extends EntityService<LemmaEntity, ElasticsearchReposi
         return attestations;
     }
 
-    public Map<String, Long> getMostFrequent(int limit) {
-        SearchResponse response = this.searchService.query(SentenceEntity.class, matchAllQuery(),
-                AggregationBuilders.nested("aggs", "tokens").subAggregation(AggregationBuilders.terms("lemmata")
-                        .field("tokens.lemma.id").order(BucketOrder.count(false)).size(limit)));
-        Nested aggs = response.getAggregations().get("aggs");
-        Terms terms = aggs.getAggregations().get("lemmata");
-        return terms.getBuckets().stream()
-                .collect(Collectors.toMap(Terms.Bucket::getKeyAsString, Terms.Bucket::getDocCount));
-    }
+    // public Map<String, Long> getMostFrequent(int limit) {
+    //     SearchResponse response = this.searchService.query(SentenceEntity.class, matchAllQuery(),
+    //             AggregationBuilders.nested("aggs", "tokens").subAggregation(AggregationBuilders.terms("lemmata")
+    //                     .field("tokens.lemma.id").order(BucketOrder.count(false)).size(limit)));
+    //     Nested aggs = response.getAggregations().get("aggs");
+    //     Terms terms = aggs.getAggregations().get("lemmata");
+    //     return terms.getBuckets().stream()
+    //             .collect(Collectors.toMap(Terms.Bucket::getKeyAsString, Terms.Bucket::getDocCount));
+    // }
 
     @Override
     public AutoCompleteSupport getAutoCompleteSupport() {

@@ -2,10 +2,7 @@ package tla.backend.es.query;
 
 import java.util.Arrays;
 
-import org.elasticsearch.search.sort.ScoreSortBuilder;
-import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortBuilders;
-import org.elasticsearch.search.sort.SortOrder;
+import org.springframework.data.domain.Sort;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -29,15 +26,15 @@ public class SortSpec {
      */
     protected String field;
     /**
-     * sort order (i.e. {@link SortOrder.ASC} or {@link SortOrder.DESC})
+     * sort order (i.e. {@link Sort.Order.ASC} or {@link Sort.Order.DESC})
      */
-    protected SortOrder order;
+    protected Sort.Order order;
 
     /**
      * Create new sort spec configured for ascending order ({@link SortOrder.ASC}) on given field.
      */
     public SortSpec(String field) {
-        this(field, SortOrder.ASC);
+        this(field, Sort.Order.asc(field));
     }
 
     /**
@@ -46,7 +43,7 @@ public class SortSpec {
     public SortSpec(String field, String order) {
         this(
             field,
-            order.toLowerCase().equals("desc") ? SortOrder.DESC : SortOrder.ASC
+            order.toLowerCase().equals("desc") ? Sort.Order.desc(field) : Sort.Order.asc(field)
         );
     }
 
@@ -71,16 +68,16 @@ public class SortSpec {
         }
     }
 
-    public SortBuilder<?> primary() {
+    public Sort primary() {
         if (this.field != null) {
-            return SortBuilders.fieldSort(this.field).order(this.order);
+            return Sort.by(this.order.getDirection(), this.field);
         } else {
-            return SortBuilders.scoreSort();
+            return Sort.by(this.order.getDirection(), "_score");
         }
     }
 
-    public SortBuilder<?> secondary() {
-        return SortBuilders.fieldSort("id").order(this.order);
+    public Sort secondary() {
+        return Sort.by(this.order.getDirection(), "id");
     }
 
 }

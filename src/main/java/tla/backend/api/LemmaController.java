@@ -39,14 +39,14 @@ public class LemmaController extends EntityController<LemmaEntity, LemmaDto> {
         return lemmaService;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/frequencies")
-    public ResponseEntity<Map<String, Long>> getFrequencies() {
-        Map<String, Long> freq = lemmaService.getMostFrequent(2000);
-        return new ResponseEntity<Map<String, Long>>(
-            freq,
-            HttpStatus.OK
-        );
-    }
+    // @RequestMapping(method = RequestMethod.GET, value = "/frequencies")
+    // public ResponseEntity<Map<String, Long>> getFrequencies() {
+    //     Map<String, Long> freq = lemmaService.getMostFrequent(2000);
+    //     return new ResponseEntity<Map<String, Long>>(
+    //         freq,
+    //         HttpStatus.OK
+    //     );
+    // }
 
     @RequestMapping(method = RequestMethod.GET, value = "/get")
     public ResponseEntity<Iterable<LemmaDto>> getLemmataById(@RequestParam List<String> ids) {

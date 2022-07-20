@@ -16,6 +16,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.elasticsearch.RestStatusException;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
@@ -73,11 +74,15 @@ public class RepoPopulatorTest {
     void createIndex() {
         var index = operations.indexOps(TestEntity.class);
         var created = false;
-        if (!index.exists()) {
-            created |= index.create(
-                index.createSettings(TestEntity.class),
-                index.createMapping(TestEntity.class)
-            );
+        if (index.exists()) {
+            log.info("test entity ES index already exists");
+            return;
+        }
+        try {
+            created |= index.createWithMapping();
+            index.refresh();
+        } catch (Exception e) {
+            log.warn("test entity ES index already exists");
         }
         log.info("test entity ES index created: {}", created);
     }
@@ -105,6 +110,8 @@ public class RepoPopulatorTest {
         repoPopulator.flushIngestors();
         var service = repoPopulator.getService("test");
         assertEquals(testService, service);
+        var indexOps = operations.indexOps(TestEntity.class);
+        assertTrue(indexOps.exists());
         var entity = service.getRepo().findById("2");
         assertNotNull(entity);
     }
