@@ -2,12 +2,10 @@ package tla.backend.es.query;
 
 import java.util.Collection;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
-
-import org.apache.lucene.search.join.ScoreMode;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-
+import co.elastic.clients.elasticsearch._types.FieldValue;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.ChildScoreMode;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import tla.backend.es.model.SentenceEntity;
@@ -22,19 +20,25 @@ public class SentenceSearchQueryBuilder extends ESQueryBuilder implements MultiL
     public final static String AGG_ID_TEXT_IDS = "text_ids";
 
     public void setTokens(Collection<TokenSearchQueryBuilder> tokenQueries) {
-        BoolQueryBuilder tokenQuery = boolQuery();
-        if (tokenQueries != null) {
-            tokenQueries.forEach(
-                query -> tokenQuery.must(
-                    QueryBuilders.nestedQuery(
-                        "tokens",
-                        query.getNativeRootQueryBuilder(),
-                        ScoreMode.None
-                    )
-                )
-            );
+        if (tokenQueries == null) {
+            return;
         }
-        this.filter(tokenQuery);
+        BoolQuery tokenQuery = BoolQuery.of(
+            bq -> bq.must(
+                tokenQueries.stream().map(
+                    query -> Query.of(
+                        q -> q.nested(
+                            n -> n.path("tokens").query(
+                                nq -> nq.bool(
+                                    query.getNativeRootQueryBuilder()
+                                )
+                            ).scoreMode(ChildScoreMode.None)
+                        )
+                    )
+                ).toList()
+            )
+        );
+        this.filter(Query.of(q -> q.bool(tokenQuery)));
     }
 
     public void setPassport(PassportSpec spec) {
@@ -55,9 +59,16 @@ public class SentenceSearchQueryBuilder extends ESQueryBuilder implements MultiL
         if (textIds != null) {
             log.info("sentence query: receive {} text IDs", textIds.size());
             this.filter(
-                QueryBuilders.termsQuery(
-                    "context.textId",
-                    textIds
+                Query.of(
+                    q -> q.terms(
+                        t -> t.field("context.textId").terms(
+                            tsb -> tsb.value(
+                                textIds.stream().map(
+                                    textId -> FieldValue.of(textId)
+                                ).toList()
+                            )
+                        )
+                    )
                 )
             );
         }

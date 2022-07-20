@@ -120,6 +120,9 @@ public class RepoPopulator {
          * to batch-index all entities currently in the cache.
          */
         public void ingest() {
+            if (this.batch.isEmpty()) {
+                return;
+            }
             try {
                 (
                     (ElasticsearchRepository<S, String>) service.getRepo()
@@ -303,6 +306,7 @@ public class RepoPopulator {
 
     protected void flushIngestors() {
         this.batchIngestor = null;
+        // TODO this attempt might fail, leaving pending documents in batch buffers
         for (RepoBatchIngestor<? extends Indexable> batchIngestor : this.repoIngestors.values()) {
             batchIngestor.ingest();
             log.info(

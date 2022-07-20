@@ -1,7 +1,6 @@
 package tla.backend.es.query;
 
-import org.elasticsearch.index.query.QueryBuilders;
-
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import tla.domain.model.SentenceToken.Lemmatization;
 
 public class TokenSearchQueryBuilder extends ESQueryBuilder implements MultiLingQueryBuilder {
@@ -14,9 +13,12 @@ public class TokenSearchQueryBuilder extends ESQueryBuilder implements MultiLing
     public void setLemma(Lemmatization lemma) {
         if (lemma != null && !lemma.isEmpty()) {
             this.must(
-                QueryBuilders.termQuery(
-                    String.format("%slemma.id", this.nestedPath()),
-                    lemma.getId()
+                Query.of(
+                    q -> q.term(
+                        t -> t.field(
+                            String.format("%slemma.id", this.nestedPath())
+                        ).value(lemma.getId())
+                    )
                 )
             );
         }

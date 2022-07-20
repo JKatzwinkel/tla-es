@@ -1,10 +1,10 @@
 package tla.backend.es.query;
 
 import java.util.List;
+import java.util.Map;
 
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.BucketOrder;
-
+import co.elastic.clients.elasticsearch._types.SortOrder;
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import tla.backend.es.model.SentenceEntity;
 import tla.backend.service.ModelClass;
 import tla.domain.model.SentenceToken.Lemmatization;
@@ -21,12 +21,15 @@ public class SentencesContainingLemmaOccurrenceQueryBuilder extends SentenceSear
         super();
         setTokens(List.of(occurrenceTokenQuery(lemmaId)));
         aggregate(
-            AggregationBuilders.terms(AGG_ID_TEXT_IDS).field(
-                "context.textId"
-            ).order(
-                BucketOrder.key(true)
-            ).size(
-                ExpansionQueryBuilder.ID_AGG_SIZE
+            AGG_ID_TEXT_IDS,
+            Aggregation.of(
+                a -> a.terms(
+                    ta -> ta.field("context.textId").size(
+                        ExpansionQueryBuilder.ID_AGG_SIZE
+                    ).order(
+                        List.of(Map.of(AGG_ID_TEXT_IDS, SortOrder.Asc))
+                    )
+                )
             )
         );
     }

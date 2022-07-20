@@ -2,9 +2,9 @@ package tla.backend.service;
 
 import java.io.IOException;
 
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.AbstractElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class MetadataService extends EntityService<Metadata, ElasticsearchReposi
     private MetadataRepo repo;
 
     @Autowired
-    private RestHighLevelClient esClient;
+    ElasticsearchOperations operations;
 
     private Metadata metadata;
 
@@ -41,7 +41,7 @@ public class MetadataService extends EntityService<Metadata, ElasticsearchReposi
      * retrieve version number of connected Elasticsearch node
      */
     public String getESVersionNumber() throws IOException {
-        return esClient.info(RequestOptions.DEFAULT).getVersion().getNumber();
+        return ((AbstractElasticsearchTemplate) operations).getClusterVersion();
     }
 
     @Override

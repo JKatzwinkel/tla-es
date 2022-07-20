@@ -4,13 +4,14 @@ import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.search.aggregations.AbstractAggregationBuilder;
 
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import tla.backend.es.model.meta.Indexable;
@@ -124,7 +125,7 @@ public interface TLAQueryBuilder {
      * ES root query builder which queries for individual properties get added to
      * either as <code>must</code> or <code>should</code> clause, or as a <code>filter</code>.
      */
-    public BoolQueryBuilder getNativeRootQueryBuilder();
+    public BoolQuery getNativeRootQueryBuilder();
 
     /**
      * Create JSON string representation of native ES query.
@@ -133,7 +134,7 @@ public interface TLAQueryBuilder {
         return this.getNativeRootQueryBuilder().toString();
     }
 
-    public List<AbstractAggregationBuilder<?>> getNativeAggregationBuilders();
+    public Map<String, Aggregation> getNativeAggregationBuilders();
 
     /**
      * returns ES search hits and page information wrapped together into one object.
@@ -144,27 +145,36 @@ public interface TLAQueryBuilder {
     /**
      * Add criterion to root query's <code>must</code> clause list.
      */
-    default BoolQueryBuilder must(QueryBuilder clause) {
-        return this.getNativeRootQueryBuilder().must(clause);
+    default BoolQuery must(Query clause) {
+        if (clause != null) {
+            this.getNativeRootQueryBuilder().must().add(clause);
+        }
+        return this.getNativeRootQueryBuilder();
     }
     /**
      * Add criterion to root query's <code>should</code> clause list.
      */
-    default BoolQueryBuilder should(QueryBuilder clause) {
-        return this.getNativeRootQueryBuilder().should(clause);
+    default BoolQuery should(Query clause) {
+        if (clause != null) {
+            this.getNativeRootQueryBuilder().should().add(clause);
+        }
+        return this.getNativeRootQueryBuilder();
     }
     /**
      * add filter
      */
-    default BoolQueryBuilder filter(QueryBuilder criterion) {
-        return this.getNativeRootQueryBuilder().filter(criterion);
+    default BoolQuery filter(Query criterion) {
+        if (criterion != null) {
+            this.getNativeRootQueryBuilder().filter().add(criterion);
+        }
+        return this.getNativeRootQueryBuilder();
     }
 
     /**
      * add aggregation
      */
-    default AbstractAggregationBuilder<?> aggregate(AbstractAggregationBuilder<?> agg) {
-        this.getNativeAggregationBuilders().add(agg);
+    default Aggregation aggregate(String name, Aggregation agg) {
+        this.getNativeAggregationBuilders().put(name, agg);
         return agg;
     }
 
