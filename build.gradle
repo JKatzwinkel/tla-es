@@ -12,7 +12,7 @@ plugins {
 }
 
 group = 'org.bbaw.aaew.tla'
-version = '0.0.903-dev'
+version = '0.0.904-dev'
 sourceCompatibility = '17'
 
 publishing {
@@ -57,15 +57,15 @@ dependencies {
     implementation 'org.apache.commons:commons-compress:1.21'
     implementation 'org.yaml:snakeyaml:1.30'
 
-    implementation 'org.springframework.boot:spring-boot:3.0.0-M3'
-    implementation 'org.springframework.boot:spring-boot-starter-jetty:3.0.0-M3'
-    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.0-M3'
+    implementation 'org.springframework.boot:spring-boot:3.0.0-M4'
+    implementation 'org.springframework.boot:spring-boot-starter-jetty:3.0.0-M4'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.0-M4'
     implementation 'org.springframework.data:spring-data-elasticsearch:5.0.0-M4'
     implementation 'org.springframework:spring-webmvc:6.0.0-M5'
     implementation 'org.apache.logging.log4j:log4j-core:2.18.0'
     implementation 'org.slf4j:slf4j-simple:2.0.0-alpha7'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.0-M3'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.0-M4'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.0-RC1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0-RC1'
 }
