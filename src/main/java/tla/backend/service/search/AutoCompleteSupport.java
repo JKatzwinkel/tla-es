@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 
+import co.elastic.clients.elasticsearch._types.query_dsl.MultiMatchQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.TextQueryType;
 import lombok.Builder;
@@ -74,15 +75,16 @@ public class AutoCompleteSupport {
     /**
      * prepare multimatch query for autocomplete search.
      */
-    protected Query autoCompleteQueryBuilder(String term) {
-        Query query = Query.of(
-            b -> b.multiMatch(
-                mm -> mm.query(term).fields(
-                    this.queryFields.keySet().stream().toList()
-                ).type(TextQueryType.BoolPrefix)
+    protected MultiMatchQuery autoCompleteQueryBuilder(String term) {
+        return MultiMatchQuery.of(
+            mm -> mm.query(term).fields(
+                this.queryFields.keySet().stream().toList()
+            ).type(TextQueryType.BoolPrefix).query(
+                term
+            ).prefixLength(
+                term.length()
             )
         );
-        return query;
     }
 
     /**
@@ -103,7 +105,11 @@ public class AutoCompleteSupport {
                 )
             )
         ).withQuery(
-            this.autoCompleteQueryBuilder(term)
+            Query.of(
+                q -> q.multiMatch(
+                    this.autoCompleteQueryBuilder(term)
+                )
+            )
         ).withPageable(
             PageRequest.of(0, 15)
         ).build();
