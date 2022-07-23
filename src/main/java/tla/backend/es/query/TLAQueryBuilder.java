@@ -129,7 +129,9 @@ public interface TLAQueryBuilder {
      * Create JSON string representation of native ES query.
      */
     public default String toJson() {
-        return this.getNativeRootQueryBuilder().toString();
+        return this.build().toString().substring(
+            Query.class.getSimpleName().length() + 2
+        );
     }
 
     public Map<String, Aggregation> getNativeAggregations();
