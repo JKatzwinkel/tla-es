@@ -2,9 +2,7 @@ package tla.backend.es.query;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
-import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +27,7 @@ public class TextSearchQueryBuilder extends PassportIncludingQueryBuilder implem
                 a -> a.terms(
                     ta -> ta.field(
                         String.format("%s.id.keyword", AGG_ID_DATE)
-                    ).size(1000).order(
-                        List.of(Map.of(AGG_ID_DATE, SortOrder.Asc))
-                    )
+                    ).size(1000)
                 )
             )
         );
