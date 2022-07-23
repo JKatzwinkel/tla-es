@@ -82,6 +82,10 @@ task testSearch(type: Test) {
     }
 }
 
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ['-Xlint:deprecation']
+}
+
 task testAll(type: Test) {
     group = 'Verification'
     description = 'Runs both search integration and unit tests.'
