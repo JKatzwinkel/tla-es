@@ -1,9 +1,7 @@
 package tla.backend.es.query;
 
 import java.util.List;
-import java.util.Map;
 
-import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import tla.backend.es.model.SentenceEntity;
 import tla.backend.service.ModelClass;
@@ -26,8 +24,6 @@ public class SentencesContainingLemmaOccurrenceQueryBuilder extends SentenceSear
                 a -> a.terms(
                     ta -> ta.field("context.textId").size(
                         ExpansionQueryBuilder.ID_AGG_SIZE
-                    ).order(
-                        List.of(Map.of(AGG_ID_TEXT_IDS, SortOrder.Asc))
                     )
                 )
             )
