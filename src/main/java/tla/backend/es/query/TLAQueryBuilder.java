@@ -10,7 +10,6 @@ import java.util.function.Function;
 
 
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
-import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -122,10 +121,9 @@ public interface TLAQueryBuilder {
     }
 
     /**
-     * ES root query builder which queries for individual properties get added to
-     * either as <code>must</code> or <code>should</code> clause, or as a <code>filter</code>.
+     * Builds a native ES (ELC) query based on the current configuration.
      */
-    public BoolQuery getNativeRootQueryBuilder();
+    public Query build();
 
     /**
      * Create JSON string representation of native ES query.
@@ -134,7 +132,7 @@ public interface TLAQueryBuilder {
         return this.getNativeRootQueryBuilder().toString();
     }
 
-    public Map<String, Aggregation> getNativeAggregationBuilders();
+    public Map<String, Aggregation> getNativeAggregations();
 
     /**
      * returns ES search hits and page information wrapped together into one object.
@@ -145,36 +143,23 @@ public interface TLAQueryBuilder {
     /**
      * Add criterion to root query's <code>must</code> clause list.
      */
-    default BoolQuery must(Query clause) {
-        if (clause != null) {
-            this.getNativeRootQueryBuilder().must().add(clause);
-        }
-        return this.getNativeRootQueryBuilder();
-    }
+    void must(Query clause);
+
     /**
      * Add criterion to root query's <code>should</code> clause list.
      */
-    default BoolQuery should(Query clause) {
-        if (clause != null) {
-            this.getNativeRootQueryBuilder().should().add(clause);
-        }
-        return this.getNativeRootQueryBuilder();
-    }
+    void should(Query clause);
+
     /**
      * add filter
      */
-    default BoolQuery filter(Query criterion) {
-        if (criterion != null) {
-            this.getNativeRootQueryBuilder().filter().add(criterion);
-        }
-        return this.getNativeRootQueryBuilder();
-    }
+    void filter(Query criterion);
 
     /**
      * add aggregation
      */
     default Aggregation aggregate(String name, Aggregation agg) {
-        this.getNativeAggregationBuilders().put(name, agg);
+        this.getNativeAggregations().put(name, agg);
         return agg;
     }
 

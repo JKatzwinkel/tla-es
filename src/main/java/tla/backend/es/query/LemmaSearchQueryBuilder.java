@@ -1,5 +1,6 @@
 package tla.backend.es.query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
@@ -66,13 +67,13 @@ public class LemmaSearchQueryBuilder extends ESQueryBuilder implements MultiLing
     }
 
     public void setWordClass(TypeSpec wordClass) {
-        Query query = null;
+        List<Query> queries = new ArrayList<Query>();
         if (wordClass == null) {
             return;
         }
         if (wordClass.getType() != null) {
             if (wordClass.getType().equals("excl_names")) { // TODO
-                query = Query.of(
+                queries.add(Query.of(
                     q -> q.bool(
                         bq -> bq.mustNot(
                             iq -> iq.term(
@@ -80,24 +81,26 @@ public class LemmaSearchQueryBuilder extends ESQueryBuilder implements MultiLing
                             )
                         )
                     )
-                ); // TODO: ?
+                )); // TODO: ?
             } else if (wordClass.getType().equals("any")) {
             } else if (!wordClass.getType().isBlank()) {
-                query = Query.of(
+                queries.add(Query.of(
                     q -> q.term(
                         tq -> tq.field("type").value(wordClass.getType())
                     )
-                );
+                ));
             }
         }
         if (wordClass.getSubtype() != null) {
-            query = Query.of(
+            queries.add(Query.of(
                 q -> q.term(
                     tq -> tq.field("subtype").value(wordClass.getSubtype())
                 )
-            );
+            ));
         }
-        this.must(query);
+        queries.forEach(
+            query -> this.must(query)
+        );
     }
 
     public void setRoot(String transcription) { // TODO spawn join query
