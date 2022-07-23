@@ -29,9 +29,7 @@ public class SentenceSearchQueryBuilder extends ESQueryBuilder implements MultiL
                     query -> Query.of(
                         q -> q.nested(
                             n -> n.path("tokens").query(
-                                nq -> nq.bool(
-                                    query.getNativeRootQueryBuilder()
-                                )
+                                query.build()
                             ).scoreMode(ChildScoreMode.None)
                         )
                     )

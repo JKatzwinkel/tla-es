@@ -19,7 +19,7 @@ public class SortSpec {
      * an empty sort specification instance, whose {@link #primary()} method just returns
      * a standard {@link ScoreSortBuilder}.
      */
-    public static final SortSpec DEFAULT = new SortSpec();
+    public static final SortSpec DEFAULT = new SortSpec("_score", Sort.Order.desc("_score"));
 
     /**
      * name of field by whose value to order.

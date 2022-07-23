@@ -2,7 +2,9 @@ package tla.backend.es.query;
 
 import static com.jayway.jsonpath.JsonPath.read;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -32,9 +34,23 @@ public class SearchCommandQueryBuilderTest {
         modelMapper = new MappingTest().getModelMapper();
     }
 
-    static Object toJson(TLAQueryBuilder query) {
+    static Object toJsonObject(TLAQueryBuilder query) {
         return Configuration.defaultConfiguration().jsonProvider().parse(
             query.toJson()
+        );
+    }
+
+    @Test
+    void queryJsonSerializationTest() throws Exception {
+        LemmaSearch cmd = new LemmaSearch();
+        var query = modelMapper.map(cmd, LemmaSearchQueryBuilder.class);
+        var json = query.toJson();
+        assertEquals('{', json.charAt(0), "JSON serialization begins with curly bracket");
+        assertEquals('}', json.charAt(json.length()-1), "JSON serialization ends with curly bracket");
+        assertTrue(json.contains("\"bool\":"), "JSON serialization contains root query kind");
+        assertDoesNotThrow(
+            () -> read(toJsonObject(query), "$.bool.must"),
+            "query serialization can be parsed and queried"
         );
     }
 
@@ -43,12 +59,15 @@ public class SearchCommandQueryBuilderTest {
         LemmaSearch cmd = new LemmaSearch();
         cmd.setWordClass(new TypeSpec("type", "subtype"));
         cmd.setScript(new Script[]{Script.DEMOTIC});
+        cmd.setTranslation(new TranslationSpec());
+        cmd.getTranslation().setText("pferd");
+        cmd.getTranslation().setLang(new Language[]{Language.DE});
         var query = modelMapper.map(cmd, LemmaSearchQueryBuilder.class);
-        var json = toJson(query);
+        var json = toJsonObject(query);
         assertAll("lemma search ES query",
             //() -> assertEquals("", query.toJson()),
-            () -> assertEquals(List.of("type"), read(json, "$.bool.must[*].bool.must[*].term.type.value"), "type term query"),
-            () -> assertEquals(List.of("d"), read(json, "$.bool.filter[*].bool.must[*].prefix.id.value"), "prefix for demotic IDs")
+            () -> assertEquals(List.of("type"), read(json, "$.bool.must[*].term.type.value"), "type term query"),
+            () -> assertEquals(List.of("d"), read(json, "$.bool.filter[*].prefix.id.value"), "prefix for demotic IDs")
         );
     }
 
@@ -65,8 +84,9 @@ public class SearchCommandQueryBuilderTest {
         t.getTranslation().setLang(new Language[]{Language.DE});
         cmd.setTokens(List.of(t));
         var query = modelMapper.map(cmd, SentenceSearchQueryBuilder.class);
-        var json = toJson(query);
+        var json = toJsonObject(query);
         assertAll("sentence search ES query",
+            //() -> assertEquals("", query.toJson()),
             () -> assertEquals(
                 2, ((List)read(json, "$.bool.filter[*].bool.should[*].match.keys()")).size(),
                 "2 query clauses for sentence translation"
