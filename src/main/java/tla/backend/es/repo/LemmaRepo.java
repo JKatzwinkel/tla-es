@@ -1,9 +1,8 @@
 package tla.backend.es.repo;
 
 import tla.backend.es.model.LemmaEntity;
+import tla.backend.es.repo.custom.EntityRepo;
 
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-
-public interface LemmaRepo extends ElasticsearchRepository<LemmaEntity, String> {
+public interface LemmaRepo extends EntityRepo<LemmaEntity, String> {
 
 }

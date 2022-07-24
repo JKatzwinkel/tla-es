@@ -83,9 +83,9 @@ public class SentenceControllerTest extends AbstractMockMvcTest {
             List.of(text)
         );
         when(
-            annoRepo.findById(annoId)
+            annoRepo.findAllById(anyCollection())
         ).thenReturn(
-            Optional.of(
+            List.of(
                 Util.loadSampleFile(AnnotationEntity.class, annoId)
             )
         );
@@ -97,6 +97,8 @@ public class SentenceControllerTest extends AbstractMockMvcTest {
             content().contentType(MediaType.APPLICATION_JSON_VALUE)
         ).andExpect(
             jsonPath(String.format("$.related.BTSText.%s.id", textId)).value(textId)
+        ).andExpect(
+            jsonPath(String.format("$.related.BTSAnnotation.%s.id", annoId)).value(annoId)
         ).andExpect(
             jsonPath("$.doc.tokens[0].flexion.lingGloss").value("N.f:sg")
         );
