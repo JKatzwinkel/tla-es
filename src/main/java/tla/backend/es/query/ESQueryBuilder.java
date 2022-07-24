@@ -49,13 +49,13 @@ public abstract class ESQueryBuilder implements TLAQueryBuilder {
     /**
      * Put together an actual Elasticsearch query ready for execution.
      */
-    public NativeQuery buildSearchQuery(Pageable page) {
+    public NativeQuery buildNativeQuery(Pageable page) {
         var qb = new NativeQueryBuilder().withQuery(
             this.build()
         ).withPageable(
             page
         ).withSort(
-            this.getSortSpec().primary()
+            this.getSortSpec().build()
         );
         log.info("query: {}", this.build());
         this.getNativeAggregations().forEach(

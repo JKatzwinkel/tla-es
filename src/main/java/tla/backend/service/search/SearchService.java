@@ -51,7 +51,7 @@ public class SearchService {
                 log.info("execute query dependency {}", dependency);
                 dependency.getQuery().setResult(
                     executeSearchQuery(
-                        ((ESQueryBuilder) dependency.getQuery()).buildSearchQuery(
+                        ((ESQueryBuilder) dependency.getQuery()).buildNativeQuery(
                             UNPAGED // TODO size=0
                         ),
                         dependency.getQuery().getModelClass()
@@ -66,7 +66,7 @@ public class SearchService {
             }
             log.info("run head query");
             ESQueryResult<?> result = executeSearchQuery(
-                this.query.buildSearchQuery(page),
+                this.query.buildNativeQuery(page),
                 this.query.getModelClass()
             );
             result.addAggregationResults(this.aggregations);
