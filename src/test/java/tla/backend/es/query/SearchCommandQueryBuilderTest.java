@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import tla.backend.es.model.meta.MappingTest;
 import tla.domain.command.LemmaSearch;
@@ -68,6 +70,24 @@ public class SearchCommandQueryBuilderTest {
             //() -> assertEquals("", query.toJson()),
             () -> assertEquals(List.of("type"), read(json, "$.bool.must[*].term.type.value"), "type term query"),
             () -> assertEquals(List.of("d"), read(json, "$.bool.filter[*].prefix.id.value"), "prefix for demotic IDs")
+        );
+    }
+
+    @Test
+    void lemmaSearchQuerySortOrderTest() {
+        LemmaSearch cmd = new LemmaSearch();
+        cmd.setSort("root_desc");
+        var query = modelMapper.map(cmd, LemmaSearchQueryBuilder.class);
+        var nativeQuery = query.buildNativeQuery(Pageable.unpaged());
+        assertAll("lemma search query sort order should be in order",
+            () -> assertEquals(
+                "relations.root.name",
+                nativeQuery.getSort().get().toList().get(0).getProperty()
+            ),
+            () -> assertEquals(
+                Sort.Direction.DESC,
+                nativeQuery.getSort().get().toList().get(0).getDirection()
+            )
         );
     }
 

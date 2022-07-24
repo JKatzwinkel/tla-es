@@ -3,6 +3,8 @@ package tla.backend.es.query;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
+
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Operator;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
@@ -151,10 +153,17 @@ public class LemmaSearchQueryBuilder extends ESQueryBuilder implements MultiLing
         }
     }
 
-    public void setSort(String sort) {
-        super.setSort(sort);
-        if (sortSpec.field.equals("root")) {
-            sortSpec.field = "relations.root.name";
+    public void setSort(String source) {
+        super.setSort(source);
+        Sort.Order sortOrder = sortSpec.build().toList().get(0);
+        if (sortOrder.getProperty().equals("root")) {
+            super.setSort(
+                String.format(
+                    "relations.root.name%s%s",
+                    SortSpec.DELIMITER,
+                    sortOrder.getDirection()
+                )
+            );
         }
     }
 
