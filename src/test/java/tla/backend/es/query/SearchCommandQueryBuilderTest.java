@@ -79,11 +79,11 @@ public class SearchCommandQueryBuilderTest {
     @Test
     void lemmaSearchQueryTest_script() {
         LemmaSearch cmd = new LemmaSearch();
-        cmd.setScript(new Script[]{Script.DEMOTIC});
+        cmd.setScript(new Script[]{Script.HIERATIC});
         var query = modelMapper.map(cmd, LemmaSearchQueryBuilder.class);
         assertAll("lemma ES search query excludes demotic lemma IDs",
             //() -> assertEquals("", query.toJson()),
-            () -> assertTrue(query.toJson().contains("\"prefix\":{\"id\":{\"value\":\"d\""))
+            () -> assertTrue(query.toJson().contains("must_not\":[{\"prefix\":{\"id\":{\"value\":\"d\"}"))
         );
     }
 
