@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Sort;
 
-import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Operator;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import lombok.Getter;
@@ -57,41 +56,40 @@ public class LemmaSearchQueryBuilder extends ESQueryBuilder implements MultiLing
     }
 
     public void setTranscription(String transcription) {
-        if (transcription != null) {
-            this.must(
-                Query.of(
-                    q -> q.match(
-                        mq -> mq.field("words.transcription.unicode").query(transcription)
-                    )
-                )
-            );
+        if (transcription == null) {
+            return;
         }
+        this.must(
+            Query.of(
+                q -> q.match(
+                    mq -> mq.field("words.transcription.unicode").query(transcription)
+                )
+            )
+        );
     }
 
     public void setWordClass(TypeSpec wordClass) {
-        List<Query> queries = new ArrayList<Query>();
-        if (wordClass == null) {
+        if (wordClass == null || wordClass.isEmpty()) {
             return;
         }
-        if (wordClass.getType() != null) {
-            if (wordClass.getType().equals("excl_names")) { // TODO
-                queries.add(Query.of(
-                    q -> q.bool(
-                        bq -> bq.mustNot(
-                            iq -> iq.term(
-                                t -> t.field("type").value("entity_name")
-                            )
+        List<Query> queries = new ArrayList<Query>();
+        if (wordClass.getType().equals("excl_names")) { // TODO
+            queries.add(Query.of(
+                q -> q.bool(
+                    bq -> bq.mustNot(
+                        iq -> iq.term(
+                            t -> t.field("type").value("entity_name")
                         )
                     )
-                )); // TODO: ?
-            } else if (wordClass.getType().equals("any")) {
-            } else if (!wordClass.getType().isBlank()) {
-                queries.add(Query.of(
-                    q -> q.term(
-                        tq -> tq.field("type").value(wordClass.getType())
-                    )
-                ));
-            }
+                )
+            )); // TODO: ?
+        } else if (wordClass.getType().equals("any")) {
+        } else if (!wordClass.getType().isBlank()) {
+            queries.add(Query.of(
+                q -> q.term(
+                    tq -> tq.field("type").value(wordClass.getType())
+                )
+            ));
         }
         if (wordClass.getSubtype() != null) {
             queries.add(Query.of(
@@ -106,51 +104,46 @@ public class LemmaSearchQueryBuilder extends ESQueryBuilder implements MultiLing
     }
 
     public void setRoot(String transcription) { // TODO spawn join query
-        if (transcription != null) {
-            this.must(
-                Query.of(
-                    q -> q.match(
-                        m -> m.field("relations.root.name").query(transcription)
-                    )
-                )
-            );
+        if (transcription == null || transcription.isBlank()) {
+            return;
         }
+        this.must(
+            Query.of(
+                q -> q.match(
+                    m -> m.field("relations.root.name").query(transcription)
+                )
+            )
+        );
     }
 
     public void setAnno(TypeSpec annotationType) { // TODO spawn join query
-        BoolQuery query = BoolQuery.of(q -> q);
-        if (annotationType != null) {
-            if (annotationType.getType() != null) {
-                if (!annotationType.getType().isBlank()) {
-                    query.must().add(
-                        Query.of(
-                            q -> q.term(
-                                t -> t.field("relations.contains.eclass").value("BTSAnnotation")
-                            )
-                        )
-                    );
-                }
-            }
+        if (annotationType == null || annotationType.isEmpty()) {
+            return;
         }
         this.must(
-            Query.of(q -> q.bool(query))
+            Query.of(
+                q -> q.term(
+                    t -> t.field("relations.contains.eclass").value("BTSAnnotation")
+                )
+            )
         );
     }
 
     public void setBibliography(String bibliography) {
-        if (bibliography != null) {
-            this.must(
-                Query.of(
-                    q -> q.match(
-                        m -> m.field(
-                            "passport.bibliography.bibliographical_text_field"
-                        ).query(bibliography).operator(
-                            Operator.And
-                        )
+        if (bibliography == null) {
+            return;
+        }
+        this.must(
+            Query.of(
+                q -> q.match(
+                    m -> m.field(
+                        "passport.bibliography.bibliographical_text_field"
+                    ).query(bibliography).operator(
+                        Operator.And
                     )
                 )
-            );
-        }
+            )
+        );
     }
 
     public void setSort(String source) {

@@ -20,9 +20,12 @@ import org.springframework.data.domain.Sort;
 
 import tla.backend.es.model.meta.MappingTest;
 import tla.domain.command.LemmaSearch;
+import tla.domain.command.PassportSpec;
 import tla.domain.command.SentenceSearch;
+import tla.domain.command.TextSearch;
 import tla.domain.command.TranslationSpec;
 import tla.domain.command.TypeSpec;
+import tla.domain.command.PassportSpec.PassportSpecValue;
 import tla.domain.model.Language;
 import tla.domain.model.Script;
 
@@ -74,6 +77,47 @@ public class SearchCommandQueryBuilderTest {
     }
 
     @Test
+    void lemmaSearchQueryTest_script() {
+        LemmaSearch cmd = new LemmaSearch();
+        cmd.setScript(new Script[]{Script.DEMOTIC});
+        var query = modelMapper.map(cmd, LemmaSearchQueryBuilder.class);
+        assertAll("lemma ES search query excludes demotic lemma IDs",
+            //() -> assertEquals("", query.toJson()),
+            () -> assertTrue(query.toJson().contains("\"prefix\":{\"id\":{\"value\":\"d\""))
+        );
+    }
+
+    @Test
+    void lemmaSearchQueryTest_transcription() {
+        LemmaSearch cmd = new LemmaSearch();
+        cmd.setTranscription("nfr");
+        var query = modelMapper.map(cmd, LemmaSearchQueryBuilder.class);
+        assertAll("lemma ES search query specifies transcription",
+            () -> assertTrue(query.toJson().contains("nfr"))
+        );
+    }
+
+    @Test
+    void lemmaSearchQueryTest_annoType() {
+        LemmaSearch cmd = new LemmaSearch();
+        cmd.setAnno(new TypeSpec("annoType", null));
+        var query = modelMapper.map(cmd, LemmaSearchQueryBuilder.class);
+        assertAll("lemma ES search query specifies anno type",
+            () -> assertTrue(query.toJson().contains("BTSAnnotation"))
+        );
+    }
+
+    @Test
+    void lemmaSearchQueryTest_bibliography() {
+        LemmaSearch cmd = new LemmaSearch();
+        cmd.setBibliography("Wb 1, 130.1-5");
+        var query = modelMapper.map(cmd, LemmaSearchQueryBuilder.class);
+        assertAll("lemma ES search query specifies bibliographic reference",
+            () -> assertTrue(query.toJson().contains("Wb 1, 130.1-5"))
+        );
+    }
+
+    @Test
     void lemmaSearchQuerySortOrderTest() {
         LemmaSearch cmd = new LemmaSearch();
         cmd.setSort("root_desc");
@@ -119,6 +163,44 @@ public class SearchCommandQueryBuilderTest {
                 ),
                 "nested token translation filter query clause"
             )
+        );
+    }
+
+    @Test
+    void textSearchQueryTest_thesaurusReferences() {
+        TextSearch cmd = new TextSearch();
+        var pps = new PassportSpec();
+        var thsIds = List.of("LKQP7D6XGBGV5K52MIEFX2NWNI", "TCNODPO4NFBSRI7WQYIR23ALJI");
+        pps.put(
+            "object.description_of_object.type",
+            PassportSpecValue.of(thsIds, false)
+        );
+        cmd.setPassport(pps);
+        var query = modelMapper.map(cmd, TextSearchQueryBuilder.class);
+        assertAll("text ES query specifies thesaurus references",
+            thsIds.stream().map(
+                thsId -> () -> {
+                    assertTrue(query.toJson().contains(thsId), thsId);
+                }
+            )
+        );
+    }
+
+    @Test
+    void textSearchQueryTest_passportValues() {
+        TextSearch cmd = new TextSearch();
+        var pps = new PassportSpec();
+        pps.put(
+            "present_location.location.inventory_number",
+            PassportSpecValue.of(List.of("E 3209"), null)
+        );
+        cmd.setPassport(pps);
+        var query = modelMapper.map(cmd, TextSearchQueryBuilder.class);
+        assertAll("text ES query specifies passport values",
+            //() -> assertEquals("", query.toJson()),
+            () -> assertTrue(query.toJson().contains(
+                "passport.present_location.location.inventory_number\":{\"query\":\"E 3209\"}"
+            ))
         );
     }
 
