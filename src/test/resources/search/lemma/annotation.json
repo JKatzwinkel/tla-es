@@ -1,0 +1,30 @@
+[
+  {
+    "name": "only annotated lemmata expected on first search page if annotation type is specified",
+    "cmd": {
+      "@class": "tla.domain.command.LemmaSearch",
+      "anno": {
+        "type": "Lemma"
+      }
+    },
+    "valid": [
+      "104370",
+      "104880",
+      "105260",
+      "105310",
+      "105340",
+      "106450",
+      "106630",
+      "109510",
+      "109930",
+      "109950",
+      "110120",
+      "111660",
+      "112360",
+      "113100",
+      "114330",
+      "117380",
+      "117420"
+    ]
+  }
+]

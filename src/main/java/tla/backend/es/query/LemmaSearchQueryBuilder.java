@@ -123,7 +123,7 @@ public class LemmaSearchQueryBuilder extends ESQueryBuilder implements MultiLing
         this.must(
             Query.of(
                 q -> q.term(
-                    t -> t.field("relations.contains.eclass").value("BTSAnnotation")
+                    t -> t.field("relations.contains.eclass.keyword").value("BTSAnnotation")
                 )
             )
         );
