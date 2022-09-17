@@ -61,7 +61,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jetty:3.0.0-M4'
     implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.0-M3' // don't upgrade to M4 for now (same applies to spring-boot-starter-test 👇)
     implementation 'org.springframework.data:spring-data-elasticsearch:5.0.0-M4'
-    implementation 'org.springframework:spring-webmvc:6.0.0-M5'
+    implementation 'org.springframework:spring-webmvc:6.0.0-M6'
     implementation 'org.apache.logging.log4j:log4j-core:2.18.0'
     implementation 'org.slf4j:slf4j-simple:2.0.1'
 
