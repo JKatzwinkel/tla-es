@@ -161,8 +161,8 @@ public class RepoPopulator {
         EntityService<? extends Indexable, ? extends ElasticsearchRepository<?, ?>, ?> service
     ) {
         for (Annotation a : service.getClass().getAnnotations()) {
-            if (a instanceof ModelClass) {
-                return ((ModelClass) a).path();
+            if (a instanceof ModelClass modelClassAnnotation) {
+                return modelClassAnnotation.path();
             }
         }
         return null;

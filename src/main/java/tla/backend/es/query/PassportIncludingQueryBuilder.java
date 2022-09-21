@@ -57,8 +57,8 @@ public class PassportIncludingQueryBuilder extends ESQueryBuilder {
      */
     private void processPassportProperty(String key, PassportSpecValue value) {
         if (!value.getValues().isEmpty()) {
-            if (value instanceof PassportSpec.ThsRefPassportValue) {
-                processThsReferences(key, (PassportSpec.ThsRefPassportValue) value);
+            if (value instanceof PassportSpec.ThsRefPassportValue reference) {
+                processThsReferences(key, reference);
             } else {
                 this.must(
                     Query.of(

@@ -132,8 +132,8 @@ public class ThsEntryEntity extends UserFriendlyEntity implements Recursable {
             path -> {
                 this.getPassport().extractProperty(path).stream().forEach(
                     node -> {
-                        if (node.get() instanceof String) {
-                            years.add(Integer.valueOf((String) node.get()));
+                        if (node.get() instanceof String nodeValue) {
+                            years.add(Integer.valueOf(nodeValue));
                         }
                     }
                 );

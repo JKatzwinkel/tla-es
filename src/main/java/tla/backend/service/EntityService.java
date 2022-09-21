@@ -228,10 +228,9 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
             ModelConfig.toDTO(document)
         );
         var bulk = this.retrieveRelatedDocs(document);
-        if (document instanceof TLAEntity) {
+        if (document instanceof TLAEntity entity) {
             bulk.addAll(
-                ((TLAEntity) document).getPassport() != null ?
-                ((TLAEntity) document).getPassport().extractObjectReferences() : null
+                entity.getPassport() != null ? entity.getPassport().extractObjectReferences() : null
             );
         }
         try {
@@ -259,9 +258,9 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
      * passed is not a {@link LinkedEntity} instance.
      */
     protected EntityRetrieval.BulkEntityResolver retrieveRelatedDocs(T document) {
-        return (document instanceof LinkedEntity) ? EntityRetrieval.BulkEntityResolver.from(
-            (LinkedEntity) document
-        ) : new EntityRetrieval.BulkEntityResolver();
+        return (document instanceof LinkedEntity entity)
+            ? EntityRetrieval.BulkEntityResolver.from(entity)
+            : new EntityRetrieval.BulkEntityResolver();
     }
 
     /**
