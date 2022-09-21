@@ -8,13 +8,6 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    ignore:
-      - dependency-name: "spring-boot-autoconfigure"
-        versions:
-          - "3.0.0-M4"
-      - dependency-name: "spring-boot-starter-test"
-        versions:
-          - "3.0.0-M4"
     reviewers:
       - "jkatzwinkel"
 
