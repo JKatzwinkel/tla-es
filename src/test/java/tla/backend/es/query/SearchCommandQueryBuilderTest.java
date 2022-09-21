@@ -67,12 +67,14 @@ public class SearchCommandQueryBuilderTest {
         cmd.setTranslation(new TranslationSpec());
         cmd.getTranslation().setText("pferd");
         cmd.getTranslation().setLang(new Language[]{Language.DE});
+        cmd.setRoot("ḫzꜣ");
         var query = modelMapper.map(cmd, LemmaSearchQueryBuilder.class);
         var json = toJsonObject(query);
         assertAll("lemma search ES query",
             //() -> assertEquals("", query.toJson()),
             () -> assertEquals(List.of("type"), read(json, "$.bool.must[*].term.type.value"), "type term query"),
-            () -> assertEquals(List.of("d"), read(json, "$.bool.filter[*].prefix.id.value"), "prefix for demotic IDs")
+            () -> assertEquals(List.of("d"), read(json, "$.bool.filter[*].prefix.id.value"), "prefix for demotic IDs"),
+            () -> assertTrue(query.toJson().contains("ḫzꜣ"))
         );
     }
 

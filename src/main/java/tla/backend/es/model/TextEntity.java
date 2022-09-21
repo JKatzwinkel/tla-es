@@ -40,9 +40,6 @@ public class TextEntity extends UserFriendlyEntity implements Recursable {
     private ObjectPath[] paths;
 
     @Field(type = FieldType.Object)
-    private List<Translations> translations;
-
-    @Field(type = FieldType.Object)
     private WordCount wordCount;
 
     @Getter

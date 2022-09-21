@@ -14,11 +14,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import tla.domain.model.Language;
 
-@Data
+@Getter
+@Setter
+@ToString
 @Slf4j
 @Builder
 @NoArgsConstructor
