@@ -35,7 +35,6 @@ import tla.domain.model.meta.TLADTO;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
 @BTSeClass("BTSSentence")
 @TLADTO(SentenceDto.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)

@@ -1,8 +1,9 @@
 package tla.backend.es.query;
 
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.BucketOrder;
+import java.util.Collection;
+import java.util.List;
 
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import tla.backend.es.model.TextEntity;
@@ -17,14 +18,17 @@ public class TextSearchQueryBuilder extends PassportIncludingQueryBuilder implem
 
     private boolean expansion;
 
-    private String[] rootIds;
+    private List<String> rootIds;
 
     public TextSearchQueryBuilder() {
         this.aggregate(
-            AggregationBuilders.terms(AGG_ID_DATE).field(
-                String.format("%s.id.keyword", AGG_ID_DATE)
-            ).size(1000).order(
-                BucketOrder.key(true)
+            AGG_ID_DATE,
+            Aggregation.of(
+                a -> a.terms(
+                    ta -> ta.field(
+                        String.format("%s.id.keyword", AGG_ID_DATE)
+                    ).size(1000)
+                )
             )
         );
     }
@@ -37,7 +41,7 @@ public class TextSearchQueryBuilder extends PassportIncludingQueryBuilder implem
     }
 
     @Override
-    public void setRootIds(String[] ids) {
+    public void setRootIds(Collection<String> ids) {
         // TODO Auto-generated method stub
     }
 

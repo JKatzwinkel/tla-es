@@ -1,7 +1,7 @@
 package tla.backend.es.query;
 
-import org.elasticsearch.index.query.QueryBuilders;
-
+import co.elastic.clients.elasticsearch._types.FieldValue;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,9 +31,18 @@ public class PassportIncludingQueryBuilder extends ESQueryBuilder {
             this.getPassport().put(key, values);
         } else {
             this.filter(
-                QueryBuilders.termsQuery(
-                    String.format("passport.%s.id.keyword", key),
-                    this.getPassport().put(key, values).getValues()
+                Query.of(
+                    q -> q.terms(
+                        t -> t.field(
+                            String.format("passport.%s.id.keyword", key)
+                        ).terms(
+                            tsb -> tsb.value(
+                                this.getPassport().put(key, values).getValues().stream().map(
+                                    value -> FieldValue.of(value)
+                                ).toList()
+                            )
+                        )
+                    )
                 )
             );
         }
@@ -48,13 +57,18 @@ public class PassportIncludingQueryBuilder extends ESQueryBuilder {
      */
     private void processPassportProperty(String key, PassportSpecValue value) {
         if (!value.getValues().isEmpty()) {
-            if (value instanceof PassportSpec.ThsRefPassportValue) {
-                processThsReferences(key, (PassportSpec.ThsRefPassportValue) value);
+            if (value instanceof PassportSpec.ThsRefPassportValue reference) {
+                processThsReferences(key, reference);
             } else {
                 this.must(
-                    QueryBuilders.matchQuery(
-                        String.format("passport.%s", key),
-                        String.join(" ", value.getValues())
+                    Query.of(
+                        q -> q.match(
+                            m -> m.field(
+                                String.format("passport.%s", key)
+                            ).query(
+                                String.join(" ", value.getValues())
+                            )
+                        )
                     )
                 );
             }

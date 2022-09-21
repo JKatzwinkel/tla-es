@@ -9,6 +9,8 @@ import tla.backend.es.model.meta.Indexable;
 
 /**
  * Put this on top of services. It is being used for index population from tar file.
+ * It is also used for choosing the correct Elasticsearch index for executing a search query
+ * by the search service.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

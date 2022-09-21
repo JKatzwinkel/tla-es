@@ -15,9 +15,9 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Setting;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 import tla.backend.es.model.meta.Recursable;
@@ -30,13 +30,13 @@ import tla.domain.model.extern.AttestedTimespan;
 import tla.domain.model.meta.BTSeClass;
 import tla.domain.model.meta.TLADTO;
 
-@Data
+@Getter
+@Setter
 @Slf4j
 @SuperBuilder
 @NoArgsConstructor
 @BTSeClass("BTSThsEntry")
 @TLADTO(ThsEntryDto.class)
-@EqualsAndHashCode(callSuper = true)
 @Document(indexName = "ths", createIndex = false)
 @Setting(settingPath = "/elasticsearch/settings/indices/ths.json")
 public class ThsEntryEntity extends UserFriendlyEntity implements Recursable {
@@ -132,8 +132,8 @@ public class ThsEntryEntity extends UserFriendlyEntity implements Recursable {
             path -> {
                 this.getPassport().extractProperty(path).stream().forEach(
                     node -> {
-                        if (node.get() instanceof String) {
-                            years.add(Integer.valueOf((String) node.get()));
+                        if (node.get() instanceof String nodeValue) {
+                            years.add(Integer.valueOf(nodeValue));
                         }
                     }
                 );

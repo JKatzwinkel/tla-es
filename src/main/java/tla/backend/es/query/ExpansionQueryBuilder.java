@@ -1,8 +1,11 @@
 package tla.backend.es.query;
 
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.BucketOrder;
+import java.util.Collection;
+import java.util.List;
+
+import co.elastic.clients.elasticsearch._types.FieldValue;
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 
 public interface ExpansionQueryBuilder extends TLAQueryBuilder {
 
@@ -16,10 +19,11 @@ public interface ExpansionQueryBuilder extends TLAQueryBuilder {
     public default void setExpansion(boolean expansion) {
         if (expansion) {
             this.aggregate(
-                AggregationBuilders.terms(
-                    ESQueryResult.AGGS_ID_IDS
-                ).field(ID_FIELD).size(ID_AGG_SIZE).order(
-                    BucketOrder.key(true)
+                ESQueryResult.AGGS_ID_IDS,
+                Aggregation.of(
+                    a -> a.terms(
+                        ta -> ta.field(ID_FIELD).size(ID_AGG_SIZE)
+                    )
                 )
             );
         }
@@ -27,12 +31,22 @@ public interface ExpansionQueryBuilder extends TLAQueryBuilder {
 
     public boolean isExpansion();
 
-    public default void setRootIds(String[] ids) {
+    public default void setRootIds(Collection<String> ids) {
         this.must(
-            QueryBuilders.termsQuery("paths.id.keyword", ids)
+            Query.of(
+                q -> q.terms(
+                    t -> t.field("paths.id.keyword").terms(
+                        tsb -> tsb.value(
+                            ids.stream().map(
+                                id -> FieldValue.of(id)
+                            ).toList()
+                        )
+                    )
+                )
+            )
         );
     }
 
-    public String[] getRootIds();
+    public List<String> getRootIds();
 
 }

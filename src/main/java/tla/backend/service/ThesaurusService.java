@@ -56,10 +56,10 @@ public class ThesaurusService extends UserFriendlyEntityService<ThsEntryEntity, 
      * passport in its retrieval queue.
      */
     public static EntityRetrieval.BulkEntityResolver extractThsEntriesFromPassport(Indexable document) {
-        if (document instanceof TLAEntity) {
+        if (document instanceof TLAEntity entity) {
             return EntityRetrieval.BulkEntityResolver.of(
-                ((TLAEntity) document).getPassport() != null ?
-                ((TLAEntity) document).getPassport().extractObjectReferences() : null
+                entity.getPassport() != null ?
+                entity.getPassport().extractObjectReferences() : null
             );
         }
         return new EntityRetrieval.BulkEntityResolver();

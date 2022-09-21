@@ -39,7 +39,7 @@ public class ThsRefExpansionDependency extends TLAQueryBuilder.QueryDependency<P
         Collection<String> thsIds
     ) {
         ThsSearchQueryBuilder expansionQuery = new ThsSearchQueryBuilder();
-        expansionQuery.setRootIds(thsIds.toArray(new String[]{}));
+        expansionQuery.setRootIds(thsIds);
         expansionQuery.setExpansion(true);
         return new ThsRefExpansionDependency(
             expansionQuery,

@@ -1,32 +1,55 @@
 package tla.backend.es.query;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
-import org.elasticsearch.index.query.BoolQueryBuilder;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
 
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.ExistsQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.MatchQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch._types.query_dsl.QueryVariant;
 import tla.domain.command.TranslationSpec;
 import tla.domain.model.Language;
 
 public interface MultiLingQueryBuilder extends TLAQueryBuilder {
 
     public default void setTranslation(TranslationSpec translation) {
-        BoolQueryBuilder translationsQuery = boolQuery();
-        if (translation != null && translation.getLang() != null) {
-            var termSpecified = translation.getText() != null && !translation.getText().isBlank();
-            for (Language lang : translation.getLang()) {
-                translationsQuery.should(
-                    termSpecified
-                    ? matchQuery(
-                        String.format("%stranslations.%s", this.nestedPath(), lang),
-                        translation.getText()
-                    )
-                    : existsQuery(
-                        String.format("%stranslations.%s", this.nestedPath(), lang)
-                    )
-                );
-            }
+        if (translation == null || translation.getLang() == null) {
+            return;
         }
-        this.filter(translationsQuery);
+        Function<Language, QueryVariant> generator;
+        var termSpecified = translation.getText() != null && !translation.getText().isBlank();
+        if (termSpecified) {
+            generator = lang -> MatchQuery.of(
+                q -> q.field(
+                    String.format("%stranslations.%s", this.nestedPath(), lang)
+                ).query(
+                    translation.getText()
+                )
+            );
+        } else {
+            generator = lang -> ExistsQuery.of(
+                q -> q.field(
+                    String.format("%stranslations.%s", this.nestedPath(), lang)
+                )
+            );
+        }
+        List<Query> translationQueries = Arrays.asList(
+            translation.getLang()
+        ).stream().map(
+            lang -> new Query(generator.apply(lang))
+        ).toList();
+        this.filter(
+            Query.of(
+                q -> q.bool(
+                    BoolQuery.of(
+                        bq -> bq.should(translationQueries)
+                    )
+                )
+            )
+        );
     }
 
 }

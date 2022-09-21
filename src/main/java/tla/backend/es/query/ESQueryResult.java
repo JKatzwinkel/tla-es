@@ -3,14 +3,19 @@ package tla.backend.es.query;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.elasticsearch.search.aggregations.Aggregations;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.client.elc.Aggregation;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregation;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregations;
+import org.springframework.data.elasticsearch.core.AggregationsContainer;
 import org.springframework.data.elasticsearch.core.SearchHits;
 
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
+import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
 import lombok.Getter;
 import tla.backend.es.model.meta.Indexable;
 import tla.domain.dto.extern.PageInfo;
@@ -62,20 +67,30 @@ public class ESQueryResult<T extends Indexable> {
      * @return map of aggregated terms and corresponding document counts, or an empty map if the
      * aggregation doesn't exist
      */
-    public Map<String, Long> getAggregation(String agg) {
-        return this.aggregations.getOrDefault(agg, this.getAggregationFromESHits(agg));
+    public Map<String, Long> getAggregation(String aggName) {
+        return this.aggregations.getOrDefault(aggName, this.getAggregationFromESHits(aggName));
     }
 
-    private Map<String, Long> getAggregationFromESHits(String agg) {
-        Aggregations aggregations = (Aggregations) this.hits.getAggregations().aggregations();
-        if (aggregations == null || aggregations.get(agg) == null) {
+    private Map<String, Long> getAggregationFromESHits(String aggName) {
+        AggregationsContainer<?> aggsContainer = this.hits.getAggregations();
+        List<ElasticsearchAggregation> aggs = ((ElasticsearchAggregations) aggsContainer).aggregations();
+
+        Map<String, Aggregate> aggregations = aggs.stream().map(ElasticsearchAggregation::aggregation).collect(
+            Collectors.toMap(
+                Aggregation::getName,
+                Aggregation::getAggregate
+            )
+        );
+        if (aggregations == null || aggregations.getOrDefault(aggName, null) == null) {
             return Collections.emptyMap();
         }
-        return (
-            (Terms) aggregations.get(agg)
-        ).getBuckets().stream().collect(
+        Aggregate agg = aggregations.get(aggName);
+        if (!agg.isSterms()) {
+            return Collections.emptyMap();
+        }
+        return agg.sterms().buckets().array().stream().collect(
             Collectors.toMap(
-                Terms.Bucket::getKeyAsString, Terms.Bucket::getDocCount
+                StringTermsBucket::key, StringTermsBucket::docCount
             )
         );
     }
@@ -83,8 +98,8 @@ public class ESQueryResult<T extends Indexable> {
     /**
      * save terms aggregation results.
      */
-    public void addAggregationResults(Map<String, Map<String, Long>> aggs) {
-        this.aggregations.putAll(aggs);
+    public void addAggregationResults(Map<String, Map<String, Long>> aggValues) {
+        this.aggregations.putAll(aggValues);
     }
 
     /**

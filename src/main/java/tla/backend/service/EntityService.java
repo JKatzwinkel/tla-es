@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.RestStatusException;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
@@ -53,6 +54,9 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
 
     @Autowired
     protected SearchService searchService;
+
+    @Autowired
+    private ElasticsearchOperations elasticsearchOperations;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -114,17 +118,14 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
      * spring data elasticsearch object mapping annotations of the model class's attributes.
      */
     public boolean createIndex() {
-        IndexOperations index = searchService.getOperations().indexOps(modelClass);
+        IndexOperations index = elasticsearchOperations.indexOps(modelClass);
         var name = index.getIndexCoordinates().getIndexName();
         if (index.exists()) {
             log.info("index {} already exists.", name);
             return false;
         }
         try {
-            index.create(
-                index.createSettings(modelClass),
-                index.createMapping(modelClass)
-            );
+            index.createWithMapping();
             log.info("created index {} for model class {}.", name, modelClass.getSimpleName());
             return true;
         } catch (RestStatusException e) {
@@ -227,10 +228,9 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
             ModelConfig.toDTO(document)
         );
         var bulk = this.retrieveRelatedDocs(document);
-        if (document instanceof TLAEntity) {
+        if (document instanceof TLAEntity entity) {
             bulk.addAll(
-                ((TLAEntity) document).getPassport() != null ?
-                ((TLAEntity) document).getPassport().extractObjectReferences() : null
+                entity.getPassport() != null ? entity.getPassport().extractObjectReferences() : null
             );
         }
         try {
@@ -258,9 +258,9 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
      * passed is not a {@link LinkedEntity} instance.
      */
     protected EntityRetrieval.BulkEntityResolver retrieveRelatedDocs(T document) {
-        return (document instanceof LinkedEntity) ? EntityRetrieval.BulkEntityResolver.from(
-            (LinkedEntity) document
-        ) : new EntityRetrieval.BulkEntityResolver();
+        return (document instanceof LinkedEntity entity)
+            ? EntityRetrieval.BulkEntityResolver.from(entity)
+            : new EntityRetrieval.BulkEntityResolver();
     }
 
     /**

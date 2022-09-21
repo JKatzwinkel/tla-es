@@ -9,9 +9,9 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.lang.NonNull;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import tla.backend.es.model.meta.Indexable;
@@ -22,12 +22,12 @@ import tla.domain.model.meta.BTSeClass;
 import tla.domain.model.meta.TLADTO;
 
 
-@Data
+@Getter
+@Setter
 @SuperBuilder
 @NoArgsConstructor
 @BTSeClass("BTSComment")
 @TLADTO(CommentDto.class)
-@EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Document(indexName = "comment", createIndex = false)

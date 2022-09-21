@@ -2,16 +2,16 @@ package tla.backend.service.search;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.client.elc.NativeQuery;
+import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 
+import co.elastic.clients.elasticsearch._types.query_dsl.MultiMatchQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch._types.query_dsl.TextQueryType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Singular;
@@ -75,30 +75,41 @@ public class AutoCompleteSupport {
     /**
      * prepare multimatch query for autocomplete search.
      */
-    protected MultiMatchQueryBuilder autoCompleteQueryBuilder(String term) {
-        MultiMatchQueryBuilder query = new MultiMatchQueryBuilder(term)
-            .type(MultiMatchQueryBuilder.Type.BOOL_PREFIX);
-        for (Entry<String, Float> e : this.queryFields.entrySet()) {
-            query = query.field(
-                e.getKey(),
-                e.getValue()
-            );
-        }
-        return query;
+    protected MultiMatchQuery autoCompleteQueryBuilder(String term) {
+        return MultiMatchQuery.of(
+            mm -> mm.query(term).fields(
+                this.queryFields.keySet().stream().toList()
+            ).type(TextQueryType.BoolPrefix).query(
+                term
+            ).prefixLength(
+                term.length()
+            )
+        );
     }
 
     /**
      * create native ES search query.
      */
-    public NativeSearchQuery autoCompleteQuery(String term, String type) {
-        return new NativeSearchQueryBuilder().withFields(
+    public NativeQuery autoCompleteQuery(String term, String type) {
+        return new NativeQueryBuilder().withFields(
             this.getResponseFields()
         ).withFilter(
             (type != null && !type.isBlank()) ?
-            QueryBuilders.termQuery("type", type) :
-            QueryBuilders.boolQuery()
+            Query.of(
+                b -> b.term(
+                    t -> t.field("type").value(type)
+                )
+            ) : Query.of(
+                b -> b.bool(
+                    q -> q
+                )
+            )
         ).withQuery(
-            this.autoCompleteQueryBuilder(term)
+            Query.of(
+                q -> q.multiMatch(
+                    this.autoCompleteQueryBuilder(term)
+                )
+            )
         ).withPageable(
             PageRequest.of(0, 15)
         ).build();

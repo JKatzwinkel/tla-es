@@ -73,11 +73,15 @@ public class RepoPopulatorTest {
     void createIndex() {
         var index = operations.indexOps(TestEntity.class);
         var created = false;
-        if (!index.exists()) {
-            created |= index.create(
-                index.createSettings(TestEntity.class),
-                index.createMapping(TestEntity.class)
-            );
+        if (index.exists()) {
+            log.info("test entity ES index already exists");
+            return;
+        }
+        try {
+            created |= index.createWithMapping();
+            index.refresh();
+        } catch (Exception e) {
+            log.warn("test entity ES index already exists");
         }
         log.info("test entity ES index created: {}", created);
     }
@@ -105,6 +109,8 @@ public class RepoPopulatorTest {
         repoPopulator.flushIngestors();
         var service = repoPopulator.getService("test");
         assertEquals(testService, service);
+        var indexOps = operations.indexOps(TestEntity.class);
+        assertTrue(indexOps.exists());
         var entity = service.getRepo().findById("2");
         assertNotNull(entity);
     }

@@ -1,57 +1,48 @@
 package tla.backend.es.query;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-import org.elasticsearch.search.sort.ScoreSortBuilder;
-import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortBuilders;
-import org.elasticsearch.search.sort.SortOrder;
-
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Sort;
 
 /**
  * Representation of search order specifications.
  */
-@NoArgsConstructor
-@AllArgsConstructor
 public class SortSpec {
 
     public static final String DELIMITER = "_";
-    /**
-     * an empty sort specification instance, whose {@link #primary()} method just returns
-     * a standard {@link ScoreSortBuilder}.
-     */
-    public static final SortSpec DEFAULT = new SortSpec();
 
     /**
-     * name of field by whose value to order.
+     * default search specs (sort by "_score" in descending order).
      */
-    protected String field;
-    /**
-     * sort order (i.e. {@link SortOrder.ASC} or {@link SortOrder.DESC})
-     */
-    protected SortOrder order;
+    public static final SortSpec DEFAULT = SortSpec.from("_score_desc");
+
+    protected List<Sort.Order> orders;
+
+    public SortSpec() {
+        this.orders = new ArrayList<Sort.Order>();
+    }
 
     /**
      * Create new sort spec configured for ascending order ({@link SortOrder.ASC}) on given field.
      */
     public SortSpec(String field) {
-        this(field, SortOrder.ASC);
+        this(field, Sort.Direction.ASC);
     }
 
     /**
      * Create a new sort specification instance with given field name and sort order (<code>"asc"</code>/<code>"desc"</code>).
      */
-    public SortSpec(String field, String order) {
-        this(
-            field,
-            order.toLowerCase().equals("desc") ? SortOrder.DESC : SortOrder.ASC
+    public SortSpec(String field, Sort.Direction direction) {
+        this();
+        this.orders.add(
+            new Sort.Order(direction, field)
         );
     }
 
     /**
-     * Create a sort spec instance from a string consisting of a field name, followed by an order specifier (asc/desc),
+     * Create a sort spec instance from a string consisting of a field name, followed by a direction specifier (asc/desc),
      * seperated by the delimiter character defined in {@link #DELIMITER}.
      */
     public static SortSpec from(String source) {
@@ -62,25 +53,32 @@ public class SortSpec {
                 Arrays.asList(segm).subList(0, segm.length - 1)
             );
             if (segm.length > 1) {
-                return new SortSpec(field, segm[segm.length - 1]);
+                return new SortSpec(
+                    field,
+                    Sort.Direction.fromString(
+                        segm[segm.length - 1]
+                    )
+                );
             } else {
-                return new SortSpec(segm[0]);
+                throw new IllegalArgumentException(
+                    String.format(
+                        """
+                        cannot create SortSpec instance from string representation %s:
+                        must match the pattern fieldName%sdirection (with direction being
+                        either asc or desc)!""",
+                        source, DELIMITER
+                    )
+                );
             }
         } else {
             return new SortSpec("id");
         }
     }
 
-    public SortBuilder<?> primary() {
-        if (this.field != null) {
-            return SortBuilders.fieldSort(this.field).order(this.order);
-        } else {
-            return SortBuilders.scoreSort();
-        }
-    }
-
-    public SortBuilder<?> secondary() {
-        return SortBuilders.fieldSort("id").order(this.order);
+    public Sort build() {
+        return Sort.by(
+            this.orders
+        );
     }
 
 }

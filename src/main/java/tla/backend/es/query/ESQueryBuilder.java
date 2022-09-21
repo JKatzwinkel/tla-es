@@ -1,18 +1,17 @@
 package tla.backend.es.query;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-import static org.elasticsearch.index.query.QueryBuilders.idsQuery;
-import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
-
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.search.aggregations.AbstractAggregationBuilder;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.client.elc.NativeQuery;
+import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import tla.domain.model.meta.AbstractBTSBaseClass;
@@ -29,8 +28,10 @@ public abstract class ESQueryBuilder implements TLAQueryBuilder {
      */
     private Class<? extends AbstractBTSBaseClass> dtoClass;
 
-    private BoolQueryBuilder nativeRootQueryBuilder;
-    private List<AbstractAggregationBuilder<?>> nativeAggregationBuilders;
+    private List<Query> must;
+    private List<Query> should;
+    private List<Query> filters;
+    private Map<String, Aggregation> nativeAggregations;
     protected SortSpec sortSpec = SortSpec.DEFAULT;
 
     private List<TLAQueryBuilder.QueryDependency<?>> dependencies;
@@ -38,29 +39,29 @@ public abstract class ESQueryBuilder implements TLAQueryBuilder {
     private ESQueryResult<?> result;
 
     public ESQueryBuilder() {
-        this.nativeRootQueryBuilder = boolQuery();
-        this.nativeAggregationBuilders = new LinkedList<>();
+        this.must = new ArrayList<>();
+        this.should = new ArrayList<>();
+        this.filters = new ArrayList<>();
+        this.nativeAggregations = new HashMap<>();
         this.dependencies = new LinkedList<>();
     }
 
     /**
      * Put together an actual Elasticsearch query ready for execution.
      */
-    public NativeSearchQuery buildNativeSearchQuery(Pageable page) {
-        var qb = new NativeSearchQueryBuilder().withQuery(
-            this.getNativeRootQueryBuilder()
+    public NativeQuery buildNativeQuery(Pageable page) {
+        var qb = new NativeQueryBuilder().withQuery(
+            this.build()
         ).withPageable(
             page
-        ).withTrackTotalHits(
-            page.isPaged()
-        ).withSorts(
-            this.getSortSpec().primary()
+        ).withSort(
+            this.getSortSpec().build()
         );
-        log.info("query: {}", this.getNativeRootQueryBuilder());
-        this.getNativeAggregationBuilders().forEach(
-            agg -> {
+        log.info("query: {}", this.build());
+        this.getNativeAggregations().forEach(
+            (name, agg) -> {
                 log.info("add aggregation to query: {}", agg);
-                qb.withAggregations(agg);
+                qb.withAggregation(name, agg);
             }
         );
         return qb.build();
@@ -76,11 +77,13 @@ public abstract class ESQueryBuilder implements TLAQueryBuilder {
         this.dtoClass = dtoClass;
     }
 
-    public void setId(String[] ids) {
+    public void setId(List<String> ids) {
         if (ids != null) {
-            log.info("add {} IDs to query", ids.length);
+            log.info("add {} IDs to query", ids.size());
             this.filter(
-                idsQuery().addIds(ids)
+                Query.of(
+                    b -> b.ids(i -> i.values(ids))
+                )
             );
         }
     }
@@ -88,10 +91,14 @@ public abstract class ESQueryBuilder implements TLAQueryBuilder {
     public void setEditor(String name) {
         if (name != null) {
             this.must(
-                boolQuery().should(
-                    matchQuery("editors.author", name)
-                ).should(
-                    matchQuery("editors.contributors", name)
+                Query.of(
+                    q -> q.bool(
+                        b -> b.should(
+                            s -> s.match(m -> m.field("editors.author").query(name))
+                        ).should(
+                            s -> s.match(m -> m.field("editors.contributors").query(name))
+                        )
+                    )
                 )
             );
         }
@@ -100,6 +107,36 @@ public abstract class ESQueryBuilder implements TLAQueryBuilder {
     public void setSort(String sort) {
         log.info("receive sort order: {}", sort);
         this.sortSpec = SortSpec.from(sort);
+    }
+
+    @Override
+    public void must(Query clause) {
+        if (clause != null) {
+            this.must.add(clause);
+        }
+    }
+
+    @Override
+    public void should(Query clause) {
+        if (clause != null) {
+            this.should.add(clause);
+        }
+    }
+
+    @Override
+    public void filter(Query criterion) {
+        if (criterion != null) {
+            this.filters.add(criterion);
+        }
+    }
+
+    @Override
+    public Query build() {
+        return Query.of(
+            q -> q.bool(
+                bq -> bq.must(this.must).should(this.should).filter(this.filters)
+            )
+        );
     }
 
 }

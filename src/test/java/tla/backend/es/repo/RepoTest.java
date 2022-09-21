@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.core.convert.ElasticsearchDateConverter;
+import org.springframework.data.elasticsearch.core.index.Settings;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 
 import tla.backend.App;
@@ -33,9 +33,6 @@ public class RepoTest {
     private RepoPopulator repoPopulator;
 
     @Autowired
-    private ElasticsearchRestTemplate elasticsearchRestTemplate;
-
-    @Autowired
     private ElasticsearchOperations operations;
 
     @Test
@@ -45,7 +42,7 @@ public class RepoTest {
 
     @Test
     void esRestTemplateAvailable() {
-        assertTrue(elasticsearchRestTemplate != null, "elasticsearch rest template should not be null");
+        assertTrue(operations != null, "elasticsearch operations should not be null");
     }
 
     @Test
@@ -56,11 +53,13 @@ public class RepoTest {
         assertAll(
             () -> assertFalse(repoPopulator.repoIngestors.isEmpty(), "repo populator has registry"),
             () -> assertEquals(
-                expectedKeys.size(), EntityService.getRegisteredModelClasses().size(),
+                expectedKeys.size(),
+                EntityService.getRegisteredModelClasses().size(),
                 "all model classes have been registered by service"
             ),
             () -> assertEquals(
-                expectedKeys.size(), repoPopulator.repoIngestors.size(),
+                expectedKeys.size(),
+                repoPopulator.repoIngestors.size(),
                 "all model classes have been registered by repo ingestor"
             ),
             () -> assertAll(
@@ -94,15 +93,15 @@ public class RepoTest {
 
     @Test
     void indexLemmaSetup() {
-        IndexOperations index = elasticsearchRestTemplate.indexOps(
+        IndexOperations index = operations.indexOps(
             IndexCoordinates.of("lemma")
         );
-        Map<?,?> lemmaIndexSettings = index.getSettings();
+        Settings lemmaIndexSettings = index.getSettings().flatten();
         assertAll("index lemma should exist and be configured correctly",
             () -> assertTrue(index.exists(), "index lemma should exist"),
             () -> assertTrue(!lemmaIndexSettings.isEmpty(), "lemma index should contain settings"),
             () -> assertTrue(lemmaIndexSettings.containsKey("index.max_result_window"), "settings should contain key `max_result_window`"),
-            () -> assertEquals("100000", lemmaIndexSettings.get("index.max_result_window"))
+            () -> assertEquals(100000, lemmaIndexSettings.get("index.max_result_window"))
         );
     }
 

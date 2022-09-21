@@ -1,15 +1,12 @@
 package tla.backend.es.query;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.prefixQuery;
-import static org.elasticsearch.index.query.QueryBuilders.termQuery;
-
+import java.util.ArrayList;
 import java.util.List;
 
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.Operator;
+import org.springframework.data.domain.Sort;
 
+import co.elastic.clients.elasticsearch._types.query_dsl.Operator;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import lombok.Getter;
 import tla.backend.es.model.LemmaEntity;
 import tla.backend.service.ModelClass;
@@ -30,80 +27,136 @@ public class LemmaSearchQueryBuilder extends ESQueryBuilder implements MultiLing
     );
 
     public void setScript(List<Script> scripts) {
-        var scriptFilter = boolQuery();
-        if (scripts != null) {
-            if (!scripts.contains(Script.HIERATIC)) {
-                if (scripts.contains(Script.DEMOTIC)) {
-                    scriptFilter.must(prefixQuery("id", "d"));
-                }
-            } else {
-                if (!scripts.contains(Script.DEMOTIC)) {
-                    scriptFilter.mustNot(prefixQuery("id", "d"));
-                }
+        if (scripts == null) {
+            return;
+        }
+        Query scriptFilter = null;
+        if (!scripts.contains(Script.HIERATIC)) {
+            if (scripts.contains(Script.DEMOTIC)) {
+                scriptFilter = Query.of(
+                    q -> q.prefix(
+                        pq -> pq.field("id").value("d")
+                    )
+                );
+            }
+        } else {
+            if (!scripts.contains(Script.DEMOTIC)) {
+                scriptFilter = Query.of(
+                    q -> q.bool(
+                        bq -> bq.mustNot(
+                            iq -> iq.prefix(
+                                p -> p.field("id").value("d")
+                            )
+                        )
+                    )
+                );
             }
         }
         this.filter(scriptFilter);
     }
 
     public void setTranscription(String transcription) {
-        if (transcription != null) {
-            this.must(matchQuery("words.transcription.unicode", transcription));
+        if (transcription == null) {
+            return;
         }
+        this.must(
+            Query.of(
+                q -> q.match(
+                    mq -> mq.field("words.transcription.unicode").query(transcription)
+                )
+            )
+        );
     }
 
     public void setWordClass(TypeSpec wordClass) {
-        BoolQueryBuilder query = boolQuery();
-        if (wordClass != null) {
-            if (wordClass.getType() != null) {
-                if (wordClass.getType().equals("excl_names")) { // TODO
-                    query.mustNot(termQuery("type", "entity_name")); // TODO
-                } else if (wordClass.getType().equals("any")) {
-                } else if (!wordClass.getType().isBlank()) {
-                    query.must(termQuery("type", wordClass.getType()));
-                }
-            }
-            if (wordClass.getSubtype() != null) {
-                query.must(termQuery("subtype", wordClass.getSubtype()));
-            }
+        if (wordClass == null || wordClass.isEmpty()) {
+            return;
         }
-        this.must(query);
+        List<Query> queries = new ArrayList<Query>();
+        if (wordClass.getType().equals("excl_names")) { // TODO
+            queries.add(Query.of(
+                q -> q.bool(
+                    bq -> bq.mustNot(
+                        iq -> iq.term(
+                            t -> t.field("type").value("entity_name")
+                        )
+                    )
+                )
+            )); // TODO: ?
+        } else if (wordClass.getType().equals("any")) {
+        } else if (!wordClass.getType().isBlank()) {
+            queries.add(Query.of(
+                q -> q.term(
+                    tq -> tq.field("type").value(wordClass.getType())
+                )
+            ));
+        }
+        if (wordClass.getSubtype() != null) {
+            queries.add(Query.of(
+                q -> q.term(
+                    tq -> tq.field("subtype").value(wordClass.getSubtype())
+                )
+            ));
+        }
+        queries.forEach(
+            query -> this.must(query)
+        );
     }
 
     public void setRoot(String transcription) { // TODO spawn join query
-        if (transcription != null) {
-            this.must(matchQuery("relations.root.name", transcription));
+        if (transcription == null || transcription.isBlank()) {
+            return;
         }
+        this.must(
+            Query.of(
+                q -> q.match(
+                    m -> m.field("relations.root.name").query(transcription)
+                )
+            )
+        );
     }
 
     public void setAnno(TypeSpec annotationType) { // TODO spawn join query
-        BoolQueryBuilder q = boolQuery();
-        if (annotationType != null) {
-            if (annotationType.getType() != null) {
-                if (!annotationType.getType().isBlank()) {
-                    q.must(
-                        termQuery("relations.contains.eclass", "BTSAnnotation")
-                    );
-                }
-            }
+        if (annotationType == null || annotationType.isEmpty()) {
+            return;
         }
-        this.must(q);
+        this.must(
+            Query.of(
+                q -> q.term(
+                    t -> t.field("relations.contains.eclass.keyword").value("BTSAnnotation")
+                )
+            )
+        );
     }
 
     public void setBibliography(String bibliography) {
-        if (bibliography != null) {
-            this.must(
-                matchQuery(
-                    "passport.bibliography.bibliographical_text_field",
-                    bibliography
-                ).operator(Operator.AND)
-            );
+        if (bibliography == null) {
+            return;
         }
+        this.must(
+            Query.of(
+                q -> q.match(
+                    m -> m.field(
+                        "passport.bibliography.bibliographical_text_field"
+                    ).query(bibliography).operator(
+                        Operator.And
+                    )
+                )
+            )
+        );
     }
 
-    public void setSort(String sort) {
-        super.setSort(sort);
-        if (sortSpec.field.equals("root")) {
-            sortSpec.field = "relations.root.name";
+    public void setSort(String source) {
+        super.setSort(source);
+        Sort.Order sortOrder = sortSpec.build().toList().get(0);
+        if (sortOrder.getProperty().equals("root")) {
+            super.setSort(
+                String.format(
+                    "relations.root.name%s%s",
+                    SortSpec.DELIMITER,
+                    sortOrder.getDirection()
+                )
+            );
         }
     }
 

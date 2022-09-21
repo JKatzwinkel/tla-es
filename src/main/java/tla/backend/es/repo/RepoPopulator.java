@@ -120,6 +120,9 @@ public class RepoPopulator {
          * to batch-index all entities currently in the cache.
          */
         public void ingest() {
+            if (this.batch.isEmpty()) {
+                return;
+            }
             try {
                 (
                     (ElasticsearchRepository<S, String>) service.getRepo()
@@ -158,8 +161,8 @@ public class RepoPopulator {
         EntityService<? extends Indexable, ? extends ElasticsearchRepository<?, ?>, ?> service
     ) {
         for (Annotation a : service.getClass().getAnnotations()) {
-            if (a instanceof ModelClass) {
-                return ((ModelClass) a).path();
+            if (a instanceof ModelClass modelClassAnnotation) {
+                return modelClassAnnotation.path();
             }
         }
         return null;
@@ -303,6 +306,7 @@ public class RepoPopulator {
 
     protected void flushIngestors() {
         this.batchIngestor = null;
+        // TODO this attempt might fail, leaving pending documents in batch buffers
         for (RepoBatchIngestor<? extends Indexable> batchIngestor : this.repoIngestors.values()) {
             batchIngestor.ingest();
             log.info(

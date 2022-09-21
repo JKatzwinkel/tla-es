@@ -13,8 +13,6 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Setting;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,13 +26,13 @@ import tla.domain.dto.LemmaDto;
 import tla.domain.model.meta.BTSeClass;
 import tla.domain.model.meta.TLADTO;
 
-@Data
+@Getter
+@Setter
 @SuperBuilder
 @TLADTO(LemmaDto.class)
 @BTSeClass("BTSLemmaEntry")
 @ToString(callSuper = true)
 @JsonInclude(Include.NON_NULL)
-@EqualsAndHashCode(callSuper = true)
 @Document(indexName = "lemma", createIndex = false)
 @Setting(settingPath = "/elasticsearch/settings/indices/lemma.json")
 public class LemmaEntity extends TLAEntity {

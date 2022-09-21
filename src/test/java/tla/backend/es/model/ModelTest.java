@@ -130,40 +130,8 @@ public class ModelTest {
     void entitySuperClass_equality() throws Exception {
         Indexable lemma = LemmaEntity.builder().id("ID").build();
         Indexable term = ThsEntryEntity.builder().id("ID").build();
-        assertAll("entities of different subclass with same ID should not be equal",
+        assertAll("entities of different eclass with same ID should not be equal",
             () -> assertNotEquals(lemma, term, "lemma 'ID' should not equal ths term 'ID'")
-        );
-    }
-
-    @Test
-    void translationsEqual() throws Exception {
-        assertTrue(mapper != null, "entitymapper should not be null");
-        Translations t1 = Translations.builder().de(List.of("übersetzung")).en(List.of("translation", "meaning")).build();
-        Translations t2 = Translations.builder().de(Arrays.asList("übersetzung")).en(Arrays.asList("translation", "meaning")).build();
-        Translations t3 = mapper.readValue("{\"de\": [\"übersetzung\"], \"en\": [\"translation\", \"meaning\"]}", Translations.class);
-        assertAll("translations objects should be equal",
-            () -> assertEquals(t2, t1, "translation instances should be equal regardless of build method parameter type"),
-            () -> assertEquals(t3, t1, "deserialized instance should be equal to builder-instantiated"),
-            () -> assertNull(t1.getFr(), "builder-built french translations array should be null"),
-            () -> assertNull(t3.getFr(), "deserialized french translations array should be null"),
-            () -> assertEquals(t3.hashCode(), t1.hashCode(), "hashcodes equal"),
-            () -> assertNull(t3.get(null), "undefined language causes null")
-        );
-    }
-
-    @Test
-    void editInfoEqual() throws Exception {
-        EditorInfo e1 = mapper.readValue(
-            "{\"author\":\"author\", \"updated\":\"2019-12-18\"}",
-            EditorInfo.class
-        );
-        EditorInfo e2 = mapper.readValue(
-            mapper.writeValueAsString(e1),
-            EditorInfo.class
-        );
-        assertAll("test EditorInfo equality",
-            () -> assertEquals(e1, e2, "instances as a whole should be equal"),
-            () -> assertEquals(e1.getUpdated(), e2.getUpdated(), "edit dates should be equals")
         );
     }
 
@@ -184,7 +152,6 @@ public class ModelTest {
         assertAll("thesaurus entry instances should be equal regardless of creation method",
             () -> assertNotEquals(t_built, t_read, "deserialized instance should not be the same as built instance"),
             () -> assertEquals(t_built, t_round, "built instance should remain the same after serialization and deserialization via ES entity mapper"),
-            () -> assertEquals(t_built.getEditors(), t_read.getEditors(), "edit infos should be equal"),
             () -> assertEquals(t_built.hashCode(), t_round.hashCode(), "hashcode same after deserializing serialization")
         );
     }

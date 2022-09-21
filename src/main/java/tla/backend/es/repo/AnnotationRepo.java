@@ -1,7 +1,6 @@
 package tla.backend.es.repo;
 
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-
 import tla.backend.es.model.AnnotationEntity;
+import tla.backend.es.repo.custom.EntityRepo;
 
-public interface AnnotationRepo extends ElasticsearchRepository<AnnotationEntity, String> {}
+public interface AnnotationRepo extends EntityRepo<AnnotationEntity, String> {}

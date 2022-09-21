@@ -356,8 +356,8 @@ public class ModelConfig {
      */
     public static Class<? extends AbstractDto> getModelClassDTO(Class<? extends Indexable> modelClass) {
         for (Annotation annotation : modelClass.getAnnotations()) {
-            if (annotation instanceof TLADTO) {
-                return ((TLADTO) annotation).value();
+            if (annotation instanceof TLADTO tladto) {
+                return tladto.value();
             }
         }
         log.warn("class {} has not @TLADTO annotation", modelClass.getName());

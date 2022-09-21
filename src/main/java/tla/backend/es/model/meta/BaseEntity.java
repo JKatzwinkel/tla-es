@@ -34,11 +34,12 @@ import tla.domain.model.meta.TLADTO;
 @SuperBuilder
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public abstract class BaseEntity extends LinkedEntity implements Indexable {
 
     @Id
     @NonNull
+    @EqualsAndHashCode.Include
     @Field(type = FieldType.Keyword)
     private String id;
 

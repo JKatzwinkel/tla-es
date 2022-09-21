@@ -12,7 +12,7 @@ plugins {
 }
 
 group = 'org.bbaw.aaew.tla'
-version = '0.0.904-dev'
+version = '0.0.950-dev'
 sourceCompatibility = '17'
 
 publishing {
@@ -34,19 +34,6 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
-configurations {
-    implementation.exclude module: 'spring-boot-starter-tomcat'
-    implementation.exclude group: 'jakarta.xml.bind'
-    implementation.exclude group: 'org.xmlunit'
-    implementation.exclude group: 'org.skyscreamer'
-    implementation.exclude module: 'jackson-dataformat-smile'
-    // ES transport client stuff
-    implementation.exclude module: 'transport'
-    implementation.exclude module: 'transport-netty4-client'
-    testImplementation.exclude module: 'junit-vintage-engine'
-    testImplementation.exclude group: 'org.junit.vintage'
-}
-
 dependencies {
     implementation 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
@@ -60,12 +47,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot:3.0.0-M4'
     implementation 'org.springframework.boot:spring-boot-starter-jetty:3.0.0-M4'
     implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.0-M3' // don't upgrade to M4 for now (same applies to spring-boot-starter-test 👇)
-    implementation 'org.springframework.data:spring-data-elasticsearch:5.0.0-M4'
+    implementation 'org.springframework.data:spring-data-elasticsearch:5.0.0-M5'
     implementation 'org.springframework:spring-webmvc:6.0.0-M6'
     implementation 'org.apache.logging.log4j:log4j-core:2.18.0'
     implementation 'org.slf4j:slf4j-simple:2.0.1'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.0-M3'
+    testImplementation('org.springframework.boot:spring-boot-starter-test:3.0.0-M3') {
+        exclude group: 'org.xmlunit', module: 'xmlunit-core'
+        exclude group: 'jakarta.xml.bind'
+    }
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
 }
@@ -90,6 +80,10 @@ task testSearch(type: Test) {
     useJUnitPlatform {
       includeTags 'search'
     }
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ['-Xlint:deprecation']
 }
 
 task testAll(type: Test) {
