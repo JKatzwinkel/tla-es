@@ -45,7 +45,7 @@ dependencies {
     implementation 'org.yaml:snakeyaml:1.32'
 
     implementation 'org.springframework.boot:spring-boot:3.0.0-M4'
-    implementation 'org.springframework.boot:spring-boot-starter-jetty:3.0.0-M4'
+    implementation 'org.springframework.boot:spring-boot-starter-jetty:3.0.0-M5'
     implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.0-M3'
     implementation 'org.springframework.data:spring-data-elasticsearch:5.0.0-M5'
     implementation 'org.springframework:spring-webmvc:6.0.0-M6'
