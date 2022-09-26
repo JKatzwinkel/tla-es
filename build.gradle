@@ -42,7 +42,7 @@ dependencies {
     implementation 'com.github.jkatzwinkel:tla-common:main-SNAPSHOT'
     implementation 'org.modelmapper:modelmapper:3.1.0'
     implementation 'org.apache.commons:commons-compress:1.21'
-    implementation 'org.yaml:snakeyaml:1.32'
+    implementation 'org.yaml:snakeyaml:1.33'
 
     implementation 'org.springframework.boot:spring-boot:3.0.0-M5'
     implementation 'org.springframework.boot:spring-boot-starter-jetty:3.0.0-M5'
