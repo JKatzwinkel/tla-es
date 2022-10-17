@@ -16,9 +16,9 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+import org.springframework.data.elasticsearch.UncategorizedElasticsearchException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import tla.backend.es.model.meta.Indexable;
@@ -128,7 +128,7 @@ public abstract class EntityService<T extends Indexable, R extends Elasticsearch
             index.createWithMapping();
             log.info("created index {} for model class {}.", name, modelClass.getSimpleName());
             return true;
-        } catch (RestStatusException e) {
+        } catch (RestStatusException | UncategorizedElasticsearchException e) {
             log.warn("index {} already exists!", name);
         }
         return false;
