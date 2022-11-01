@@ -52,7 +52,7 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-core:2.19.0'
     implementation 'org.slf4j:slf4j-simple:2.0.3'
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test:3.0.0-M5') {
+    testImplementation('org.springframework.boot:spring-boot-starter-test:3.0.0-RC1') {
         exclude group: 'org.xmlunit', module: 'xmlunit-core'
         exclude group: 'jakarta.xml.bind'
     }
