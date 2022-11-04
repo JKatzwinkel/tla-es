@@ -90,7 +90,8 @@ public class ESQueryResult<T extends Indexable> {
         }
         return agg.sterms().buckets().array().stream().collect(
             Collectors.toMap(
-                StringTermsBucket::key, StringTermsBucket::docCount
+                bucket -> bucket.key().toString(),
+                StringTermsBucket::docCount
             )
         );
     }
