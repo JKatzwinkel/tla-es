@@ -26,7 +26,7 @@ public class QueryResultTest {
         
         SearchHits<?> searchHits = new SearchHitsImpl<>(
             pages * ESQueryResult.SEARCH_RESULT_PAGE_SIZE,
-            TotalHitsRelation.EQUAL_TO, 10f, null, HITS_MOCK, null, null
+            TotalHitsRelation.EQUAL_TO, 10f, null, null, HITS_MOCK, null, null
         );
         Pageable page = PageRequest.of(0, ESQueryResult.SEARCH_RESULT_PAGE_SIZE);
         assertEquals(
@@ -39,7 +39,7 @@ public class QueryResultTest {
         final int pages = 2;
         SearchHits<?> searchHits = new SearchHitsImpl<>(
             pages * ESQueryResult.SEARCH_RESULT_PAGE_SIZE + 1,
-            TotalHitsRelation.EQUAL_TO, 10f, null, HITS_MOCK, null, null
+            TotalHitsRelation.EQUAL_TO, 10f, null, null, HITS_MOCK, null, null
         );
         Pageable page = PageRequest.of(0, ESQueryResult.SEARCH_RESULT_PAGE_SIZE);
         assertEquals(
@@ -52,7 +52,7 @@ public class QueryResultTest {
     void queryResultHitCount() {
         SearchHits<LemmaEntity> searchHits = new SearchHitsImpl<>(
             ESQueryResult.SEARCH_RESULT_PAGE_SIZE,
-            TotalHitsRelation.EQUAL_TO, 10f, null, HITS_MOCK, null, null
+            TotalHitsRelation.EQUAL_TO, 10f, null, null, HITS_MOCK, null, null
         );
         ESQueryResult<?> result = new ESQueryResult<LemmaEntity>(searchHits, Pageable.unpaged());
         assertEquals(ESQueryResult.SEARCH_RESULT_PAGE_SIZE, result.getHitCount());
