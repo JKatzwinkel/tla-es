@@ -39,4 +39,10 @@ jobs:
     - name: query backend endpoints
       run: curl -s http://localhost:8090/
 
+    - name: query lemma details
+      run: curl -f http://localhost:8090/lemma/get/10050
+
+    - name: query thesaurus entry details
+      run: curl -f http://localhost:8090/ths/get/7pupjz
+
 ...
