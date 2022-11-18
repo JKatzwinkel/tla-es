@@ -25,12 +25,9 @@ jobs:
       run: docker-compose logs populate
 
     - name: wait for backend to be populated with corpus data
-      uses: "cygnetdigital/wait_for_response@v2.0.0"
-      with:
-        url: http://localhost:8090/lemma/get/100690
-        responseCode: 200
-        interval: 5000
-        timeout: 120000
+      run: >
+        bash .github/scripts/wait_for_response.sh
+        http://localhost:8090/lemma/get/100690 120
       continue-on-error: true
 
     - name: query backend version
@@ -40,9 +37,13 @@ jobs:
       run: curl -s http://localhost:8090/
 
     - name: query lemma details
-      run: curl -f http://localhost:8090/lemma/get/10050
+      run: >
+        bash .github/scripts/wait_for_response.sh
+        http://localhost:8090/lemma/get/10050 60
 
     - name: query thesaurus entry details
-      run: curl -f http://localhost:8090/ths/get/7pupjz
+      run: >
+        bash .github/scripts/wait_for_response.sh
+        http://localhost:8090/ths/get/7pupjz 60
 
 ...
