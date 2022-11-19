@@ -24,11 +24,9 @@ jobs:
         ES_PORT: 9200
 
     - name: Wait for ES to respond
-      uses: cygnetdigital/wait_for_response@v2.0.0
-      with:
-        url: 'http://localhost:9200'
-        responseCode: '200'
-        timeout: 30000
+      run: >
+        bash .github/scripts/wait_for_response.sh
+        http://localhost:9200 30
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
