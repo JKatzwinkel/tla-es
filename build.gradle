@@ -55,7 +55,7 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-core:2.19.0'
 
     testImplementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
-    testImplementation('org.springframework.boot:spring-boot-starter-test:3.0.0-RC2') {
+    testImplementation('org.springframework.boot:spring-boot-starter-test:3.0.0') {
         exclude group: 'org.xmlunit', module: 'xmlunit-core'
         exclude group: 'jakarta.xml.bind'
     }
