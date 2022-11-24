@@ -51,7 +51,7 @@ dependencies {
     }
     implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.0-RC2'
     implementation 'org.springframework.data:spring-data-elasticsearch:5.0.0'
-    implementation 'org.springframework:spring-webmvc:6.0.0'
+    implementation 'org.springframework:spring-webmvc:6.0.2'
     implementation 'org.apache.logging.log4j:log4j-core:2.19.0'
 
     testImplementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
