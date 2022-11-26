@@ -1,3 +1,11 @@
+buildscript {
+  repositories {
+    // maybe also add gradle's maven repo for plugins as well, cf. https://github.com/JKatzwinkel/tla-es/pull/82
+    // and more specifically https://github.com/gradle/gradle/issues/22864#issuecomment-1327978524
+    mavenCentral()
+  }
+}
+
 plugins {
     id 'war'
     id 'java'
