@@ -265,10 +265,6 @@ public class ModelConfig {
                 SentenceEntity::getTranslations, SentenceDto::setTranslations
             )
         );
-        // note: addMapping on component (lemmatization) must be done before addMappings on container class (token)!
-        modelMapper.createTypeMap(Token.Lemmatization.class, SentenceToken.Lemmatization.class).addMapping(
-            Token.Lemmatization::getPartOfSpeech, SentenceToken.Lemmatization::setPartOfSpeech
-        );
         modelMapper.createTypeMap(Token.class, SentenceToken.class).addMappings(
             m -> m.using(translationsToMapConverter).map(
                 Token::getTranslations, SentenceToken::setTranslations
