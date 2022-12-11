@@ -5,10 +5,4 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 
 import tla.backend.es.model.meta.Indexable;
 
-public interface EntityRepo<T extends Indexable, ID> extends ElasticsearchRepository<T, ID> {
-
-    @Override
-    @Query("{\"ids\": {\"values\": ?0 }}")
-    Iterable<T> findAllById(Iterable<ID> ids);
-
-}
+public interface EntityRepo<T extends Indexable, ID> extends ElasticsearchRepository<T, ID> {}
