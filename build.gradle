@@ -53,7 +53,7 @@ dependencies {
     implementation 'org.yaml:snakeyaml:1.33'
 
     implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
-    implementation 'org.springframework.boot:spring-boot:3.0.0'
+    implementation 'org.springframework.boot:spring-boot:3.0.1'
     implementation('org.springframework.boot:spring-boot-starter-jetty:3.0.0') {
         exclude group: 'jakarta.servlet', module: 'jakarta.servlet-api' // until jetty 12
     }
