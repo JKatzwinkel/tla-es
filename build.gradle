@@ -60,7 +60,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.1'
     implementation 'org.springframework.data:spring-data-elasticsearch:5.0.0'
     implementation 'org.springframework:spring-webmvc:6.0.3'
-    implementation 'org.springframework.boot:spring-boot-starter-logging:3.0.0'
+    implementation 'org.springframework.boot:spring-boot-starter-logging:3.0.1'
 
     testImplementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
     testImplementation('org.springframework.boot:spring-boot-starter-test:3.0.1') {
