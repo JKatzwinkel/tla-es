@@ -33,7 +33,7 @@ jobs:
         http://localhost:9200 30
 
     - name: Cache sample corpus data
-      uses: actions/cache@v3.2.2
+      uses: actions/cache@v3.2.3
       env:
         cache-name: cache-corpus-data
       with:
