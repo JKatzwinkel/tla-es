@@ -57,7 +57,7 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-jetty:3.0.1') {
         exclude group: 'jakarta.servlet', module: 'jakarta.servlet-api' // until jetty 12
     }
-    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.1'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.2'
     implementation 'org.springframework.data:spring-data-elasticsearch:5.0.1'
     implementation 'org.springframework:spring-webmvc:6.0.4'
     implementation 'org.springframework.boot:spring-boot-starter-logging:3.0.1'
