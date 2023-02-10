@@ -5,8 +5,8 @@ name: searchtest
 on:
   push:
     branches:
-      - main
-  pull_request: {}
+      - 'qa'
+  # pull_request: {}
 
 jobs:
   search:

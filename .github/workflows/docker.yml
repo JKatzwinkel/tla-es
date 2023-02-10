@@ -2,7 +2,11 @@
 
 name: deploy
 
-on: [pull_request, push]
+on:
+  push:
+    branches:
+    - 'qa'
+  # pull_request
 
 jobs:
 
