@@ -38,15 +38,14 @@ publishing {
 
 repositories {
     mavenCentral()
-    maven { url 'https://projectlombok.org/edge-releases' }
     maven { url 'https://repo.spring.io/milestone' }
     maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    implementation 'org.projectlombok:lombok:edge-SNAPSHOT'
-    annotationProcessor 'org.projectlombok:lombok:edge-SNAPSHOT'
-    testAnnotationProcessor 'org.projectlombok:lombok:edge-SNAPSHOT'
+    implementation 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 
     implementation 'com.github.jkatzwinkel:tla-common:main-SNAPSHOT'
     implementation 'org.modelmapper:modelmapper:3.1.1'
