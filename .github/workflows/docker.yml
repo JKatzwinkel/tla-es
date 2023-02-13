@@ -3,10 +3,10 @@
 name: deploy
 
 on:
+  pull_request:
   push:
     branches:
-    - 'qa'
-  # pull_request
+    - main
 
 jobs:
 
