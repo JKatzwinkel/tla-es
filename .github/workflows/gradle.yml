@@ -41,7 +41,7 @@ jobs:
       run: ./gradlew build
       
     - name: Process junit reports
-      uses: mikepenz/action-junit-report@v3.7.1
+      uses: mikepenz/action-junit-report@v3.7.4
       if: always()
       with:
         report_paths: 'build/test-results/test/TEST-*.xml'
