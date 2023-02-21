@@ -5,8 +5,11 @@ name: searchtest
 on:
   push:
     branches:
-      - 'qa'
-  # pull_request: {}
+      - main
+  pull_request:
+    paths:
+      - 'src/test/resources/search/**/*.json'
+      - 'docker-compose.yml'
 
 jobs:
   search:
