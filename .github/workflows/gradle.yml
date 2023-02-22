@@ -14,6 +14,9 @@ jobs:
         java-version:
           - 17
           - 19
+    
+    permissions:
+      checks: write
 
     steps:
     - uses: actions/checkout@v3.3.0
