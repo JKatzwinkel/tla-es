@@ -14,6 +14,9 @@ jobs:
         java-version:
           - 17
           - 19
+    
+    permissions:
+      checks: write
 
     steps:
     - uses: actions/checkout@v3.3.0
@@ -41,7 +44,7 @@ jobs:
       run: ./gradlew build
       
     - name: Process junit reports
-      uses: mikepenz/action-junit-report@v3.7.1
+      uses: mikepenz/action-junit-report@v3.7.4
       if: always()
       with:
         report_paths: 'build/test-results/test/TEST-*.xml'
