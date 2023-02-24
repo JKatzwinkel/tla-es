@@ -63,7 +63,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-logging:3.0.2'
 
     testImplementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
-    testImplementation('org.springframework.boot:spring-boot-starter-test:3.0.2') {
+    testImplementation('org.springframework.boot:spring-boot-starter-test:3.0.3') {
         exclude group: 'org.xmlunit', module: 'xmlunit-core'
         exclude group: 'jakarta.xml.bind'
     }
