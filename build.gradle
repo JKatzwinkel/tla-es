@@ -53,17 +53,17 @@ dependencies {
     implementation 'org.yaml:snakeyaml:1.33'
 
     implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
-    implementation 'org.springframework.boot:spring-boot:3.0.2'
-    implementation('org.springframework.boot:spring-boot-starter-jetty:3.0.2') {
+    implementation 'org.springframework.boot:spring-boot:3.1.0-M1'
+    implementation('org.springframework.boot:spring-boot-starter-jetty:3.1.0-M1') {
         exclude group: 'jakarta.servlet', module: 'jakarta.servlet-api' // until jetty 12
     }
-    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.2'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.1.0-M1'
     implementation 'org.springframework.data:spring-data-elasticsearch:5.1.0-M2'
     implementation 'org.springframework:spring-webmvc:6.0.5'
-    implementation 'org.springframework.boot:spring-boot-starter-logging:3.0.2'
+    implementation 'org.springframework.boot:spring-boot-starter-logging:3.1.0-M1'
 
     testImplementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
-    testImplementation('org.springframework.boot:spring-boot-starter-test:3.0.2') {
+    testImplementation('org.springframework.boot:spring-boot-starter-test:3.1.0-M1') {
         exclude group: 'org.xmlunit', module: 'xmlunit-core'
         exclude group: 'jakarta.xml.bind'
     }
