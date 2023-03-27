@@ -69,6 +69,8 @@ dependencies {
     }
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+    // until gradle 8.1-rc-2, cf. https://github.com/gradle/gradle/issues/24429#issuecomment-1478698695
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.9.2'
 }
 
 application {
@@ -76,7 +78,7 @@ application {
 }
 
 test {
-    useJUnitPlatform{
+    useJUnitPlatform {
       includeTags '!search'
     }
     environment "ES_PORT", env.fetch("ES_PORT", "9200")
