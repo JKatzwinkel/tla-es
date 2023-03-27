@@ -21,6 +21,6 @@ jobs:
         java-version: 19
 
     - name: Submit dependencies
-      uses: mikepenz/gradle-dependency-submission@v0.8.5
+      uses: mikepenz/gradle-dependency-submission@v0.8.6
 
 ...
