@@ -18,7 +18,7 @@ The TLA backend server is a Spring Boot application using Elasticsearch as a sea
 
 ## Installation
 
-> **TL;DR:** run `SAMPLE_URL=http://aaew64.bbaw.de/resources/tla-data/tla-sample-20210115-1000t.tar.gz docker-compose up -d`
+> **TL;DR:** run `SAMPLE_URL=http://aaew64.bbaw.de/resources/tla-data/tla-sample-20210115-1000t.tar.gz docker compose up -d`
 
 There are two methods for getting this thing up and running.
 
@@ -48,7 +48,7 @@ Requirements:
 Start the docker container setup configured in `docker-compose.yml`:
 
 ```bash
-  docker-compose up -d
+  docker compose up -d
 ```
 
 This will build and run three containers:
@@ -77,7 +77,7 @@ Requirements:
 1. This method requires you to provide a running Elasticsearch instance. If you have Docker Compose, you can simply start one in a
    container by using the configuration coming with this repository:
    ```bash
-   docker-compose up -d es
+   docker compose up -d es
    ```
    Before continuing, make sure Elasticsearch is running by checking the output of `docker ps --all` or
    accessing [its REST interface](http://localhost:9200) in a browser (change `9200` in case that you
