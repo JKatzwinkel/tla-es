@@ -29,7 +29,7 @@ import tla.domain.dto.extern.PageInfo;
 public class ESQueryResult<T extends Indexable> {
 
     /**
-     * How many search results fit in one single page.
+     * How many search results fit in one single page by default.
      */
     public static final int SEARCH_RESULT_PAGE_SIZE = 20;
 
@@ -118,15 +118,15 @@ public class ESQueryResult<T extends Indexable> {
         return PageInfo.builder()
             .number(pageable.getPageNumber())
             .totalElements(hits.getTotalHits())
-            .size(SEARCH_RESULT_PAGE_SIZE)
+            .size(pageable.getPageSize())
             .numberOfElements(
                 Math.min(
-                    SEARCH_RESULT_PAGE_SIZE,
+                    pageable.getPageSize(),
                     hits.getSearchHits().size()
                 )
             ).totalPages(
-                (int) hits.getTotalHits() / SEARCH_RESULT_PAGE_SIZE + (
-                    hits.getTotalHits() % SEARCH_RESULT_PAGE_SIZE < 1 ? 0 : 1
+                (int) hits.getTotalHits() / pageable.getPageSize() + (
+                    hits.getTotalHits() % pageable.getPageSize() < 1 ? 0 : 1
                 )
             ).build();
     }
