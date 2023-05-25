@@ -43,9 +43,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.projectlombok:lombok:1.18.26'
-    annotationProcessor 'org.projectlombok:lombok:1.18.26'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
+    implementation 'org.projectlombok:lombok:1.18.28'
+    annotationProcessor 'org.projectlombok:lombok:1.18.28'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
 
     implementation 'com.github.jkatzwinkel:tla-common:main-SNAPSHOT'
     implementation 'org.modelmapper:modelmapper:3.1.1'
