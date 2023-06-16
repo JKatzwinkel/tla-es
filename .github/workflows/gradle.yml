@@ -32,16 +32,16 @@ jobs:
       env:
         ES_PORT: 9200
 
+    - name: Build project
+      run: ./gradlew assemble
+
     - name: Wait for ES to respond
       run: >
         bash .github/scripts/wait_for_response.sh
         http://localhost:9200 30
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-
-    - name: Build with Gradle
-      run: ./gradlew build
+    - name: Run tests
+      run: ./gradlew test
       
     - name: Process junit reports
       uses: mikepenz/action-junit-report@v3.7.7
