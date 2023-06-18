@@ -30,6 +30,9 @@ jobs:
       env:
         ES_PORT: 9200
 
+    - name: Install project dependencies
+      run: ./gradlew testclasses
+
     - name: Wait for ES to respond
       run: >
         bash .github/scripts/wait_for_response.sh
@@ -44,9 +47,6 @@ jobs:
         key: ${{ runner.os }}-searchtest-${{ env.cache-name }}-${{ hashFiles('sample.tar.gz') }}
         restore-keys: |
           ${{ runner.os }}-searchtest-${{ env.cache-name }}-
-
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
 
     - name: Ingest corpus data
       run: ./gradlew populate
