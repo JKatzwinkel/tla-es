@@ -7,11 +7,12 @@ RUN gradle bootJar --no-daemon && \
     mv build/libs/*.jar bin/run/tla-backend.jar
 
 
-FROM openjdk:18.0.2-jdk-buster
+FROM openjdk:22-jdk-slim-bookworm
 
 RUN mkdir /app
-WORKDIR /app/
+RUN apt-get update && apt-get install -y wget
 COPY --from=build /home/gradle/tla/bin/run/ /app/
+WORKDIR /app/
 
 EXPOSE 8090
 ENTRYPOINT ["sh", "/app/entrypoint.sh"]
