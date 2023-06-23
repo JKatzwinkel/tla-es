@@ -14,7 +14,7 @@ plugins {
     id 'maven-publish'
     id 'co.uzzu.dotenv.gradle' version '2.0.0'
     id 'de.undercouch.download' version '5.4.0'
-    id 'org.springframework.boot' version '3.1.0'
+    id 'org.springframework.boot' version '3.1.1'
     id 'com.github.ben-manes.versions' version '0.47.0'
     id 'com.github.dawnwords.jacoco.badge' version '0.2.4'
 }
@@ -54,17 +54,17 @@ dependencies {
     implementation 'org.yaml:snakeyaml:2.0'
 
     implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
-    implementation 'org.springframework.boot:spring-boot:3.1.0'
-    implementation('org.springframework.boot:spring-boot-starter-jetty:3.1.0') {
+    implementation 'org.springframework.boot:spring-boot:3.1.1'
+    implementation('org.springframework.boot:spring-boot-starter-jetty:3.1.1') {
         exclude group: 'jakarta.servlet', module: 'jakarta.servlet-api' // until jetty 12
     }
-    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.1.0'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.1.1'
     implementation 'org.springframework.data:spring-data-elasticsearch:5.1.1'
     implementation 'org.springframework:spring-webmvc:6.1.0-M1'
-    implementation 'org.springframework.boot:spring-boot-starter-logging:3.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-logging:3.1.1'
 
     testImplementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
-    testImplementation('org.springframework.boot:spring-boot-starter-test:3.1.0') {
+    testImplementation('org.springframework.boot:spring-boot-starter-test:3.1.1') {
         exclude group: 'org.xmlunit', module: 'xmlunit-core'
         exclude group: 'jakarta.xml.bind'
     }
