@@ -54,7 +54,6 @@ dependencies {
     implementation 'org.yaml:snakeyaml:2.0'
 
     implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
-    implementation 'org.springframework.boot:spring-boot:3.2.0-M1'
     implementation('org.springframework.boot:spring-boot-starter-jetty:3.2.0-M1') {
         exclude group: 'jakarta.servlet', module: 'jakarta.servlet-api' // until jetty 12
     }
