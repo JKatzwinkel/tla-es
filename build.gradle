@@ -67,7 +67,7 @@ dependencies {
         exclude group: 'org.xmlunit', module: 'xmlunit-core'
         exclude group: 'jakarta.xml.bind'
     }
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.0-RC1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
 }
 
