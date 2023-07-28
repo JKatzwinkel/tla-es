@@ -70,7 +70,7 @@ You can check its progress by taking a look into its log output:
 Requirements:
 
 - Java 17
-- Elasticsearch 8.7.0 *or* Docker Compose
+- Elasticsearch 8.9.0 *or* Docker Compose
 
 #### 2.1. Prerequesites
 
@@ -89,11 +89,13 @@ Requirements:
 you must set the `SAMPLE_URL` environment variable to a URL pointing to a tar-compressed TLA corpus data
 file. One way to do this is to create a `.env` file in the directory containing this README, and setting
 the variable `SAMPLE_URL` in there:
+
    ```ini
    SAMPLE_URL=http://example.org/sample.tar.gz
    ```
 
 4. Finally, download and store TLA corpus data from the specified source by running the `populate` gradle task:
+
    ```bash
    ./gradlew populate
    ```
