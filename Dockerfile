@@ -1,13 +1,13 @@
-FROM gradle:8.2.1-jdk17 AS build
+FROM openjdk:20-jdk-slim-bullseye AS build
 
-COPY --chown=gradle:gradle . /home/gradle/tla
+COPY . /home/gradle/tla
 WORKDIR /home/gradle/tla
 
-RUN gradle bootJar --no-daemon && \
+RUN ./gradlew bootJar --no-daemon && \
     mv build/libs/*.jar bin/run/tla-backend.jar
 
 
-FROM openjdk:22-jdk-slim-bookworm
+FROM openjdk:20-jdk-slim-bullseye
 
 RUN mkdir /app
 RUN apt-get update && apt-get install -y wget
