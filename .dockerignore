@@ -8,9 +8,6 @@ docker-compose.yml
 .gitattributes
 .github
 .gitignore
-.gradle
-gradle
-gradlew
 gradlew.bat
 .project
 README.md
