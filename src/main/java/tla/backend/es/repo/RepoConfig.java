@@ -6,7 +6,14 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import co.elastic.clients.transport.rest_client.RestClientOptions;
+import co.elastic.clients.transport.rest_client.RestClientTransport;
+import co.elastic.clients.json.jackson.JacksonJsonpMapper;
+
+import org.elasticsearch.client.RestClient;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -31,6 +38,21 @@ public class RepoConfig extends ElasticsearchConfiguration {
 
     @Autowired
     private Environment env;
+
+    /**
+     * TODO this is a workaround for a breaking change in the elasticsearch java client version 8.9.0:
+     * https://discuss.elastic.co/t/caused-by-java-lang-nosuchmethoderror-void-co-elastic-clients-transport-rest-client-restclienttransport-init/339573/9
+     *
+     * it might no longer be needed once spring boot 3.2.0 (or 3.2.0-M2 even) is released:
+     * https://github.com/spring-projects/spring-boot/issues/36669#issuecomment-1672953229
+     * so once spring-boot has upgraded to elasticsearch client 8.9.0, this bean probably be
+     * removed because spring boot's default bean will make it redundant:
+     * https://github.com/spring-projects/spring-boot/commit/6c3c8398d019fc8031e140ee3ecbb94fb4856483
+     */
+    @Bean
+    RestClientTransport restClientTransport(RestClient restClient, ObjectProvider<RestClientOptions> transportOptions) {
+        return new RestClientTransport(restClient, new JacksonJsonpMapper(), transportOptions.getIfAvailable());
+    }
 
     @Override
     public ClientConfiguration clientConfiguration() {
