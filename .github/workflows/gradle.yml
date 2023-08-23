@@ -27,6 +27,8 @@ jobs:
         java-version: ${{ matrix.java-version }}
         cache: 'gradle'
 
+    - uses: gradle/wrapper-validation-action@v1.1.0
+
     - name: Set up Elasticsearch container
       run: docker compose up -d es
       env:
