@@ -23,5 +23,19 @@
 			"version": "latest",
 			"dockerDashComposeVersion": "v2"
 		}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ryanluker.vscode-coverage-gutters"
+			],
+			"settings": {
+				"editor.renderWhitespace": "all",
+				"coverage-gutters.coverageFileNames": [
+					"jacocoTestReport.xml"
+				],
+				"coverage-gutters.showLineCoverage": true
+			}
+		}
 	}
 }
