@@ -1,13 +1,6 @@
 {
-	"name": "Java",
-	"image": "mcr.microsoft.com/devcontainers/java:0-17-bullseye",
-
+	"image": "mcr.microsoft.com/devcontainers/java:1-17-bookworm",
 	"features": {
-		"ghcr.io/devcontainers/features/java:1": {
-			"version": "none",
-			"installMaven": "false",
-			"installGradle": "false"
-		},
 		"ghcr.io/devcontainers/features/common-utils:2": {
 			"installZsh": true,
 			"configureZshAsDefaultShell": true,
