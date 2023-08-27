@@ -56,7 +56,7 @@ dependencies {
     implementation 'com.github.jkatzwinkel:tla-common:main-SNAPSHOT'
     implementation 'org.modelmapper:modelmapper:3.1.1'
     implementation 'org.apache.commons:commons-compress:1.23.0'
-    implementation 'org.yaml:snakeyaml:2.1'
+    implementation 'org.yaml:snakeyaml:2.2'
 
     implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
     implementation('org.springframework.boot:spring-boot-starter-jetty:3.2.0-M2') {
