@@ -1,4 +1,4 @@
-FROM openjdk:20-jdk-slim-bullseye AS build
+FROM openjdk:22-jdk-slim-bullseye AS build
 
 COPY . /home/gradle/tla
 WORKDIR /home/gradle/tla
@@ -7,7 +7,7 @@ RUN ./gradlew bootJar --no-daemon && \
     mv build/libs/*.jar bin/run/tla-backend.jar
 
 
-FROM openjdk:20-jdk-slim-bullseye
+FROM openjdk:22-jdk-slim-bullseye
 
 RUN mkdir /app
 RUN apt-get update && apt-get install -y wget
