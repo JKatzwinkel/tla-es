@@ -35,7 +35,7 @@ jobs:
         ES_PORT: 9200
 
     - name: Build project
-      run: ./gradlew assemble
+      run: ./gradlew compileTestJava
 
     - name: Wait for ES to respond
       run: >
