@@ -80,7 +80,7 @@ application {
 }
 
 testlogger {
-    theme 'mocha'
+    theme 'standard'
     slowThreshold 1500
     showStandardStreams false
     showFullStackTraces true
