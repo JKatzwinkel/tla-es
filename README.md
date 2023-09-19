@@ -70,7 +70,7 @@ You can check its progress by taking a look into its log output:
 Requirements:
 
 - Java 17
-- Elasticsearch 8.9.0 *or* Docker Compose
+- Elasticsearch 7.17.0 or higher *or* Docker Compose v2
 
 #### 2.1. Prerequesites
 
