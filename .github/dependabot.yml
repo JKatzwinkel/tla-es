@@ -11,6 +11,10 @@ updates:
     reviewers:
       - "jkatzwinkel"
     open-pull-requests-limit: 10
+    groups:
+      spring-boot:
+        patterns:
+          - "org.springframework.boot:spring-boot-*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
