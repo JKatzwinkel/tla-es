@@ -10,6 +10,7 @@ updates:
       interval: "daily"
     reviewers:
       - "jkatzwinkel"
+    open-pull-requests-limit: 10
 
   - package-ecosystem: "github-actions"
     directory: "/"
