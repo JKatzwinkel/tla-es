@@ -13,7 +13,7 @@ jobs:
       matrix:
         java-version:
           - 17
-          - 19
+          - 20
     
     permissions:
       checks: write
