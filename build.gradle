@@ -18,7 +18,7 @@ plugins {
     id 'co.uzzu.dotenv.gradle' version '2.0.0'
     id 'de.undercouch.download' version '5.5.0'
     id 'com.adarshr.test-logger' version '4.0.0'
-    id 'org.springframework.boot' version '3.1.4'
+    id 'org.springframework.boot' version '3.1.5'
     id 'org.barfuin.gradle.jacocolog' version '3.1.0'
     id 'com.github.ben-manes.versions' version '0.49.0'
     id 'com.github.dawnwords.jacoco.badge' version '0.2.4'
