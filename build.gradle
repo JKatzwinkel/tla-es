@@ -58,13 +58,13 @@ dependencies {
     implementation 'org.apache.commons:commons-compress:1.24.0'
     implementation 'org.yaml:snakeyaml:2.2'
 
-    implementation 'org.springframework.boot:spring-boot-starter-tomcat:3.2.0-M3'
-    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.2.0-M3'
+    implementation 'org.springframework.boot:spring-boot-starter-tomcat:3.2.0-RC1'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.2.0-RC1'
     implementation 'org.springframework.data:spring-data-elasticsearch:5.2.0-RC1'
     implementation 'org.springframework:spring-webmvc:6.1.0-RC1'
-    implementation 'org.springframework.boot:spring-boot-starter-logging:3.2.0-M3'
+    implementation 'org.springframework.boot:spring-boot-starter-logging:3.2.0-RC1'
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test:3.2.0-M3') {
+    testImplementation('org.springframework.boot:spring-boot-starter-test:3.2.0-RC1') {
         exclude group: 'org.xmlunit', module: 'xmlunit-core'
         exclude group: 'jakarta.xml.bind'
     }
