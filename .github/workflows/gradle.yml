@@ -14,6 +14,7 @@ jobs:
         java-version:
           - 17
           - 20
+          - 21
     
     permissions:
       checks: write
@@ -23,9 +24,9 @@ jobs:
     
     - uses: actions/setup-java@v3.13.0
       with:
-        distribution: 'temurin'
+        distribution: temurin
         java-version: ${{ matrix.java-version }}
-        cache: 'gradle'
+        cache: gradle
 
     - uses: gradle/wrapper-validation-action@v1.1.0
 

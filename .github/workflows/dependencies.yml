@@ -17,8 +17,8 @@ jobs:
 
     - uses: actions/setup-java@v3.13.0
       with:
-        distribution: 'temurin'
-        java-version: 19
+        distribution: temurin
+        java-version: 21
 
     - name: Submit dependencies
       uses: mikepenz/gradle-dependency-submission@v0.9.0
