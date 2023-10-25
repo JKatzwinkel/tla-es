@@ -1,5 +1,5 @@
 {
-	"image": "mcr.microsoft.com/devcontainers/java:1-17-bookworm",
+	"image": "mcr.microsoft.com/devcontainers/java:1-21-bookworm",
 	"features": {
 		"ghcr.io/devcontainers/features/common-utils:2": {
 			"installZsh": true,
@@ -27,7 +27,8 @@
 				"coverage-gutters.coverageFileNames": [
 					"jacocoTestReport.xml"
 				],
-				"coverage-gutters.showLineCoverage": true
+				"coverage-gutters.showLineCoverage": true,
+				"window.density.editorTabHeight": "compact"
 			}
 		}
 	}
