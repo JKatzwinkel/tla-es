@@ -2,7 +2,7 @@
 
 name: dependencies
 
-on:
+on:  # yamllint disable-line
   push:
     branches:
       - main
@@ -13,14 +13,14 @@ jobs:
 
     steps:
 
-    - uses: actions/checkout@v4.1.0
+      - uses: actions/checkout@v4.1.1
 
-    - uses: actions/setup-java@v3.13.0
-      with:
-        distribution: temurin
-        java-version: 21
+      - uses: actions/setup-java@v3.13.0
+        with:
+          distribution: temurin
+          java-version: 21
 
-    - name: Submit dependencies
-      uses: mikepenz/gradle-dependency-submission@v0.9.1
+      - name: Submit dependencies
+        uses: mikepenz/gradle-dependency-submission@v0.9.1
 
 ...
