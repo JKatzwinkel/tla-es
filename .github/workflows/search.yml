@@ -52,7 +52,7 @@ jobs:
       run: ./gradlew populate
       env:
         ES_PORT: 9200
-        SAMPLE_URL: http://aaew64.bbaw.de/resources/tla-data/tla-data-20210115.tar.gz
+        SAMPLE_URL: ${{ vars.DATA_URL }}
 
     - name: Run search tests
       run: ./gradlew testSearch

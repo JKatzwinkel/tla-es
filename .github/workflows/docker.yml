@@ -20,7 +20,7 @@ jobs:
     - name: start TLA containers
       run: docker compose up -d
       env:
-        SAMPLE_URL: http://aaew64.bbaw.de/resources/tla-data/tla-sample-20210115-1000t.tar.gz
+        SAMPLE_URL: ${{ vars.SAMPLE_URL }}
 
     - name: show container status
       run: docker compose ps
