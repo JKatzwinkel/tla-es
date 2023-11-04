@@ -34,6 +34,6 @@ updates:
       # introducing java 22 support
       - dependency-name: openjdk
         versions:
-          - 22-jdk-slim-bullseye
+          - 22-jdk-slim-bookworm
 
 ...
