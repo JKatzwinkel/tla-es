@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 public class ConnectionTest {
@@ -16,21 +17,15 @@ public class ConnectionTest {
     }
 
     private URL getElasticsearchURL(String path) throws Exception {
-        return new URL(
-            String.format(
-                "http://localhost:%s/%s",
-                System.getenv("ES_PORT"),
-                path
-            )
-        );
+        return new URI(
+            String.format("http://localhost:%s/%s", System.getenv("ES_PORT"), path)
+        ).toURL();
     }
 
     @Test
     void doesESrespond() throws Exception {
         var responseStatus = (
-            (HttpURLConnection) getElasticsearchURL(
-                ""
-            ).openConnection()
+            (HttpURLConnection) getElasticsearchURL("").openConnection()
         ).getResponseCode();
         assertEquals(200, responseStatus, "ES should return HTTP code 200");
     }

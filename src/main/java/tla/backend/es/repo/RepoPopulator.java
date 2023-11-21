@@ -285,7 +285,7 @@ public class RepoPopulator {
     private void processTarArchive(TarArchiveInputStream input) throws IOException {
         TarArchiveEntry archiveEntry;
         long filecount = 0;
-        while ((archiveEntry = input.getNextTarEntry()) != null) {
+        while ((archiveEntry = input.getNextEntry()) != null) {
             String typeId = this.extractDocTypeFromPath(archiveEntry);
             if (!archiveEntry.isDirectory()) {
                 if (input.canReadEntryData(archiveEntry)) {
