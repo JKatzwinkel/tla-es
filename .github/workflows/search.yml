@@ -2,7 +2,7 @@
 
 name: searchtest
 
-on:
+'on':
   push:
     branches:
       - main
@@ -16,47 +16,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.1
 
-    - name: Set up Java 21
-      uses: actions/setup-java@v3.13.0
-      with:
-        distribution: temurin
-        java-version: 21
-        cache: gradle
+      - name: Set up Java 21
+        uses: actions/setup-java@v3.13.0
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
 
-    - name: Set up Elasticsearch container
-      run: docker compose up -d es
-      env:
-        ES_PORT: 9200
+      - name: Set up Elasticsearch container
+        run: docker compose up -d es
+        env:
+          ES_PORT: 9200
 
-    - name: Install project dependencies
-      run: ./gradlew testclasses
+      - name: Install project dependencies
+        run: ./gradlew testclasses
 
-    - name: Wait for ES to respond
-      run: >
-        bash .github/scripts/wait_for_response.sh
-        http://localhost:9200 30
+      - name: Wait for ES to respond
+        run: >
+          bash .github/scripts/wait_for_response.sh
+          http://localhost:9200 30
 
-    - name: Cache sample corpus data
-      uses: actions/cache@v3.3.2
-      env:
-        cache-name: cache-corpus-data
-      with:
-        path: sample.tar.gz
-        key: ${{ runner.os }}-searchtest-${{ env.cache-name }}-${{ hashFiles('sample.tar.gz') }}
-        restore-keys: |
-          ${{ runner.os }}-searchtest-${{ env.cache-name }}-
+      - name: Cache sample corpus data
+        uses: actions/cache@v3.3.2
+        env:
+          cache-name: cache-corpus-data
+        with:
+          path: sample.tar.gz
+          key: "${{ runner.os }}-searchtest-${{ env.cache-name }}-\
+            ${{ hashFiles('sample.tar.gz') }}"
+          restore-keys: |
+            ${{ runner.os }}-searchtest-${{ env.cache-name }}-
 
-    - name: Ingest corpus data
-      run: ./gradlew populate
-      env:
-        ES_PORT: 9200
-        SAMPLE_URL: ${{ vars.DATA_URL }}
+      - name: Ingest corpus data
+        run: ./gradlew populate
+        env:
+          ES_PORT: 9200
+          SAMPLE_URL: ${{ vars.DATA_URL }}
 
-    - name: Run search tests
-      run: ./gradlew testSearch
-      env:
-        ES_PORT: 9200
+      - name: Run search tests
+        run: ./gradlew testSearch
+        env:
+          ES_PORT: 9200
 
 ...

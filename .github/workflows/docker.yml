@@ -2,11 +2,11 @@
 
 name: deploy
 
-on:
+'on':
   pull_request:
   push:
     branches:
-    - main
+      - main
 
 jobs:
 
@@ -15,39 +15,39 @@ jobs:
 
     steps:
 
-    - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.1
 
-    - name: start TLA containers
-      run: docker compose up -d
-      env:
-        SAMPLE_URL: ${{ vars.SAMPLE_URL }}
+      - name: start TLA containers
+        run: docker compose up -d
+        env:
+          SAMPLE_URL: ${{ vars.SAMPLE_URL }}
 
-    - name: show container status
-      run: docker compose ps
+      - name: show container status
+        run: docker compose ps
 
-    - name: show ingest container logs
-      run: docker compose logs populate
+      - name: show ingest container logs
+        run: docker compose logs populate
 
-    - name: wait for backend to be populated with corpus data
-      run: >
-        bash .github/scripts/wait_for_response.sh
-        http://localhost:8090/lemma/get/100690 120
-      continue-on-error: true
+      - name: wait for backend to be populated with corpus data
+        run: >
+          bash .github/scripts/wait_for_response.sh
+          http://localhost:8090/lemma/get/100690 120
+        continue-on-error: true
 
-    - name: query backend version
-      run: curl -s http://localhost:8090/version
+      - name: query backend version
+        run: curl -s http://localhost:8090/version
 
-    - name: query backend endpoints
-      run: curl -s http://localhost:8090/
+      - name: query backend endpoints
+        run: curl -s http://localhost:8090/
 
-    - name: query lemma details
-      run: >
-        bash .github/scripts/wait_for_response.sh
-        http://localhost:8090/lemma/get/10050 60
+      - name: query lemma details
+        run: >
+          bash .github/scripts/wait_for_response.sh
+          http://localhost:8090/lemma/get/10050 60
 
-    - name: query thesaurus entry details
-      run: >
-        bash .github/scripts/wait_for_response.sh
-        http://localhost:8090/ths/get/7pupjz 60
+      - name: query thesaurus entry details
+        run: >
+          bash .github/scripts/wait_for_response.sh
+          http://localhost:8090/ths/get/7pupjz 60
 
 ...
