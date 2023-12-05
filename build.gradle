@@ -63,7 +63,7 @@ dependencies {
     implementation 'org.springframework.data:spring-data-elasticsearch:5.2.0'
     implementation 'org.springframework:spring-webmvc:6.1.1'
     implementation 'org.springframework.boot:spring-boot-starter-logging:3.2.0'
-    implementation 'ch.qos.logback:logback-classic:1.4.12'
+    implementation 'ch.qos.logback:logback-classic:1.4.14'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test:3.2.0') {
         exclude group: 'org.xmlunit', module: 'xmlunit-core'
