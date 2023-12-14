@@ -14,7 +14,7 @@ updates:
     groups:
       spring-boot:
         patterns:
-          - "org.springframework.boot:spring-boot-*"
+          - "org.springframework.boot*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
