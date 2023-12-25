@@ -29,11 +29,5 @@ updates:
       interval: "weekly"
     reviewers:
       - "jkatzwinkel"
-    ignore:
-      # this only applies until gradle 8.5 or whichever gradle release
-      # introducing java 22 support
-      - dependency-name: openjdk
-        versions:
-          - 22-jdk-slim-bookworm
 
 ...
