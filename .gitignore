@@ -10,7 +10,6 @@ bin/main/
 bin/test/
 build
 *.tar.gz
-settings.gradle
 *.csv
 *.gv
 *.pdf
