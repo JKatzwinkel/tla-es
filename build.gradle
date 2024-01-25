@@ -9,7 +9,7 @@ plugins {
     id 'com.adarshr.test-logger' version '4.0.0'
     id 'org.springframework.boot' version '3.3.0-M1'
     id 'org.barfuin.gradle.jacocolog' version '3.1.0'
-    id 'com.github.ben-manes.versions' version '0.50.0'
+    id 'com.github.ben-manes.versions' version '0.51.0'
     id 'com.github.dawnwords.jacoco.badge' version '0.2.4'
 }
 
