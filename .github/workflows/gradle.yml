@@ -38,7 +38,7 @@ jobs:
 
       - uses: gradle/gradle-build-action@v3.0.0-beta.5
         with:
-          dependency-graph: generate-and-upload
+          dependency-graph: generate-and-submit
 
       - name: Build project
         run: ./gradlew compileTestJava
