@@ -36,7 +36,7 @@ jobs:
         env:
           ES_PORT: 9200
 
-      - uses: gradle/gradle-build-action@v2.12.0
+      - uses: gradle/gradle-build-action@v3.0.0-beta.5
         with:
           dependency-graph: generate-and-upload
 
