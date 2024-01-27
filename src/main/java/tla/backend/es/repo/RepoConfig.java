@@ -29,7 +29,7 @@ import tla.domain.model.Passport;
 @EnableElasticsearchRepositories
 public class RepoConfig extends ElasticsearchConfiguration {
 
-    public String getEnvOrDefault(String name, String defaultValue) {
+    static String getEnvOrDefault(String name, String defaultValue) {
         var value = System.getenv(name);
         if (value == null) {
             return defaultValue;
