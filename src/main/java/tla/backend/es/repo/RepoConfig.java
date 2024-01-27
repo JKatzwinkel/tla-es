@@ -29,17 +29,22 @@ import tla.domain.model.Passport;
 @EnableElasticsearchRepositories
 public class RepoConfig extends ElasticsearchConfiguration {
 
-    @Autowired
-    private Environment env;
+    public String getEnvOrDefault(String name, String defaultValue) {
+        var value = System.getenv(name);
+        if (value == null) {
+            return defaultValue;
+        }
+        return value;
+    }
 
     @Override
     public ClientConfiguration clientConfiguration() {
-        var host = env.getProperty(
-            "tla.es.host", "localhost"
+        var host = getEnvOrDefault(
+            "ES_HOST", "localhost"
         );
         var port = Integer.parseInt(
-            env.getProperty(
-                "tla.es.port", "9200"
+            getEnvOrDefault(
+                "ES_PORT", "9200"
             )
         );
         log.info("configure Elasticsearch client for connection to {}:{}", host, port);
@@ -80,11 +85,10 @@ public class RepoConfig extends ElasticsearchConfiguration {
         @Override
         public Map<String, Object> convert(Passport source) {
             try {
-                Map<String, Object> res = mapper.readValue(
+                return mapper.readValue(
                     mapper.writeValueAsString(source),
                     Map.class
                 );
-                return res;
             } catch (Exception e) {
                 log.warn(
                     String.format(

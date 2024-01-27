@@ -76,7 +76,6 @@ test {
     useJUnitPlatform {
       includeTags '!search'
     }
-    environment "ES_PORT", System.getenv("ES_PORT")
     finalizedBy 'jacocoTestReport'
 }
 
@@ -84,22 +83,25 @@ task testSearch(type: Test) {
     group = 'Verification'
     description = 'Runs search integration tests against populated ES instance.'
     systemProperty 'spring.profiles.active', 'search'
-    environment "ES_PORT", System.getenv("ES_PORT")
     useJUnitPlatform {
       includeTags 'search'
     }
-}
-
-tasks.withType(JavaCompile) {
-    options.compilerArgs += ['-Xlint:deprecation']
 }
 
 task testAll(type: Test) {
     group = 'Verification'
     description = 'Runs both search integration and unit tests.'
     useJUnitPlatform()
-    environment "ES_PORT", System.getenv("ES_PORT")
     finalizedBy 'jacocoTestReport'
+}
+
+tasks.withType(Test) {
+    environment 'ES_PORT', System.getenv('ES_PORT') ?: '9200'
+    environment 'ES_HOST', System.getenv('ES_HOST') ?: 'localhost'
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ['-Xlint:deprecation']
 }
 
 jacocoTestReport {
@@ -122,8 +124,8 @@ bootRun {
     if (project.hasProperty('args')) {
         args project.args.split(',')
     }
-    environment "ES_PORT", System.getenv("ES_PORT")
-    environment "ES_HOST", System.getenv("ES_HOST")
+    environment 'ES_PORT', System.getenv('ES_PORT') ?: '9200'
+    environment 'ES_HOST', System.getenv('ES_HOST') ?: 'localhost'
 }
 
 task downloadSample(type: Download) {

@@ -9,18 +9,5 @@ import lombok.Data;
 @Configuration
 @ConfigurationProperties(prefix = "tla")
 public class ApplicationProperties {
-
-    private ElasticsearchProperties es;
-
-    @Data
-    public static class ElasticsearchProperties {
-        /**
-         * Elasticsearch port
-         */
-        private int port;
-        /**
-         * Elasticsearch host address
-         */
-        private String host;
-    }
+    //
 }

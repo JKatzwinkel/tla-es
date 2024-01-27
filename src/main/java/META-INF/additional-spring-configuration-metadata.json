@@ -8,10 +8,6 @@
     ],
     "properties": [
         {
-            "name": "tla.es",
-            "type": "tla.backend.config.ApplicationProperties.ElasticsearchProperties"
-        },
-        {
             "name": "tla.searchtest",
             "type": "java.util.Map"
         }
