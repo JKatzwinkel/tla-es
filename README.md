@@ -32,18 +32,11 @@ Requirements:
 
 - Docker Compose
 
-#### 1.1. Prerequesites
+The environment variable `SAMPLE_URL` is required. Add it to your environment any way you like, e.g.:
 
-1. Create an environment variable template file `.env` based on the template coming with this repo:
-   ```bash
-   cp .env.template .env
-   ```
-2. Specify the location where a TLA corpus data archive can be downloaded using the `SAMPLE_URL` environment variable, e.g.:
-   ```ini
-   SAMPLE_URL=http://example.org/sample.tar.gz
-   ```
-
-#### 1.2. Run Setup
+```bash
+  export SAMPLE_URL=http://example.org/sample.tar.gz
+```
 
 Start the docker container setup configured in `docker-compose.yml`:
 
@@ -72,6 +65,7 @@ Requirements:
 - Java 17
 - Elasticsearch 7.17.0 or higher *or* Docker Compose v2
 
+
 #### 2.1. Prerequesites
 
 1. This method requires you to provide a running Elasticsearch instance. If you have Docker Compose, you can simply start one in a
@@ -83,22 +77,20 @@ Requirements:
    accessing [its REST interface](http://localhost:9200) in a browser (change `9200` in case that you
    set a different port via the `ES_PORT` environment variable).
 
-2. Nicely done! Now follow [the instructions above](#11-prerequesites) to make sure you have set the environment variables `ES_HOST`, `ES_PORT` and `SAMPLE_URL`.
+2. Once Elasticsearch is up and running, TLA corpus data needs to be loaded into it. In order to do so,
+   you must set the `SAMPLE_URL` environment variable to a URL pointing to a tar-compressed TLA corpus data
+   file.
 
-3. Once Elasticsearch is up and running, TLA corpus data needs to be loaded into it. In order to do so,
-you must set the `SAMPLE_URL` environment variable to a URL pointing to a tar-compressed TLA corpus data
-file. One way to do this is to create a `.env` file in the directory containing this README, and setting
-the variable `SAMPLE_URL` in there:
-
-   ```ini
-   SAMPLE_URL=http://example.org/sample.tar.gz
+   ```bash
+     export SAMPLE_URL=http://example.org/sample.tar.gz
    ```
 
-4. Finally, download and store TLA corpus data from the specified source by running the `populate` gradle task:
+3. Finally, download and store TLA corpus data from the specified source by running the `populate` gradle task:
 
    ```bash
    ./gradlew populate
    ```
+
 
 #### 2.2. Run application
 
