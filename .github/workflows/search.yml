@@ -10,6 +10,7 @@ name: searchtest
     paths:
       - 'src/test/resources/search/**/*.json'
       - 'docker-compose.yml'
+      - '.github/workflows/search.yml'
 
 jobs:
   search:
@@ -23,12 +24,11 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-          cache: gradle
 
-      - name: Set up Elasticsearch container
+      - name: Set up Elasticsearch container at port 9201
         run: docker compose up -d es
         env:
-          ES_PORT: 9200
+          ES_PORT: 9201
 
       - name: Install project dependencies
         run: ./gradlew testclasses
@@ -36,7 +36,7 @@ jobs:
       - name: Wait for ES to respond
         run: >
           bash .github/scripts/wait_for_response.sh
-          http://localhost:9200 30
+          http://localhost:9201 30
 
       - name: Cache sample corpus data
         uses: actions/cache@v4.0.0
@@ -52,12 +52,12 @@ jobs:
       - name: Ingest corpus data
         run: ./gradlew populate
         env:
-          ES_PORT: 9200
+          ES_PORT: 9201
           SAMPLE_URL: ${{ vars.DATA_URL }}
 
       - name: Run search tests
         run: ./gradlew testSearch
         env:
-          ES_PORT: 9200
+          ES_PORT: 9201
 
 ...

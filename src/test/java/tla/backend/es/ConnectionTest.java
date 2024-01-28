@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 public class ConnectionTest {
@@ -13,10 +15,10 @@ public class ConnectionTest {
     @Test
     void envSet() {
         String esPort = System.getenv("ES_PORT");
-        assertTrue(esPort != null, "ES_PORT should be set");
+        assertNotNull(esPort, "ES_PORT should be set");
     }
 
-    private URL getElasticsearchURL(String path) throws Exception {
+    private URL getElasticsearchURL(String path) throws MalformedURLException, URISyntaxException {
         return new URI(
             String.format("http://localhost:%s/%s", System.getenv("ES_PORT"), path)
         ).toURL();

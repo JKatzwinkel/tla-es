@@ -14,9 +14,4 @@ server:
     whitelabel:
       enabled: false
 
-tla:
-  es:
-    port: ${ES_PORT:9200}
-    host: ${ES_HOST:localhost}
-
 ...
