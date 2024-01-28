@@ -18,7 +18,11 @@ The TLA backend server is a Spring Boot application using Elasticsearch as a sea
 
 ## Installation
 
-> **TL;DR:** run `SAMPLE_URL=http://aaew64.bbaw.de/resources/tla-data/tla-sample-20210115-1000t.tar.gz docker compose up -d`
+> [!TIP]
+> the **TL;DR:** version of all of the below is:
+> ```bash
+> SAMPLE_URL=http://aaew64.bbaw.de/resources/tla-data/tla-sample-20210115-1000t.tar.gz docker compose up -d
+> ```
 
 There are two methods for getting this thing up and running.
 
