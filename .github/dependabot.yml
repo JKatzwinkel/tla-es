@@ -12,6 +12,9 @@ updates:
       - "jkatzwinkel"
     open-pull-requests-limit: 10
     groups:
+      junit:
+        patterns:
+          - "org.junit.jupiter:junit-jupiter-*"
       spring-boot:
         patterns:
           - "org.springframework.boot*"
