@@ -29,7 +29,7 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Set up Elasticsearch container at port ${ES_PORT}
+      - name: Set up Elasticsearch container at port ${{ env.ES_PORT }}
         run: docker compose up -d es
 
       - name: Install project dependencies
