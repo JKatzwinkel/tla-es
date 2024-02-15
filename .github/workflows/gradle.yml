@@ -27,7 +27,6 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ matrix.java-version }}
-          cache: gradle
 
       - uses: gradle/wrapper-validation-action@v2.1.1
 
