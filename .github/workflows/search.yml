@@ -11,6 +11,7 @@ name: searchtest
       - 'src/test/resources/search/**/*.json'
       - 'docker-compose.yml'
       - '.github/workflows/search.yml'
+  workflow_dispatch:
 
 env:
   ES_PORT: 9201
