@@ -85,7 +85,9 @@ public class SentenceServiceTest {
         SearchHit<SentenceEntity> hit = new SearchHit<>(
             null, null, null, 1f, null, null, null, null, null, null, s
         );
-        SearchHits<SentenceEntity> hits = new SearchHitsImpl<>(1, TotalHitsRelation.EQUAL_TO, 1f, null, null, List.of(hit), null, null);
+        SearchHits<SentenceEntity> hits = new SearchHitsImpl<>(
+            1, TotalHitsRelation.EQUAL_TO, 1f, null, null, List.of(hit), null, null, null
+        );
         SentenceSearch cmd = new SentenceSearch();
         TranslationSpec translation = new TranslationSpec();
         translation.setText("Blut der ersten Geburt der Kobra");
