@@ -8,7 +8,7 @@ CMD=runserver
 if [ $# -ge 1 ]; then
     if [ "$1" = "ingest" ]; then
         echo "download corpus data from ${SAMPLE_URL}..."
-        if ! wget "${SAMPLE_URL}" -O sample.tar.gz; then
+        if ! wget "${SAMPLE_URL}" --progress=dot:giga -O sample.tar.gz; then
             echo "could not retrieve corpus data!"
             exit 1
         fi
