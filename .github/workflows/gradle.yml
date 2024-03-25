@@ -28,7 +28,7 @@ jobs:
           distribution: temurin
           java-version: ${{ matrix.java-version }}
 
-      - uses: gradle/wrapper-validation-action@v2.1.1
+      - uses: gradle/wrapper-validation-action@v2.1.2
 
       - name: Set up Elasticsearch container
         run: docker compose up -d es
