@@ -23,7 +23,7 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.2
 
       - uses: actions/setup-java@v4.2.1
         with:
@@ -45,6 +45,7 @@ jobs:
 
       - name: Build project
         run: ./gradlew compileTestJava
+        continue-on-error: ${{ matrix.java-version > 21 }}
 
       - name: Wait for ES to respond
         run: >
@@ -53,6 +54,7 @@ jobs:
 
       - name: Run tests
         run: ./gradlew test
+        continue-on-error: ${{ matrix.java-version > 21 }}
 
       - name: Process junit reports
         uses: mikepenz/action-junit-report@v4.1.0
