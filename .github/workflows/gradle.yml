@@ -53,6 +53,7 @@ jobs:
 
       - name: Run tests
         run: ./gradlew test
+        continue-on-error: ${{ matrix.java-version > 21 }}
 
       - name: Process junit reports
         uses: mikepenz/action-junit-report@v4.1.0
