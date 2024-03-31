@@ -42,7 +42,7 @@ jobs:
           http://localhost:${ES_PORT} 30
 
       - name: Cache sample corpus data
-        uses: actions/cache@v4.0.1
+        uses: actions/cache@v4.0.2
         with:
           path: sample.tar.gz
           key: ${{ env.SAMPLE_URL }}
