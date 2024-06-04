@@ -1,4 +1,4 @@
-FROM openjdk:21-jdk-slim-bookworm AS build
+FROM openjdk:23-jdk-slim-bookworm AS build
 
 COPY . /home/gradle/tla
 WORKDIR /home/gradle/tla
@@ -7,7 +7,7 @@ RUN ./gradlew bootJar --no-daemon && \
     mv build/libs/*.jar bin/run/tla-backend.jar
 
 
-FROM openjdk:21-jdk-slim-bookworm
+FROM openjdk:23-jdk-slim-bookworm
 
 RUN mkdir /app
 RUN apt-get update && apt-get install -y wget
