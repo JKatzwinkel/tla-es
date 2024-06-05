@@ -1,4 +1,4 @@
-FROM openjdk:23-jdk-slim-bookworm AS build
+FROM openjdk:22-jdk-slim-bookworm AS build
 
 COPY . /home/gradle/tla
 WORKDIR /home/gradle/tla
