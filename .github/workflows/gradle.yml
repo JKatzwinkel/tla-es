@@ -45,7 +45,6 @@ jobs:
 
       - name: Build project
         run: ./gradlew compileTestJava
-        continue-on-error: ${{ matrix.java-version > 21 }}
 
       - name: Wait for ES to respond
         run: >
@@ -54,7 +53,6 @@ jobs:
 
       - name: Run tests
         run: ./gradlew test
-        continue-on-error: ${{ matrix.java-version > 21 }}
 
       - name: Process junit reports
         uses: mikepenz/action-junit-report@v4.2.2
