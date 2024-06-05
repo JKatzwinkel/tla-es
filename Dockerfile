@@ -7,7 +7,7 @@ RUN ./gradlew bootJar --no-daemon && \
     mv build/libs/*.jar bin/run/tla-backend.jar
 
 
-FROM openjdk:23-jdk-slim-bookworm
+FROM openjdk:22-jdk-slim-bookworm
 
 RUN mkdir /app
 RUN apt-get update && apt-get install -y wget
