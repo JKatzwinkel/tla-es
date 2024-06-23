@@ -53,4 +53,9 @@ jobs:
       - name: Run search tests
         run: ./gradlew testSearch
 
+      - uses: mikepenz/action-junit-report@v4.3.1
+        if: always()
+        with:
+          report_paths: 'build/test-results/testSearch/TEST-*.xml'
+
 ...
