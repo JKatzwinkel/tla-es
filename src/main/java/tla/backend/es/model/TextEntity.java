@@ -1,19 +1,17 @@
 package tla.backend.es.model;
 
-import java.util.List;
-
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 import tla.backend.es.model.meta.Recursable;
 import tla.backend.es.model.meta.UserFriendlyEntity;
 import tla.backend.es.model.parts.ObjectPath;
-import tla.backend.es.model.parts.Translations;
 import tla.domain.dto.TextDto;
 import tla.domain.model.meta.BTSeClass;
 import tla.domain.model.meta.TLADTO;
@@ -23,8 +21,9 @@ import tla.domain.model.meta.TLADTO;
  */
 @Getter
 @Setter
-@SuperBuilder
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @BTSeClass("BTSText")
 @TLADTO(TextDto.class)
 @Document(indexName = "text", createIndex = false)
@@ -42,20 +41,12 @@ public class TextEntity extends UserFriendlyEntity implements Recursable {
     @Field(type = FieldType.Object)
     private WordCount wordCount;
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    public static class WordCount {
-        @Field(type = FieldType.Integer)
-        int min = 0;
-        @Field(type = FieldType.Integer)
-        int max = 0;
-        /**
-         * for compatibility
-         */
+    public record WordCount(
+        @Field(type = FieldType.Integer) int min,
+        @Field(type = FieldType.Integer) int max
+    ) {
         public WordCount(int count) {
-            this.min = count;
-            this.max = count;
+            this(count, count);
         }
     }
 

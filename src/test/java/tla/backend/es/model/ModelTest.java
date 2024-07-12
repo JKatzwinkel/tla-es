@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.temporal.ChronoField;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -359,7 +358,7 @@ public class ModelTest {
                 d.getEditors().getUpdated().after(d.getEditors().getCreated()),
                 "update same day as creation"
             ),
-            () -> assertEquals(14, ((TextDto) d).getWordCount().getMax(), "word count")
+            () -> assertEquals(14, ((TextDto) d).getWordCount().max(), "word count")
         );
         TextDto dto = (TextDto) d;
         assertAll("test mapped text DTO properties",
