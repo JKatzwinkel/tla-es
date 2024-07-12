@@ -71,6 +71,14 @@ public class ModelConfig {
             return source;
         }
     }
+
+    public static class TextWordCountConverter extends AbstractConverter<TextEntity.WordCount, TextDto.WordCount> {
+        @Override
+        protected TextDto.WordCount convert(TextEntity.WordCount source) {
+            return new TextDto.WordCount(source.min(), source.max());
+        }
+    }
+
     /**
      * Container for configurations that can be attributed to an eClass specified
      * via {@link BTSeClass} annotation on top of an {@link TLAEntity} instance:
@@ -252,6 +260,10 @@ public class ModelConfig {
         modelMapper.createTypeMap(TextEntity.class, TextDto.class)
             .addMapping(
                 TextEntity::getRevisionState, TextDto::setReviewState
+            ).addMappings(
+                m -> m.using(new TextWordCountConverter()).map(
+                    TextEntity::getWordCount, TextDto::setWordCount
+                )
             );
         modelMapper.createTypeMap(CorpusObjectEntity.class, CorpusObjectDto.class)
             .addMapping(
