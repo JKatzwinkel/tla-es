@@ -11,16 +11,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import tla.backend.AbstractMockMvcTest;
 import tla.backend.es.model.Metadata;
 import tla.backend.es.model.parts.EditDate;
 import tla.backend.es.repo.MetadataRepo;
 
-public class ApiControllerTest extends AbstractMockMvcTest {
 
-    @MockBean
+class ApiControllerTest extends AbstractMockMvcTest {
+
+    @MockitoBean
     private MetadataRepo metadataRepo;
 
     @Autowired

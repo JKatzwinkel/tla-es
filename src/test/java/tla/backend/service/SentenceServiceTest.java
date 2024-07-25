@@ -19,14 +19,14 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.SearchHitsImpl;
 import org.springframework.data.elasticsearch.core.TotalHitsRelation;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import tla.backend.App;
 import tla.backend.Util;
@@ -44,25 +44,26 @@ import tla.domain.dto.extern.SearchResultsWrapper;
 import tla.domain.dto.extern.SingleDocumentWrapper;
 import tla.domain.model.Language;
 
-@SpringBootTest(classes = {App.class})
-public class SentenceServiceTest {
 
-    @MockBean
+@SpringBootTest(classes = {App.class})
+class SentenceServiceTest {
+
+    @MockitoBean
     private SentenceRepo sentenceRepo;
 
-    @MockBean
+    @MockitoBean
     private TextRepo textRepo;
 
-    @MockBean
+    @MockitoBean
     private AnnotationRepo annoRepo;
 
-    @MockBean
+    @MockitoBean
     private ThesaurusRepo thsRepo;
 
     @Autowired
     private SentenceService sentenceService;
 
-    @SpyBean
+    @MockitoSpyBean
     private ElasticsearchOperations operations;
 
     @Test
