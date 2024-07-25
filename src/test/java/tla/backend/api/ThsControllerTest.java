@@ -14,8 +14,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import tla.backend.AbstractMockMvcTest;
 import tla.backend.es.model.ThsEntryEntity;
@@ -24,12 +24,13 @@ import tla.backend.es.model.parts.ObjectReference;
 import tla.backend.es.repo.ThesaurusRepo;
 import tla.backend.service.ThesaurusService;
 
-public class ThsControllerTest extends AbstractMockMvcTest {
+
+class ThsControllerTest extends AbstractMockMvcTest {
 
     @Autowired
     private ThesaurusService service;
 
-    @MockBean
+    @MockitoBean
     private ThesaurusRepo repo;
 
     private ThsEntryEntity thsEntry;

@@ -1,7 +1,7 @@
 package tla.backend.api;
 
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import tla.backend.AbstractMockMvcTest;
 import tla.backend.Util;
@@ -26,15 +26,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 
-public class SentenceControllerTest extends AbstractMockMvcTest {
+class SentenceControllerTest extends AbstractMockMvcTest {
 
-    @MockBean
+    @MockitoBean
     private SentenceRepo sentenceRepo;
 
-    @MockBean
+    @MockitoBean
     private TextRepo textRepo;
 
-    @MockBean
+    @MockitoBean
     private AnnotationRepo annoRepo;
 
     @ParameterizedTest
