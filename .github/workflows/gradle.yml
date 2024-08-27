@@ -30,7 +30,7 @@ jobs:
           distribution: temurin
           java-version: ${{ matrix.java-version }}
 
-      - uses: gradle/actions/wrapper-validation@v4.0.0
+      - uses: gradle/actions/wrapper-validation@v4.0.1
 
       - name: Set up Elasticsearch container
         run: docker compose up -d es
@@ -39,7 +39,7 @@ jobs:
 
       - name: Prepare submitting Gradle dependency graph
         if: matrix.java-version == 17
-        uses: gradle/actions/setup-gradle@v4.0.0
+        uses: gradle/actions/setup-gradle@v4.0.1
         with:
           dependency-graph: generate-and-submit
 
