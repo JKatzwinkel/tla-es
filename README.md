@@ -1,7 +1,7 @@
 ![build](https://github.com/jkatzwinkel/tla-es/workflows/build/badge.svg)
 ![deploy](https://github.com/jkatzwinkel/tla-es/workflows/deploy/badge.svg)
 ![search](https://github.com/jkatzwinkel/tla-es/workflows/searchtest/badge.svg)
-![LINE](https://img.shields.io/badge/line--coverage-82.38%25-brightgreen.svg)
+![LINE](https://img.shields.io/badge/line--coverage-82.14%25-brightgreen.svg)
 ![METHOD](https://img.shields.io/badge/method--coverage-81.84%25-brightgreen.svg)
 
 # tla-es

@@ -12,10 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        java-version:
-          - 17
-          - 21
-          - 22
+        java-version: [17, 21, 22, 23]
 
     permissions:
       checks: write
