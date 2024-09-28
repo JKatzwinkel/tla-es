@@ -12,13 +12,16 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
 import lombok.extern.slf4j.Slf4j;
 import tla.backend.es.repo.RepoPopulator;
 
+
 @Slf4j
 @Configuration
 @ComponentScan
+@EnableSpringDataWebSupport
 @EnableAutoConfiguration(exclude = { ElasticsearchDataAutoConfiguration.class })
 public class App implements ApplicationRunner {
 
