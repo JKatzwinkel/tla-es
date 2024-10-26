@@ -148,6 +148,11 @@ task populate {
     inputs.files(
         file('sample.tar.gz')
     )
+    doFirst {
+        if (!file('sample.tar.gz').exists()) {
+            dependsOn 'downloadSample'
+        }
+    }
     doLast {
         bootRun.args = ['--data-file=sample.tar.gz', '--shutdown']
     }
