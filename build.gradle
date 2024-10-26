@@ -145,9 +145,16 @@ clean {
 task populate {
     group = 'Init'
     description = 'Download corpus sample and ingest into database backend'
+    inputs.files(
+        file('sample.tar.gz')
+    )
+    doFirst {
+        if (!file('sample.tar.gz').exists()) {
+            dependsOn 'downloadSample'
+        }
+    }
     doLast {
         bootRun.args = ['--data-file=sample.tar.gz', '--shutdown']
     }
-    dependsOn 'downloadSample'
     finalizedBy 'bootRun'
 }
