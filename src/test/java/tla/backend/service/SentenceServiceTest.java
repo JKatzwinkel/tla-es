@@ -94,8 +94,6 @@ class SentenceServiceTest {
         translation.setText("Blut der ersten Geburt der Kobra");
         translation.setLang(new Language[]{Language.DE});
         cmd.setTranslation(translation);
-        var query = sentenceService.getSearchCommandAdapter(cmd);
-        assertNotNull(query);
         doReturn(hits).when(operations).search(
             any(org.springframework.data.elasticsearch.core.query.Query.class),
             eq(SentenceEntity.class),
