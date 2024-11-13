@@ -140,6 +140,9 @@ task downloadSample(type: Download) {
     outputs.files(
         file("sample.tar.gz")
     )
+    onlyIf('corpus data file sample.tar.gz does not exist') {
+        !file('sample.tar.gz').exists()
+    }
 }
 
 clean {
@@ -152,11 +155,7 @@ task populate {
     inputs.files(
         file('sample.tar.gz')
     )
-    doFirst {
-        if (!file('sample.tar.gz').exists()) {
-            dependsOn 'downloadSample'
-        }
-    }
+    dependsOn 'downloadSample'
     doLast {
         bootRun.args = ['--data-file=sample.tar.gz', '--shutdown']
     }
