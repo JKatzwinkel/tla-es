@@ -33,8 +33,6 @@ repositories {
     mavenCentral()
     maven { url 'https://repo.spring.io/milestone' }
     maven { url 'https://jitpack.io' }
-    // ⬇ dropwith spring 6.2.0-RC4
-    maven { url 'https://repo.spring.io/snapshot' }
 }
 
 dependencies {
@@ -51,7 +49,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-tomcat:3.4.0-RC1'
     implementation 'org.springframework.boot:spring-boot-autoconfigure:3.4.0-RC1'
     implementation 'org.springframework.data:spring-data-elasticsearch:5.4.0-RC1'
-    implementation 'org.springframework:spring-webmvc:6.2.0-RC3'
+    implementation 'org.springframework:spring-webmvc:6.2.0'
     implementation 'org.springframework.boot:spring-boot-starter-logging:3.4.0-RC1'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test:3.4.0-RC1') {
@@ -60,8 +58,8 @@ dependencies {
     }
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.11.3'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.3'
-    // ⬇ dropwith spring 6.2.0-RC4
-    testImplementation 'org.springframework:spring-test:7.0.0-SNAPSHOT'
+    // ⬇ dropwith spring boot 3.4.0-RC2
+    testImplementation 'org.springframework:spring-test:6.2.0'
 }
 
 application {
