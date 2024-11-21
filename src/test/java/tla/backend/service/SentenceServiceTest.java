@@ -12,6 +12,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -87,7 +88,8 @@ class SentenceServiceTest {
             null, null, null, 1f, null, null, null, null, null, null, s
         );
         SearchHits<SentenceEntity> hits = new SearchHitsImpl<>(
-            1, TotalHitsRelation.EQUAL_TO, 1f, null, null, List.of(hit), null, null, null
+            1, TotalHitsRelation.EQUAL_TO, 1f, Duration.ofMillis(0l), null, null,
+            List.of(hit), null, null, null
         );
         SentenceSearch cmd = new SentenceSearch();
         TranslationSpec translation = new TranslationSpec();

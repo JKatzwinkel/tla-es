@@ -2,7 +2,7 @@ package tla.backend.es.query;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -17,6 +17,7 @@ import org.springframework.data.elasticsearch.core.SearchHitsImpl;
 import org.springframework.data.elasticsearch.core.TotalHitsRelation;
 
 import tla.backend.es.model.LemmaEntity;
+
 
 public class QueryResultTest {
 
@@ -34,7 +35,7 @@ public class QueryResultTest {
         
         SearchHits<?> searchHits = new SearchHitsImpl<>(
             pages * ESQueryResult.SEARCH_RESULT_PAGE_SIZE,
-            TotalHitsRelation.EQUAL_TO, 10f, null, null,
+            TotalHitsRelation.EQUAL_TO, 10f, Duration.ofMillis(0l), null, null,
             mockHits(ESQueryResult.SEARCH_RESULT_PAGE_SIZE), null, null, null
         );
         Pageable page = PageRequest.of(0, ESQueryResult.SEARCH_RESULT_PAGE_SIZE);
@@ -48,7 +49,7 @@ public class QueryResultTest {
         final int pages = 2;
         SearchHits<?> searchHits = new SearchHitsImpl<>(
             pages * ESQueryResult.SEARCH_RESULT_PAGE_SIZE + 1,
-            TotalHitsRelation.EQUAL_TO, 10f, null, null,
+            TotalHitsRelation.EQUAL_TO, 10f, Duration.ofMillis(0l), null, null,
             mockHits(ESQueryResult.SEARCH_RESULT_PAGE_SIZE), null, null, null
         );
         Pageable page = PageRequest.of(0, ESQueryResult.SEARCH_RESULT_PAGE_SIZE);
@@ -62,7 +63,7 @@ public class QueryResultTest {
     void queryResultHitCount() {
         SearchHits<LemmaEntity> searchHits = new SearchHitsImpl<>(
             ESQueryResult.SEARCH_RESULT_PAGE_SIZE,
-            TotalHitsRelation.EQUAL_TO, 10f, null, null,
+            TotalHitsRelation.EQUAL_TO, 10f, Duration.ofMillis(0l), null, null,
             mockHits(20), null, null, null
         );
         ESQueryResult<?> result = new ESQueryResult<LemmaEntity>(searchHits, Pageable.unpaged());
@@ -73,8 +74,8 @@ public class QueryResultTest {
     @DisplayName("query result paging information should contain correct page size")
     void queryResultPageSize() {
         SearchHits<LemmaEntity> hits = new SearchHitsImpl<>(
-            10, TotalHitsRelation.EQUAL_TO,
-            3f, null, null, mockHits(3), null, null, null
+            10, TotalHitsRelation.EQUAL_TO, 3f, Duration.ofMillis(0l),
+            null, null, mockHits(3), null, null, null
         );
         var result = new ESQueryResult<LemmaEntity>(
             hits, PageRequest.of(0, 3)
