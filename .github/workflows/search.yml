@@ -53,7 +53,7 @@ jobs:
       - name: Run search tests
         run: ./gradlew testSearch
 
-      - uses: mikepenz/action-junit-report@v5.0.0
+      - uses: mikepenz/action-junit-report@v5.1.0
         if: always()
         with:
           report_paths: 'build/test-results/testSearch/TEST-*.xml'
