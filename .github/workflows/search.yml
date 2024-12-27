@@ -18,8 +18,24 @@ env:
   SAMPLE_URL: ${{ vars.DATA_URL }}
 
 jobs:
+
+  check_url:
+    runs-on: ubuntu-latest
+    outputs:
+      url_response: ${{ steps.check.outputs.response_code }}
+
+    steps:
+      - id: check
+        run: |
+          rc=$(curl -sIo /dev/null "${{ vars.SAMPLE_URL }}" \
+          -w "%{http_code}" || true)
+          echo "response_code=${rc}" >> "${GITHUB_OUTPUT}"
+
+
   search:
     runs-on: ubuntu-latest
+    needs: check_url
+    if: needs.check_url.outputs.url_response != '404'
 
     steps:
       - uses: actions/checkout@v4.2.2
