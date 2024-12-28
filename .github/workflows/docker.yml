@@ -3,12 +3,52 @@
 name: deploy
 
 'on':
-  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
 
+  check_url:
+    runs-on: ubuntu-latest
+    outputs:
+      url_response: ${{ steps.check.outputs.response_code }}
+
+    steps:
+
+      - id: check
+        run: |
+          rc=$(curl -sIo /dev/null "${{ vars.SAMPLE_URL }}" \
+          -w "%{http_code}" || true)
+          echo "response_code=${rc}" >> "${GITHUB_OUTPUT}"
+
+
   docker:
     runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: start TLA backend container
+        run: docker compose up -d backend
+
+      - name: wait for backend container to start up
+        run: >
+          bash .github/scripts/wait_for_response.sh
+          http://localhost:8090/version 120
+
+      - name: query backend version
+        run: curl -s http://localhost:8090/version
+
+      - name: query backend endpoints
+        run: curl -s http://localhost:8090/
+
+
+  populate:
+    runs-on: ubuntu-latest
+    needs: check_url
+    if: needs.check_url.outputs.url_response != '404'
 
     steps:
 
@@ -19,9 +59,6 @@ jobs:
         env:
           SAMPLE_URL: ${{ vars.SAMPLE_URL }}
 
-      - name: show container status
-        run: docker compose ps
-
       - name: show ingest container logs
         run: docker compose logs populate
 
@@ -30,12 +67,6 @@ jobs:
           bash .github/scripts/wait_for_response.sh
           http://localhost:8090/lemma/get/100690 120
         continue-on-error: true
-
-      - name: query backend version
-        run: curl -s http://localhost:8090/version
-
-      - name: query backend endpoints
-        run: curl -s http://localhost:8090/
 
       - name: query lemma details
         run: >
