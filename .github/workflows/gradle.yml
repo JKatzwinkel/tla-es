@@ -3,7 +3,9 @@
 name: build
 
 'on':
-  push
+  push:
+  workflow_call:
+
 
 jobs:
 

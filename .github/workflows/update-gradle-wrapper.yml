@@ -1,0 +1,30 @@
+---
+
+name: update gradle wrapper
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  update-gradle-wrapper:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: update gradle wrapper
+        uses: gradle-update/update-gradle-wrapper-action@v2.1.0
+        with:
+          pr-title-template: >-
+            build(deps): update gradle wrapper from %sourceVersion%
+            to %targetVersion%
+          commit-message-template: >-
+            build(deps): update gradle wrapper from %sourceVersion%
+            to %targetVersion%
+          labels: dependencies, gradle
+          reviewers: jkatzwinkel
+
+      - uses: ./.github/workflows/gradle.yml
+
+...
