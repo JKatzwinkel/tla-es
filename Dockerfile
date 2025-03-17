@@ -10,7 +10,7 @@ RUN ./gradlew bootJar --no-daemon && \
 FROM openjdk:23-jdk-slim-bookworm
 
 RUN mkdir /app
-RUN apt-get update && apt-get install -y --no-install-recommends wget=1.21.3-1+b2
+RUN apt-get update && apt-get install -y --no-install-recommends wget=1.21.3-1+deb12u1
 COPY --from=build /home/gradle/tla/bin/run/ /app/
 WORKDIR /app/
 
