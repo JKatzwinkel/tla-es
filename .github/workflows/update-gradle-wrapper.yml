@@ -25,6 +25,8 @@ jobs:
           labels: dependencies, gradle
           reviewers: jkatzwinkel
 
+      - run: git branch --show-current
+
       - uses: ./.github/workflows/gradle.yml
 
 ...
