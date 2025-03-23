@@ -11,6 +11,7 @@ name: update elasticsearch service
       - 'dependabot/*elasticsearch*'
     paths-ignore:
       - docker-compose.yml
+  workflow_call:
 
 jobs:
   update-elasticsearch-service:
