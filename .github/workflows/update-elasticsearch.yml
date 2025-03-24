@@ -1,0 +1,66 @@
+---
+
+name: update elasticsearch service
+
+'on':
+  pull_request:
+    branches:
+      - 'dependabot/*elasticsearch*'
+  push:
+    branches:
+      - 'dependabot/*elasticsearch*'
+    paths-ignore:
+      - docker-compose.yml
+  workflow_call:
+
+jobs:
+  update-elasticsearch-service:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: install jq/yq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends jq yq
+
+      - name: get latest elasticsearch version from github
+        id: latest
+        run: >-
+          latest=$(
+            curl -s https://api.github.com/repos/elastic/elasticsearch/releases
+            | jq -r '[.[] | select(.prerelease==false) | .tag_name] | max'
+          ); echo "latest=${latest#v}" >> "${GITHUB_OUTPUT}"
+
+      - name: get current version of elasticsearch service
+        id: current
+        run: |
+          cur=$(yq -r .services.es.image docker-compose.yml)
+          echo "current=${cur#*:}" >> "${GITHUB_OUTPUT}"
+
+      - name: bump docker compose elasticsearch version
+        run: >-
+          sed -i 's/\(elasticsearch:\)'${OLD}'/\1'${NEW}'/'
+          docker-compose.yml
+        env:
+          OLD: ${{ steps.current.outputs.current }}
+          NEW: ${{ steps.latest.outputs.latest }}
+
+      - name: push change
+        run: |
+          git config user.email "${GIT_MAIL}"
+          git config user.name "github-actions[bot]"
+          git add docker-compose.yml
+          git commit -m "bump elasticsearch from ${OLD} to ${NEW}"
+          git push
+        env:
+          OLD: ${{ steps.current.outputs.current }}
+          NEW: ${{ steps.latest.outputs.latest }}
+          GIT_MAIL: >-
+            41898282+github-actions[bot]@users.noreply.github.com
+        continue-on-error: true
+
+...
