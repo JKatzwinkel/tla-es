@@ -5,6 +5,10 @@ name: build
 'on':
   push:
   workflow_call:
+    inputs:
+      ref:
+        required: false
+        type: string
 
 
 jobs:
@@ -24,6 +28,8 @@ jobs:
     steps:
 
       - uses: actions/checkout@v4.2.2
+        with:
+          ref: ${{ inputs.ref || github.ref }}
 
       - uses: actions/setup-java@v4.7.0
         with:

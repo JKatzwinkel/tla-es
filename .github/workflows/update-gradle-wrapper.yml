@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       changed: ${{ steps.changed.outputs.changed }}
+      ref: ${{ steps.ref.outputs.ref }}
 
     steps:
       - uses: actions/checkout@v4.2.2
@@ -34,9 +35,18 @@ jobs:
           chg=$(git diff --shortstat HEAD..main | wc -l)
           echo "changed=${chg}" >> ${GITHUB_OUTPUT}
 
+      - name: get branch name && save ref
+        id: ref
+        run: |
+          branch=$(git branch --show-current)
+          echo "ref=refs/heads/${branch}" >> ${GITHUB_OUTPUT}
+
+
   post-update-tests:
     needs: [update-gradle-wrapper]
     uses: ./.github/workflows/gradle.yml
     if: needs.update-gradle-wrapper.outputs.changed != '0'
+    with:
+      ref: ${{ needs.update-gradle-wrapper.outputs.ref }}
 
 ...
