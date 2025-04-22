@@ -5,10 +5,10 @@ name: update elasticsearch service
 'on':
   pull_request:
     branches:
-      - 'dependabot/*elasticsearch*'
+      - 'dependabot/**elasticsearch*'
   push:
     branches:
-      - 'dependabot/*elasticsearch*'
+      - 'dependabot/**elasticsearch*'
     paths-ignore:
       - docker-compose.yml
   workflow_call:
@@ -61,6 +61,6 @@ jobs:
           NEW: ${{ steps.latest.outputs.latest }}
           GIT_MAIL: >-
             41898282+github-actions[bot]@users.noreply.github.com
-        continue-on-error: true
+        if: steps.current.outputs.current != steps.latest.outputs.latest
 
 ...
