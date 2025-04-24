@@ -31,9 +31,12 @@ jobs:
         id: latest
         run: >-
           latest=$(
-            curl -s https://api.github.com/repos/elastic/elasticsearch/releases
-            | jq -r '[.[] | select(.prerelease==false) | .tag_name] | max'
+            curl -s "${GH_RELEASES_PAGE}" |
+            jq -r '[.[] | select(.prerelease==false) | .tag_name] | max'
           ); echo "latest=${latest#v}" >> "${GITHUB_OUTPUT}"
+        env:
+          GH_RELEASES_PAGE: >-
+            https://api.github.com/repos/elastic/elasticsearch/releases
 
       - name: get current version of elasticsearch service
         id: current
