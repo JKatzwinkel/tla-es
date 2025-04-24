@@ -5,10 +5,10 @@ name: update elasticsearch service
 'on':
   pull_request:
     branches:
-      - 'dependabot/*elasticsearch*'
+      - 'dependabot/**elasticsearch*'
   push:
     branches:
-      - 'dependabot/*elasticsearch*'
+      - 'dependabot/**elasticsearch*'
     paths-ignore:
       - docker-compose.yml
   workflow_call:
@@ -16,6 +16,9 @@ name: update elasticsearch service
 jobs:
   update-elasticsearch-service:
     runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.changed.outputs.changed }}
+      ref: ${{ steps.ref.outputs.ref }}
     permissions:
       contents: write
 
@@ -31,9 +34,12 @@ jobs:
         id: latest
         run: >-
           latest=$(
-            curl -s https://api.github.com/repos/elastic/elasticsearch/releases
-            | jq -r '[.[] | select(.prerelease==false) | .tag_name] | max'
+            curl -s "${GH_RELEASES_PAGE}" |
+            jq -r '[.[] | select(.prerelease==false) | .tag_name] | max'
           ); echo "latest=${latest#v}" >> "${GITHUB_OUTPUT}"
+        env:
+          GH_RELEASES_PAGE: >-
+            https://api.github.com/repos/elastic/elasticsearch/releases
 
       - name: get current version of elasticsearch service
         id: current
@@ -49,6 +55,12 @@ jobs:
           OLD: ${{ steps.current.outputs.current }}
           NEW: ${{ steps.latest.outputs.latest }}
 
+      - name: count changed files
+        id: changed
+        run: |
+          chg=$(git diff --shortstat | wc -l)
+          echo "changed=${chg}" >> ${GITHUB_OUTPUT}
+
       - name: push change
         run: |
           git config user.email "${GIT_MAIL}"
@@ -61,6 +73,20 @@ jobs:
           NEW: ${{ steps.latest.outputs.latest }}
           GIT_MAIL: >-
             41898282+github-actions[bot]@users.noreply.github.com
-        continue-on-error: true
+        if: steps.changed.outputs.changed != '0'
+
+      - name: get branch name && save ref
+        id: ref
+        run: |
+          branch=$(git branch --show-current)
+          echo "ref=refs/heads/${branch}" >> ${GITHUB_OUTPUT}
+
+
+  test:
+    needs: [update-elasticsearch-service]
+    uses: ./.github/workflows/gradle.yml
+    if: needs.update-elasticsearch-service.outputs.changed != '0'
+    with:
+      ref: ${{ needs.update-elasticsearch-service.outputs.ref }}
 
 ...
