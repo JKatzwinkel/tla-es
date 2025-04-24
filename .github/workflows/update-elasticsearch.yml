@@ -5,10 +5,10 @@ name: update elasticsearch service
 'on':
   pull_request:
     branches:
-      - 'dependabot/*elasticsearch*'
+      - 'dependabot/**elasticsearch*'
   push:
     branches:
-      - 'dependabot/*elasticsearch*'
+      - 'dependabot/**elasticsearch*'
     paths-ignore:
       - docker-compose.yml
   workflow_call:
