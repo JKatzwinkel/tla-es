@@ -8,8 +8,6 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    reviewers:
-      - "jkatzwinkel"
     open-pull-requests-limit: 10
     groups:
       junit:
@@ -23,14 +21,10 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    reviewers:
-      - "jkatzwinkel"
 
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "weekly"
-    reviewers:
-      - "jkatzwinkel"
 
 ...
