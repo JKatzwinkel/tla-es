@@ -6,7 +6,7 @@ plugins {
     id 'maven-publish'
     id 'de.undercouch.download' version '5.6.0'
     id 'com.adarshr.test-logger' version '4.0.0'
-    id 'org.springframework.boot' version '3.5.0-RC1'
+    id 'org.springframework.boot' version '3.5.0'
     id 'org.barfuin.gradle.jacocolog' version '3.1.0'
     id 'com.github.ben-manes.versions' version '0.52.0'
     id 'com.github.dawnwords.jacoco.badge' version '0.2.4'
@@ -46,13 +46,13 @@ dependencies {
     implementation 'org.apache.commons:commons-compress:1.27.1'
     implementation 'org.yaml:snakeyaml:2.4'
 
-    implementation 'org.springframework.boot:spring-boot-starter-tomcat:3.5.0-RC1'
-    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.5.0-RC1'
+    implementation 'org.springframework.boot:spring-boot-starter-tomcat:3.5.0'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.5.0'
     implementation 'org.springframework.data:spring-data-elasticsearch:5.4.6'
     implementation 'org.springframework:spring-webmvc:6.2.7'
-    implementation 'org.springframework.boot:spring-boot-starter-logging:3.5.0-RC1'
+    implementation 'org.springframework.boot:spring-boot-starter-logging:3.5.0'
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test:3.5.0-RC1') {
+    testImplementation('org.springframework.boot:spring-boot-starter-test:3.5.0') {
         exclude group: 'org.xmlunit', module: 'xmlunit-core'
         exclude group: 'jakarta.xml.bind'
     }
