@@ -48,7 +48,7 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-tomcat:3.5.0'
     implementation 'org.springframework.boot:spring-boot-autoconfigure:3.5.0'
-    implementation 'org.springframework.data:spring-data-elasticsearch:5.4.6'
+    implementation 'org.springframework.data:spring-data-elasticsearch:5.5.0'
     implementation 'org.springframework:spring-webmvc:6.2.7'
     implementation 'org.springframework.boot:spring-boot-starter-logging:3.5.0'
 
