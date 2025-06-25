@@ -14,7 +14,10 @@ plugins {
 
 group = 'org.bbaw.aaew.tla'
 version = '0.0.950-dev'
-sourceCompatibility = '17'
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 publishing {
     publications {
@@ -31,8 +34,8 @@ publishing {
 
 repositories {
     mavenCentral()
-    maven { url 'https://repo.spring.io/milestone' }
-    maven { url 'https://jitpack.io' }
+    maven { url = 'https://repo.spring.io/milestone' }
+    maven { url = 'https://jitpack.io' }
 }
 
 dependencies {
@@ -65,10 +68,10 @@ application {
 }
 
 testlogger {
-    theme 'standard'
-    slowThreshold 1500
-    showStandardStreams false
-    showFullStackTraces true
+    theme = 'standard'
+    slowThreshold = 1500
+    showStandardStreams = false
+    showFullStackTraces = true
 }
 
 test {
