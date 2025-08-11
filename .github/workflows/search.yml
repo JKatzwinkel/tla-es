@@ -38,7 +38,7 @@ jobs:
     if: needs.check_url.outputs.url_response != '404'
 
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v4.3.0
 
       - name: Set up Java 21
         uses: actions/setup-java@v4.7.1
