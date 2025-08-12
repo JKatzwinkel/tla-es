@@ -16,7 +16,7 @@ jobs:
       ref: ${{ steps.ref.outputs.ref }}
 
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
 
       - name: update gradle wrapper
         uses: gradle-update/update-gradle-wrapper-action@v2.1.0
