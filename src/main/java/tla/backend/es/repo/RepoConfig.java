@@ -4,13 +4,9 @@ import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.core.env.Environment;
 import org.springframework.data.convert.ReadingConverter;
 import org.springframework.data.convert.WritingConverter;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
@@ -23,6 +19,8 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 
 import lombok.extern.slf4j.Slf4j;
 import tla.domain.model.Passport;
+import tools.jackson.databind.ObjectMapper;
+
 
 @Slf4j
 @Configuration

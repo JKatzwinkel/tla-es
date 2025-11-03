@@ -244,7 +244,7 @@ public class ModelTest {
             .passport(p)
             .translations(Translations.builder().de(List.of("übersetzung")).build())
             .word(
-                new Token(
+                Token.of(
                     "N35:G47",
                     new Transcription("nfr", "nfr")
                 )

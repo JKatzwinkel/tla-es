@@ -12,14 +12,14 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.junit.jupiter.api.Test;
 
 import tla.backend.es.model.meta.BaseEntity;
 import tla.backend.es.model.parts.ObjectPath;
 import tla.backend.es.model.parts.ObjectReference;
 import tla.domain.model.meta.Resolvable;
+import tools.jackson.databind.ObjectMapper;
+
 
 public class ObjectReferenceTest {
 

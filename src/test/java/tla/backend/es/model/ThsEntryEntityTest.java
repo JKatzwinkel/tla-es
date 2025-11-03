@@ -4,14 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import tla.backend.es.model.parts.Translations;
 import tla.domain.model.Language;
 import tla.domain.model.Passport;
+import tools.jackson.databind.ObjectMapper;
+
 
 public class ThsEntryEntityTest {
 

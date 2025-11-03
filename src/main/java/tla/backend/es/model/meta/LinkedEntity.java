@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -48,6 +49,27 @@ public abstract class LinkedEntity extends AbstractBTSBaseClass implements Relat
         public static Relations of(Resolvable... sources) {
             return new Relations(
                 Arrays.asList(sources)
+            );
+        }
+
+        @JsonCreator
+        public static Relations from(Collection<tla.domain.model.ObjectReference> dtos) {
+            return new Relations(
+                dtos.stream().map(
+                    dto -> ObjectReference.builder().eclass(
+                        dto.getEclass()
+                    ).id(
+                        dto.getId()
+                    ).type(
+                        dto.getType()
+                    ).name(
+                        dto.getName()
+                    ).ranges(
+                        dto.getRanges()
+                    ).build()
+                ).map(
+                    Resolvable.class::cast
+                ).toList()
             );
         }
     }

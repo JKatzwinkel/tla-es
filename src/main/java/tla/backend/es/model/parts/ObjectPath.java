@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import lombok.Getter;
 import lombok.Setter;
-import tla.domain.model.meta.Resolvable;
 
 /**
  * A single path through an entity graph, where each hop is being
@@ -19,11 +18,11 @@ import tla.domain.model.meta.Resolvable;
 @JsonDeserialize(
     contentAs = ObjectReference.class
 )
-public class ObjectPath extends ArrayList<Resolvable> {
+public class ObjectPath extends ArrayList<ObjectReference> {
 
     private static final long serialVersionUID = 7756562974667485788L;
 
-    public static ObjectPath of(Resolvable... refs) {
+    public static ObjectPath of(ObjectReference... refs) {
         ObjectPath path = new ObjectPath();
         path.addAll(
             Arrays.asList(refs)
