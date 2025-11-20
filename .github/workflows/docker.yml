@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v6.0.0
 
       - name: start TLA backend container
         run: docker compose up -d backend
@@ -52,7 +52,7 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v6.0.0
 
       - name: start TLA containers
         run: docker compose up -d
