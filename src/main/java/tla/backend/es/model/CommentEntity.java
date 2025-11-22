@@ -3,11 +3,12 @@ package tla.backend.es.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import jakarta.annotation.Nonnull;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
-import org.springframework.lang.NonNull;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,7 +36,7 @@ import tla.domain.model.meta.TLADTO;
 public class CommentEntity extends LinkedEntity implements Indexable {
 
     @Id
-    @NonNull
+    @Nonnull
     @Field(type = FieldType.Keyword)
     private String id;
 
