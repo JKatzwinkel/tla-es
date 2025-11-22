@@ -5,9 +5,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
+import org.springframework.boot.tomcat.servlet.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.servlet.ServletWebServerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,8 +20,8 @@ import tla.backend.es.repo.RepoPopulator;
 @Slf4j
 @Configuration
 @ComponentScan
+@EnableAutoConfiguration
 @EnableSpringDataWebSupport
-@EnableAutoConfiguration(exclude = { ElasticsearchDataAutoConfiguration.class })
 public class App implements ApplicationRunner {
 
     @Autowired

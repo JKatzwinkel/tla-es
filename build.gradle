@@ -49,15 +49,15 @@ dependencies {
     implementation 'org.yaml:snakeyaml:2.5'
 
     implementation 'org.springframework.boot:spring-boot-starter-tomcat:4.0.0'
-    implementation 'org.springframework.boot:spring-boot-autoconfigure:4.0.0'
-    implementation 'org.springframework.data:spring-data-elasticsearch:5.5.6'
-    implementation 'org.springframework:spring-webmvc:6.2.13'
+    implementation 'org.springframework.data:spring-data-elasticsearch:6.0.0'
+    implementation 'org.springframework:spring-webmvc:7.0.0'
     implementation 'org.springframework.boot:spring-boot-starter-logging:4.0.0'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test:4.0.0') {
         exclude group: 'org.xmlunit', module: 'xmlunit-core'
         exclude group: 'jakarta.xml.bind'
     }
+    testImplementation 'org.springframework.boot:spring-boot-webmvc-test:4.0.0'
     testImplementation 'org.mockito:mockito-core:5.20.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:6.0.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:6.0.1'
