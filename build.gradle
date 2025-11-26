@@ -88,12 +88,16 @@ task testSearch(type: Test) {
     useJUnitPlatform {
       includeTags 'search'
     }
+    testClassesDirs = testing.suites.test.sources.output.classesDirs
+    classpath = testing.suites.test.sources.runtimeClasspath
 }
 
 task testAll(type: Test) {
     group = 'Verification'
     description = 'Runs both search integration and unit tests.'
     useJUnitPlatform()
+    testClassesDirs = testing.suites.test.sources.output.classesDirs
+    classpath = testing.suites.test.sources.runtimeClasspath
     finalizedBy 'jacocoTestReport'
 }
 
