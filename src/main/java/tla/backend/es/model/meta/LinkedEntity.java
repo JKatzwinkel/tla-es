@@ -29,7 +29,8 @@ import tla.domain.model.meta.Resolvable;
 @SuperBuilder
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @EqualsAndHashCode(callSuper = true, exclude = {"relations"})
-public abstract class LinkedEntity extends AbstractBTSBaseClass implements Relatable<LinkedEntity.Relations> {
+public abstract class LinkedEntity extends AbstractBTSBaseClass
+        implements Relatable<LinkedEntity.Relations> {
 
     /**
      * A collection of references to other entity objects.
@@ -53,7 +54,9 @@ public abstract class LinkedEntity extends AbstractBTSBaseClass implements Relat
         }
 
         @JsonCreator
-        public static Relations from(Collection<tla.domain.model.ObjectReference> dtos) {
+        public static Relations from(
+            Collection<tla.domain.model.ObjectReference> dtos
+        ) {
             return new Relations(
                 dtos.stream().map(
                     dto -> ObjectReference.builder().eclass(
