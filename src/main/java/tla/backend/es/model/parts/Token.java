@@ -52,11 +52,11 @@ public class Token {
     @Field(type = FieldType.Keyword)
     private List<String> annoTypes;
 
-    public Token(String glyphs, Transcription transcription) {
-        super();
-        this.glyphs = new Glyphs();
-        this.glyphs.setMdc(glyphs);
-        this.transcription = transcription;
+    public static Token of(String glyphs, Transcription transcription) {
+        Token result = new Token();
+        result.glyphs = Glyphs.of(glyphs);
+        result.transcription = transcription;
+        return result;
     }
 
     @Getter
@@ -114,6 +114,7 @@ public class Token {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Glyphs {
+
         @Field(type = FieldType.Text, analyzer = "hieroglyph_analyzer", searchAnalyzer = "hieroglyph_analyzer")
         private String mdc;
 
@@ -125,6 +126,12 @@ public class Token {
 
         @Field(type = FieldType.Long)
         private List<Long> order;
+
+        public static Glyphs of(String mdc) {
+            var glyphs = new Glyphs();
+            glyphs.setMdc(mdc);
+            return glyphs;
+        }
     }
 
 }
