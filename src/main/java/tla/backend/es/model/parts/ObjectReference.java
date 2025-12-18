@@ -3,11 +3,11 @@ package tla.backend.es.model.parts;
 import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +27,7 @@ import tla.domain.model.meta.Resolvable;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@JsonPropertyOrder({"id", "eclass", "type", "name"})
 public class ObjectReference implements Resolvable, Comparable<Resolvable> {
 
     @NonNull

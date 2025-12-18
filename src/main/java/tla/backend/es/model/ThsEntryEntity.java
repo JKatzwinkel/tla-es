@@ -7,13 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Setting;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +28,8 @@ import tla.domain.model.Passport;
 import tla.domain.model.extern.AttestedTimespan;
 import tla.domain.model.meta.BTSeClass;
 import tla.domain.model.meta.TLADTO;
+import tools.jackson.databind.ObjectMapper;
+
 
 @Getter
 @Setter

@@ -66,7 +66,7 @@ class LemmaControllerTest extends AbstractMockMvcTest {
             .translations(
                 Translations.builder().de(List.of("übersetzung")).build()
             ).word(
-                new Token("N35:G47", new Transcription("nfr", "nfr"))
+                Token.of("N35:G47", new Transcription("nfr", "nfr"))
             )
             .build();
         String ser = new ObjectMapper().writeValueAsString(l1);
