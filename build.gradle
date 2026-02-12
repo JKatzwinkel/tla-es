@@ -51,7 +51,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-tomcat:4.0.2'
     implementation 'org.springframework.data:spring-data-elasticsearch:6.0.2'
     implementation 'org.springframework.boot:spring-boot-webmvc:4.0.2'
-    implementation 'org.springframework:spring-webmvc:7.0.3'
+    implementation 'org.springframework:spring-webmvc:7.0.4'
     implementation 'org.springframework.boot:spring-boot-starter-logging:4.0.2'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test:4.0.2') {
