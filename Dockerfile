@@ -10,7 +10,7 @@ RUN ./gradlew bootJar --no-daemon && \
 FROM eclipse-temurin:25-jre
 
 RUN mkdir /app
-RUN apt-get update && apt-get install -y --no-install-recommends wget=1.21.4-1ubuntu4.1
+RUN apt-get update && apt-get install -y --no-install-recommends wget=1.25.0-2ubuntu4
 COPY --from=build /home/gradle/tla/bin/run/ /app/
 WORKDIR /app/
 
