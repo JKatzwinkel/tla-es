@@ -49,6 +49,7 @@ dependencies {
     implementation 'org.yaml:snakeyaml:2.6'
 
     implementation 'org.springframework.boot:spring-boot-starter-tomcat:4.0.6'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core:11.0.22'
     implementation 'org.springframework.data:spring-data-elasticsearch:6.0.5'
     implementation 'org.springframework.boot:spring-boot-webmvc:4.0.6'
     implementation 'org.springframework:spring-webmvc:7.0.7'
