@@ -29,4 +29,11 @@ updates:
     cooldown:
       default-days: 90
 
+  - package-ecosystem: "devcontainers"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 2
+
 ...
