@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -102,14 +102,12 @@ public class RepoPopulator {
                     this.modelClass
                 );
                 this.add(doc);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 log.warn(
                     String.format(
                         "ingestor could not instantiate %s class from %s",
-                        this.modelClass.getName(),
-                        json
-                    ),
-                    e
+                        this.modelClass.getName(), json
+                    ), e
                 );
             }
         }
