@@ -4,9 +4,8 @@
 		"ghcr.io/devcontainers/features/common-utils:2": {
 			"configureZshAsDefaultShell": true
 		},
-		"ghcr.io/devcontainers/features/docker-in-docker:": {
-			"moby": false,
-			"installDockerBuildx": false
+		"ghcr.io/devcontainers/features/docker-in-docker:3.1.0": {
+			"moby": false
 		},
 		"ghcr.io/devcontainers/features/github-cli:1": {}
 	},
