@@ -49,9 +49,9 @@ dependencies {
     implementation 'org.yaml:snakeyaml:2.6'
 
     implementation 'org.springframework.boot:spring-boot-starter-tomcat:4.1.0'
-    implementation 'org.apache.tomcat.embed:tomcat-embed-core:11.0.24'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core:[11.0.24,12)'
     implementation 'org.springframework.data:spring-data-elasticsearch:6.1.0'
-    implementation 'io.opentelemetry:opentelemetry-api:1.62.+'
+    implementation 'io.opentelemetry:opentelemetry-api:[1.62.+,2)'
     implementation 'org.springframework.boot:spring-boot-webmvc:4.1.0'
     implementation 'org.springframework:spring-webmvc:7.0.8'
     implementation 'org.springframework.boot:spring-boot-starter-logging:4.1.0'
@@ -64,6 +64,15 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:5.23.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:6.1.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:6.1.1'
+}
+
+configurations {
+    compileClasspath {
+        resolutionStrategy.activateDependencyLocking()
+    }
+    runtimeClasspath {
+        resolutionStrategy.activateDependencyLocking()
+    }
 }
 
 application {
