@@ -44,6 +44,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.46'
 
     implementation 'com.github.jkatzwinkel:tla-common:main-SNAPSHOT'
+    implementation 'com.fasterxml.jackson.core:jackson-core:[2.21.4,3]'
     implementation 'org.modelmapper:modelmapper:3.2.6'
     implementation 'org.apache.commons:commons-compress:1.28.0'
     implementation 'org.yaml:snakeyaml:2.6'
