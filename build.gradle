@@ -54,7 +54,7 @@ dependencies {
     implementation 'org.springframework.data:spring-data-elasticsearch:6.1.0'
     implementation 'io.opentelemetry:opentelemetry-api:[1.62.+,2)'
     implementation 'org.springframework.boot:spring-boot-webmvc:4.1.0'
-    implementation 'org.springframework:spring-webmvc:7.0.8'
+    implementation 'org.springframework:spring-webmvc:7.0.9'
     implementation 'org.springframework.boot:spring-boot-starter-logging:4.1.0'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test:4.1.0') {
