@@ -47,7 +47,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-core:[2.21.4,3]'
     implementation 'org.modelmapper:modelmapper:3.2.6'
     implementation 'org.apache.commons:commons-compress:1.28.0'
-    implementation 'org.yaml:snakeyaml:2.6'
+    implementation 'org.yaml:snakeyaml:2.7'
 
     implementation 'org.springframework.boot:spring-boot-starter-tomcat:4.1.1'
     implementation 'org.apache.tomcat.embed:tomcat-embed-core:[11.0.24,12)'
